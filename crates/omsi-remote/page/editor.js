@@ -350,7 +350,8 @@ const Editor = {
       body.append(this.field("Unit", this.input(w.unit, (v) => this.change(w, (x) => { x.unit = v; }))));
       body.append(this.field("Value", this.input(w.path || "vehicle.motion.speedKmh", set("path"))));
     }
-    if (w.kind === "wheel") body.append(this.field("Steering lock", this.input(w.max || 270, (v) => set("max")(Math.max(45, Math.min(1440, Number(v) || 270))), "number")));
+    if (w.kind === "pedals") body.append(this.field("Pedals", this.seg([["two", "Two pedals"], ["one", "One pedal: up to accelerate, down to brake"]], w.look === "one" ? "one" : "two", set("look"))));
+    if (w.kind === "wheel") body.append(this.field("Steering lock", this.input(w.max || 360, (v) => set("max")(Math.max(45, Math.min(1440, Number(v) || 360))), "number")));
     if (w.kind === "doors" || w.kind === "vdo") body.append(this.field("Look", this.seg([["line", "Line drawing"], ["lcd", "Green display"]], w.look || "line", set("look"))));
     if (w.kind === "telltales") {
       const list = R.el("div", "list");

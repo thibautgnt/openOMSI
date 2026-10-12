@@ -388,7 +388,7 @@ const KINDS = {
   pedals: {
     name: "Pedals",
     size: [2, 3],
-    make() { return Drive.pedals(); },
+    make(w) { return Drive.pedals(w); },
     update() {},
   },
   map: {
@@ -659,18 +659,18 @@ function defaultLayout(state) {
   for (const id of ["gearD", "gearN", "gearR", "horn", "headlights", "highBeam", "fog", "saloon", "driverLight", "wipers", "battery", "startup", "engine", "ticket", "pram", "microphone", "route", "clearLine", "viewDriver", "viewPax", "viewOutside", "camPrev", "camNext", "pause"]) buttons.push(presetWidget(id));
   const second = doors > 1 ? presetWidget("door2") : presetWidget("headlights");
   const wheel = [
-    at(widget("blinkers", {}), [0, 0, 3, 1], [0, 0, 3, 1]),
-    at(presetWidget("horn"), [2, 2, 1, 1], [3, 0, 1, 1]),
-    at(presetWidget("door1"), [0, 1, 1, 1], [0, 8, 1, 1]),
-    at(second, [1, 1, 1, 1], [1, 8, 1, 1]),
-    at(presetWidget("doorsAll"), [2, 1, 1, 1], [2, 8, 1, 1]),
-    at(presetWidget("stopBrake"), [0, 2, 1, 1], [3, 8, 1, 1]),
-    at(presetWidget("parkingBrake"), [1, 2, 1, 1], [3, 9, 1, 1]),
-    at(presetWidget("gearD"), [0, 3, 1, 1], [0, 9, 1, 1]),
-    at(presetWidget("gearN"), [1, 3, 1, 1], [1, 9, 1, 1]),
-    at(presetWidget("gearR"), [2, 3, 1, 1], [2, 9, 1, 1]),
-    at(widget("gauge", { label: "Speed" }), [0, 4, 3, 2], [0, 5, 1, 3]),
-    at(widget("wheel", {}), [3, 0, 6, 6], [0, 1, 4, 4]),
+    at(widget("wheel", {}), [0, 0, 6, 6], [0, 1, 4, 4]),
+    at(widget("blinkers", {}), [6, 0, 3, 1], [0, 0, 3, 1]),
+    at(presetWidget("horn"), [8, 2, 1, 1], [3, 0, 1, 1]),
+    at(presetWidget("door1"), [6, 1, 1, 1], [0, 8, 1, 1]),
+    at(second, [7, 1, 1, 1], [1, 8, 1, 1]),
+    at(presetWidget("doorsAll"), [8, 1, 1, 1], [2, 8, 1, 1]),
+    at(presetWidget("stopBrake"), [6, 2, 1, 1], [3, 8, 1, 1]),
+    at(presetWidget("parkingBrake"), [7, 2, 1, 1], [3, 9, 1, 1]),
+    at(presetWidget("gearD"), [6, 3, 1, 1], [0, 9, 1, 1]),
+    at(presetWidget("gearN"), [7, 3, 1, 1], [1, 9, 1, 1]),
+    at(presetWidget("gearR"), [8, 3, 1, 1], [2, 9, 1, 1]),
+    at(widget("gauge", { label: "Speed" }), [6, 4, 3, 2], [0, 5, 1, 3]),
     at(widget("pedals", {}), [9, 0, 3, 6], [1, 5, 3, 3]),
   ];
   const pages = [

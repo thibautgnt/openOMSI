@@ -2,11 +2,12 @@
 
 const Drive = {
   steer: 0,
+  out: 0,
   throttle: 0,
   brake: 0,
   wheels: new Set(),
   fingers: new Map(),
-  lock: 270,
+  lock: 360,
   timer: null,
   quiet: 0,
   last: 0,
@@ -33,7 +34,12 @@ const Drive = {
       const back = Math.min(1, kmh / 25) * 1.6 * dt;
       this.steer = Math.abs(this.steer) <= back ? 0 : this.steer - Math.sign(this.steer) * back;
     }
-    const msg = { t: "drive", s: Math.round(this.steer * 1000) / 1000, g: Math.round(this.throttle * 1000) / 1000, b: Math.round(this.brake * 1000) / 1000 };
+    const a = Math.abs(this.steer);
+    const target = Math.sign(this.steer) * (0.35 * a + 0.65 * a * a);
+    const eased = this.out + (target - this.out) * (1 - Math.exp(-dt / 0.09));
+    this.out += Math.max(-dt / 0.8, Math.min(dt / 0.8, eased - this.out));
+    if (Math.abs(this.out - target) < 0.0005) this.out = target;
+    const msg = { t: "drive", s: Math.round(this.out * 1000) / 1000, g: Math.round(this.throttle * 1000) / 1000, b: Math.round(this.brake * 1000) / 1000 };
     const moved = !this.sent || msg.s !== this.sent.s;
     const busy = this.holding() || this.throttle > 0 || this.brake > 0 || moved;
     this.quiet = busy ? 0 : this.quiet + 1;
@@ -61,7 +67,12 @@ const Drive = {
     const f = this.fingers.get(id);
     if (!f) return;
     this.fingers.delete(id);
-    if (f.kind !== "wheel") {
+    if (f.kind === "combined") {
+      this.throttle = 0;
+      this.brake = 0;
+      f.node.style.setProperty("--up", 0);
+      f.node.style.setProperty("--down", 0);
+    } else if (f.kind !== "wheel") {
       this[f.kind] = 0;
       if (f.node) f.node.style.setProperty("--p", 0);
     }
@@ -72,7 +83,7 @@ const Drive = {
     this.fingers.clear();
     this.throttle = 0;
     this.brake = 0;
-    for (const p of document.querySelectorAll(".pedal")) p.style.setProperty("--p", 0);
+    for (const p of document.querySelectorAll(".pedal")) for (const v of ["--p", "--up", "--down"]) p.style.setProperty(v, 0);
     this.sent = null;
     this.wake();
   },
@@ -117,7 +128,36 @@ const Drive = {
     return d;
   },
 
-  pedals() {
+  pedal() {
+    const d = R.el("div", "pedals one");
+    const p = R.el("div", "pedal combined");
+    p.append(R.el("div", "fill up"), R.el("div", "fill down"), R.el("span", "txt top", R.T("Throttle")), R.el("span", "txt bottom", R.T("Brake")), R.el("div", "mid"));
+    const set = (e) => {
+      const r = p.getBoundingClientRect();
+      const y = ((r.top + r.height / 2 - e.clientY) / Math.max(1, r.height / 2)) * 1.1;
+      const v = Math.abs(y) < 0.08 ? 0 : Math.max(-1, Math.min(1, y - Math.sign(y) * 0.08));
+      this.throttle = Math.max(0, v);
+      this.brake = Math.max(0, -v);
+      p.style.setProperty("--up", this.throttle);
+      p.style.setProperty("--down", this.brake);
+      this.wake();
+    };
+    p.addEventListener("pointerdown", (e) => {
+      if (!this.grab(e, p, "combined")) return;
+      R.buzz();
+      set(e);
+    });
+    p.addEventListener("pointermove", (e) => {
+      const f = this.fingers.get(e.pointerId);
+      if (f && f.node === p) set(e);
+    });
+    p.addEventListener("contextmenu", (e) => e.preventDefault());
+    d.append(p);
+    return d;
+  },
+
+  pedals(w) {
+    if (w && w.look === "one") return this.pedal();
     const d = R.el("div", "pedals");
     for (const [k, label] of [["brake", "Brake"], ["throttle", "Throttle"]]) {
       const p = R.el("div", "pedal " + k);

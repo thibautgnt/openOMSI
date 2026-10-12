@@ -582,3 +582,11 @@ body.editing .w.sel { outline: 2px solid var(--accent); z-index: 3; }
 @container (max-height: 64px) {
   .btn:has(.picto, .ico) .txt { display: none; }
 }
+.pedals.one { grid-template-columns: 1fr; }
+.pedal.combined { --up: 0; --down: 0; place-items: stretch; padding: 0; }
+.pedal.combined .fill.up { inset: auto 0 50% 0; height: calc(var(--up) * 50%); background: linear-gradient(0deg, #5fe07d, #1e9e45); }
+.pedal.combined .fill.down { inset: 50% 0 auto 0; height: calc(var(--down) * 50%); background: linear-gradient(180deg, #ff6b5e, #d93025); }
+.pedal.combined .mid { position: absolute; left: 10%; right: 10%; top: 50%; height: 2px; margin-top: -1px; background: var(--muted); opacity: .6; }
+.pedal.combined .txt { position: absolute; left: 0; right: 0; text-align: center; }
+.pedal.combined .txt.top { top: 10px; }
+.pedal.combined .txt.bottom { bottom: 10px; }
