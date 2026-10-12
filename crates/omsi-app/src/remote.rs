@@ -17,6 +17,9 @@ pub(crate) struct RemoteCockpit {
     sign: Option<omsi_remote::sign::Sign>,
     sign_t: f32,
     nav_t: f32,
+    door_triggers: Vec<String>,
+    door_ways: Vec<Vec<usize>>,
+    all_fired: Vec<String>,
 }
 
 fn aliases(p: &crate::player::Player) -> Vec<(String, String)> {
@@ -35,10 +38,38 @@ fn aliases(p: &crate::player::Player) -> Vec<(String, String)> {
     out
 }
 
-fn doors(ty: &omsi_sim::VehicleType) -> Vec<Vec<usize>> {
-    let keys = crate::player::door_keys(ty).iter().filter(|g| g.as_slice() != ["bus_dooraft"]).count();
-    let model = omsi_remote::doorways(ty);
-    if keys == 0 || model.len() == keys { model } else { Vec::new() }
+fn doors(p: &crate::player::Player) -> (Vec<Vec<usize>>, Vec<String>) {
+    let ty = &p.vehicle.ty;
+    let mut ways = omsi_remote::doorways(ty);
+    for t in &p.vehicle.trailers {
+        ways.extend(omsi_remote::doorways(&t.ty));
+    }
+    let keys = crate::player::door_keys(ty).len();
+    let fronts: Vec<String> = (0..ways.len()).map(|k| format!("bus_doorfront{k}")).collect();
+    let direct = keys < ways.len() && fronts.iter().all(|f| ty.program.trigger(f).is_some());
+    match (direct, keys == 0 || ways.len() == keys) {
+        (true, _) => (ways, fronts),
+        (false, true) => (ways, Vec::new()),
+        _ => (Vec::new(), Vec::new()),
+    }
+}
+
+fn direct_doors(name: &str, down: bool, r: &mut RemoteCockpit, v: &omsi_sim::VehicleInstance) -> Option<Vec<String>> {
+    if r.door_triggers.is_empty() {
+        return None;
+    }
+    let name = name.to_ascii_lowercase();
+    if name == "doors_all" {
+        if !down {
+            return Some(std::mem::take(&mut r.all_fired));
+        }
+        let open: Vec<bool> = r.door_ways.iter().map(|w| w.iter().any(|l| v.var(&format!("door_{l}")).is_some_and(|x| x > 0.05))).collect();
+        let any = open.contains(&true);
+        r.all_fired = r.door_triggers.iter().zip(&open).filter(|(_, o)| !any || **o).map(|(t, _)| t.clone()).collect();
+        return Some(r.all_fired.clone());
+    }
+    let n: usize = name.strip_prefix("door_")?.parse().ok()?;
+    r.door_triggers.get(n.checked_sub(1)?).map(|t| vec![t.clone()])
 }
 
 fn start_skins(p: &crate::player::Player, root: &std::path::Path, key: &str) -> Skins {
@@ -76,7 +107,7 @@ fn vehicle(p: &crate::player::Player) -> Vehicle {
         actions,
         aliases: aliases(p),
         depot: p.vehicle.host.hof.as_deref().map(omsi_sim::vehicle_api::depot),
-        doors: doors(&p.vehicle.ty),
+        doors: doors(p).0,
     }
 }
 
@@ -183,6 +214,15 @@ impl App {
             self.blinker(v);
             return;
         }
+        if let (Command::Action { name, down }, Some(p)) = (&c, self.player.as_mut()) {
+            let r = &mut self.integrations.remote;
+            if let Some(fire) = direct_doors(name, *down, r, &p.vehicle) {
+                for t in fire {
+                    p.action(&t, *down);
+                }
+                return;
+            }
+        }
         let duty = self.session.duty.as_ref().map(|d| d.trip_for_ibis());
         let Some(p) = self.player.as_mut() else { return };
         let request = match c {
@@ -261,6 +301,7 @@ impl App {
             server.set_vehicle(self.player.as_ref().map(vehicle));
             r.skins = self.player.as_ref().map(|p| start_skins(p, &self.args.root, &key));
             r.sign = self.player.as_ref().and_then(|p| omsi_remote::sign::Sign::find(&p.vehicle.ty, &self.args.root));
+            (r.door_ways, r.door_triggers) = self.player.as_ref().map(doors).unwrap_or_default();
             r.vehicle = key;
         }
         if let Some(Ok((for_key, skins))) = r.skins.as_ref().map(|rx| rx.try_recv()) {
@@ -287,4 +328,5 @@ impl App {
         }
     }
 }
+
 

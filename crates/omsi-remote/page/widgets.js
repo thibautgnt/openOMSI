@@ -30,9 +30,9 @@ const R = {
     const exits = R.get(s, "vehicle.passengers.exits") || [];
     const open = (n) => Number(leaves[n] && leaves[n].open) || 0;
     const ways = new Set(((App.vehicle && App.vehicle.aliases) || []).map(([a]) => a).filter((a) => /^door_\d$/.test(a))).size;
-    let groups = ((App.vehicle && App.vehicle.doors) || []).filter((g) => Array.isArray(g) && g.length).slice(0, 5);
+    let groups = ((App.vehicle && App.vehicle.doors) || []).filter((g) => Array.isArray(g) && g.length).slice(0, 6);
     if (!groups.length) {
-      const n = Math.max(1, Math.min(5, ways || exits.length || Math.ceil(leaves.length / 2) || R.get(s, "vehicle.doors.count") || 2));
+      const n = Math.max(1, Math.min(6, ways || exits.length || Math.ceil(leaves.length / 2) || R.get(s, "vehicle.doors.count") || 2));
       const per = Math.min(2, Math.max(1, Math.round(leaves.length / n)));
       groups = Array.from({ length: n }, (_, i) => Array.from({ length: per }, (_, k) => i * per + k));
     }
@@ -82,6 +82,8 @@ const LAMPS = [
   ["doorways.1.open", "Door 2 open"],
   ["doorways.2.open", "Door 3 open"],
   ["doorways.3.open", "Door 4 open"],
+  ["doorways.4.open", "Door 5 open"],
+  ["doorways.5.open", "Door 6 open"],
   ["vehicle.passengers.exits.0.requested", "Stop request"],
   ["vehicle.brakes.parking", "Parking brake"],
   ["vehicle.brakes.stop", "Stop brake"],
@@ -128,6 +130,8 @@ const PRESETS = [
   { id: "door2", label: "Door 2", icon: "door_sliding", do: { type: "act", name: "door_2" }, lamp: "doorways.1.open", picto: "door", style: "vdv", lampColor: "#3ddc5c" },
   { id: "door3", label: "Door 3", icon: "door_sliding", do: { type: "act", name: "door_3" }, lamp: "doorways.2.open", picto: "door", style: "vdv", lampColor: "#3ddc5c" },
   { id: "door4", label: "Door 4", icon: "door_sliding", do: { type: "act", name: "door_4" }, lamp: "doorways.3.open", picto: "door", style: "vdv", lampColor: "#3ddc5c" },
+  { id: "door5", label: "Door 5", icon: "door_sliding", do: { type: "act", name: "door_5" }, lamp: "doorways.4.open", picto: "door", style: "vdv", lampColor: "#3ddc5c" },
+  { id: "door6", label: "Door 6", icon: "door_sliding", do: { type: "act", name: "door_6" }, lamp: "doorways.5.open", picto: "door", style: "vdv", lampColor: "#3ddc5c" },
   { id: "doorsAll", label: "All doors", icon: "unfold_more", do: { type: "act", name: "doors_all" }, lamp: "vehicle.doors.anyOpen", picto: "doors", style: "vdv", lampColor: "#3ddc5c" },
   { id: "stopBrake", label: "Stop brake", icon: "back_hand", do: { type: "act", name: "bus_dooraft" }, lamp: "vehicle.brakes.stop", picto: "stopBrake", style: "vdv", lampColor: "#ffc400" },
   { id: "parkingBrake", label: "Parking brake", icon: "local_parking", do: { type: "act", name: "parking_brake_toggle" }, lamp: "vehicle.brakes.parking", picto: "parking", style: "vdv", lampColor: "#ff3b30" },
@@ -448,8 +452,13 @@ function citaroBus(n, full) {
   svg.style.setProperty("--hatch", `url(#${hatch.id})`);
   const body = el("g", { class: "body" }, svg);
   el("path", { class: "shell", d: "M128 34H383V116Q383 126 373 126H132Q119 126 118 114L115 80Q114 58 118 45Q121 34 128 34Z" }, body);
-  const wheels = n >= 3 ? [200, 300] : [200, 328];
-  const spots = n >= 4 ? [[132, 47, 2, 110], [214, 40, 1, 126], [258, 40, 1, 126], [330, 40, 1, 126]] : n === 3 ? [[132, 47, 2, 110], [234, 46, 1, 126], [328, 44, 1, 126]] : n === 2 ? [[132, 47, 2, 110], [248, 48, 1, 126]] : [[132, 47, 2, 110]];
+  const step = 180 / Math.max(1, n - 1);
+  const dw = Math.min(30, step - 18);
+  const spread = Array.from({ length: n - 1 }, (_, i) => [190 + i * step + (step - dw) / 2, dw, 1, 126]);
+  const gap = (i) => 190 + (i + 1) * step;
+  const wheels = n >= 5 ? [gap(0), gap(n - 3)] : n >= 3 ? [200, 300] : [200, 328];
+  const radius = n >= 5 ? 9 : 16;
+  const spots = n >= 5 ? [[132, 47, 2, 110], ...spread] : n === 4 ? [[132, 47, 2, 110], [214, 40, 1, 126], [258, 40, 1, 126], [330, 40, 1, 126]] : n === 3 ? [[132, 47, 2, 110], [234, 46, 1, 126], [328, 44, 1, 126]] : n === 2 ? [[132, 47, 2, 110], [248, 48, 1, 126]] : [[132, 47, 2, 110]];
   spots.forEach(([x, w, leaves, bottom], i) => {
     const g = el("g", { class: "door" }, body);
     const lw = w / leaves;
@@ -460,7 +469,7 @@ function citaroBus(n, full) {
     bindPress(g, { do: { type: "act", name: `door_${i + 1}` } });
   });
   for (const x of wheels) {
-    el("circle", { class: "wheel", cx: x, cy: 126, r: 16 }, svg);
+    el("circle", { class: "wheel", cx: x, cy: 126, r: radius }, svg);
     const [k0, k1] = full ? [150, 190] : [62, 100];
     el("path", { class: "kneel", d: `M${x} ${k0}V${k1} M${x - 9} ${k0 + 10}L${x} ${k0 - 1}L${x + 9} ${k0 + 10} M${x - 9} ${k1 - 10}L${x} ${k1 + 1}L${x + 9} ${k1 - 10}` }, svg);
   }
@@ -489,7 +498,7 @@ function citaroBus(n, full) {
 
 function citaroUpdate(node, w, s, full) {
   const ways = s.doorways || [];
-  const n = Math.max(1, Math.min(4, ways.length));
+  const n = Math.max(1, Math.min(6, ways.length));
   if (node.dataset.n !== String(n)) {
     node.dataset.n = String(n);
     node.textContent = "";
@@ -628,7 +637,7 @@ function pack(widgets, cols, orient, minRows) {
 }
 
 function defaultLayout(state) {
-  const doors = Math.max(1, Math.min(4, R.doorways(state).length));
+  const doors = Math.max(1, Math.min(6, R.doorways(state).length));
   const at = (w, l, p) => Object.assign(w, { pos: { l, p } });
   const dash = [
     at(widget("map", {}), [0, 0, 6, 6], [0, 3, 4, 5]),
