@@ -1,5 +1,7 @@
 **openOMSI {VERSION}: remote cockpit beta**
 
+![openOMSI Remote Cockpit: your phone or tablet becomes part of your bus cockpit](https://raw.githubusercontent.com/thibautgnt/openOMSI/remote-cockpit-beta/.github/beta-promo.png)
+
 > [!WARNING]
 > **Test build, expect bugs.** openOMSI needs an original OMSI 2 installation; it contains no game content. This build does **not** update itself: it stays on this version until you replace it.
 
