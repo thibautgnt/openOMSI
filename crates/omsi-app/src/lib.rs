@@ -85,6 +85,7 @@ mod shell;
 mod photo;
 mod devtools;
 mod telemetry;
+mod remote;
 use omsi_scene::threads;
 mod tiles;
 mod traffic;
@@ -783,6 +784,7 @@ fn assemble_app(args: Args, settings: settings::Settings) -> App {
             update_watch,
             presence,
             plugins: None,
+            remote: Default::default(),
         },
         net: NetState {
             remote_walkers: Vec::new(),

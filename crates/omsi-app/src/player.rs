@@ -4,6 +4,7 @@ use super::*;
 
 mod cameras;
 mod doors;
+pub(crate) use doors::door_keys;
 mod gears;
 mod ibis;
 mod mouse;

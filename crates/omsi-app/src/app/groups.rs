@@ -88,6 +88,7 @@ pub(crate) struct Integrations {
     pub(crate) presence: Option<crate::presence::Presence>,
     /// The OMSI plugins (`plugins/*.opl`), loaded with the first frame.
     pub(crate) plugins: Option<omsi_plugin::Plugins>,
+    pub(crate) remote: crate::remote::RemoteCockpit,
 }
 
 /// How the frames go and what is measured or scripted about them: the frame rate, the

@@ -351,6 +351,8 @@ pub struct Navigator {
     /// (degrees), how far (m) and the street it turns into.
     /// OMSI 2's route arrows are wanted (see `turn_hint`).
     pub arrows: bool,
+    pub remote: bool,
+    remote_area: Option<(DVec2, u64)>,
     /// The other (AI) vehicles are drawn on the maps (the `nav_ai` setting).
     pub show_ai: bool,
     /// How far the panel has faded in (Shift+N fades it in and out rather than cutting).
@@ -460,6 +462,8 @@ impl Navigator {
             time: 0.0,
             next_dist: None,
             arrows: false,
+            remote: false,
+            remote_area: None,
             show_ai: true,
             shown: if enabled { 1.0 } else { 0.0 },
             stop_spots: Vec::new(),
@@ -888,7 +892,7 @@ impl Navigator {
     pub fn frame(&mut self, renderer: &Renderer, scene: &mut Scene, f: &NavFrame) {
         self.panel_overlay = None;
         // (with the navigator off the route is still followed for OMSI 2's arrows)
-        if !self.enabled && !self.city.open && !self.arrows && self.shown < 0.01 {
+        if !self.enabled && !self.city.open && !self.arrows && !self.remote && self.shown < 0.01 {
             return;
         }
         let target = if self.enabled { 1.0 } else { 0.0 };
@@ -1441,6 +1445,7 @@ impl<'a> NavFrame<'a> {
 
 
 mod roads;
+mod remote;
 pub(crate) use roads::*;
 mod city_map;
 pub use city_map::*;

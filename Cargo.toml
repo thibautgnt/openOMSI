@@ -24,6 +24,7 @@ members = [
     "crates/omsi-launcher-api",
     "crates/omsi-launcher-model",
     "crates/omsi-lan",
+    "crates/omsi-remote",
     "crates/omsi-platform",
     "crates/omsi-guard",
     "crates/omsi-input",

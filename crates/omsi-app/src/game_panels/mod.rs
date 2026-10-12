@@ -16,6 +16,7 @@ mod move_here;
 pub(crate) use dest_form::open as open_dest_form;
 pub(crate) use move_here::ask as ask_move;
 pub(crate) mod quick_menu;
+pub(crate) mod remote_panel;
 pub(crate) mod trip_summary;
 pub(crate) mod view_editor;
 #[cfg(test)]
@@ -38,6 +39,7 @@ pub(crate) struct GamePanels {
     pub(crate) trip: Option<trip_summary::TripPanel>,
     pub(crate) dest: Option<dest_form::DestForm>,
     pub(crate) view: Option<view_editor::ViewEditor>,
+    pub(crate) remote: Option<remote_panel::RemotePanel>,
     /// Where the map camera's click asks to move the bus to.
     pub(crate) move_to: Option<glam::DVec3>,
 }
@@ -45,7 +47,7 @@ pub(crate) struct GamePanels {
 impl GamePanels {
     /// Whether any panel is open.
     pub(crate) fn any(&self) -> bool {
-        self.quick.is_some() || self.trip.is_some() || self.dest.is_some() || self.view.is_some() || self.move_to.is_some()
+        self.quick.is_some() || self.trip.is_some() || self.dest.is_some() || self.view.is_some() || self.move_to.is_some() || self.remote.is_some()
     }
 
     /// Whether the panels have the mouse.
@@ -124,6 +126,7 @@ impl crate::App {
                 "dest" => dest_form::click(self, el),
                 "view" => view_editor::click(self, el),
                 "move" => move_here::click(self, el),
+                "remote" => remote_panel::click(self, el),
                 _ => {}
             }
         }
@@ -155,6 +158,7 @@ impl crate::App {
             ("dest", self.menus.game_panels.dest.as_ref().map(|d| d.panel())),
             ("quick", self.menus.game_panels.quick.as_ref().map(|q| q.panel(self))),
             ("move", self.menus.game_panels.move_to.map(move_here::panel)),
+            ("remote", self.menus.game_panels.remote.as_ref().map(|r| r.panel(self))),
         ];
         let gp = &mut self.menus.game_panels;
         for (id, p) in panels {
@@ -232,7 +236,7 @@ impl crate::App {
             if gp.quick.take().is_some() {
                 return true;
             }
-            return gp.trip.is_some() || gp.dest.is_some() || gp.move_to.is_some();
+            return gp.trip.is_some() || gp.dest.is_some() || gp.move_to.is_some() || gp.remote.is_some();
         };
         match (pr.kind, pr.element.as_deref()) {
             (crate::plugin_ui::HitKind::Slider, Some(el)) => {
@@ -283,7 +287,7 @@ impl crate::App {
     /// the view editor - which keeps what was set without saving it). True when one did.
     pub(crate) fn close_game_panel(&mut self) -> bool {
         let gp = &mut self.menus.game_panels;
-        if gp.quick.take().is_some() || gp.move_to.take().is_some() || gp.dest.take().is_some() || gp.trip.take().is_some() {
+        if gp.quick.take().is_some() || gp.move_to.take().is_some() || gp.dest.take().is_some() || gp.trip.take().is_some() || gp.remote.take().is_some() {
             return true;
         }
         if gp.view.is_some() {
