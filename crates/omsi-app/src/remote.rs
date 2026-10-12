@@ -35,6 +35,12 @@ fn aliases(p: &crate::player::Player) -> Vec<(String, String)> {
     out
 }
 
+fn doors(ty: &omsi_sim::VehicleType) -> Vec<Vec<usize>> {
+    let keys = crate::player::door_keys(ty).iter().filter(|g| g.as_slice() != ["bus_dooraft"]).count();
+    let model = omsi_remote::doorways(ty);
+    if keys == 0 || model.len() == keys { model } else { Vec::new() }
+}
+
 fn start_skins(p: &crate::player::Player, root: &std::path::Path, key: &str) -> Skins {
     let (tx, rx) = std::sync::mpsc::channel();
     let (ty, root, key) = (p.vehicle.ty.clone(), root.to_path_buf(), key.to_string());
@@ -70,6 +76,7 @@ fn vehicle(p: &crate::player::Player) -> Vehicle {
         actions,
         aliases: aliases(p),
         depot: p.vehicle.host.hof.as_deref().map(omsi_sim::vehicle_api::depot),
+        doors: doors(&p.vehicle.ty),
     }
 }
 
@@ -83,6 +90,13 @@ impl RemoteCockpit {
     }
 }
 
+pub(crate) fn lan_ip() -> String {
+    use omsi_net::addrs::AddrKind;
+    let addrs = omsi_net::addrs::joinable_addresses();
+    let best = addrs.iter().find(|a| a.kind == AddrKind::Lan).or_else(|| addrs.iter().find(|a| !a.kind.is_vpn())).or(addrs.first());
+    best.map(|a| a.ip.to_string()).unwrap_or_else(|| "127.0.0.1".into())
+}
+
 pub(crate) fn dir() -> Option<std::path::PathBuf> {
     crate::settings::Settings::path().and_then(|p| p.parent().map(|d| d.join("remote")))
 }
@@ -91,7 +105,7 @@ impl App {
     pub(crate) fn remote_description(&self) -> String {
         match self.integrations.remote.server.as_ref() {
             Some(r) => {
-                let ip = omsi_net::addrs::joinable_addresses().first().map(|a| a.ip.to_string()).unwrap_or_else(|| "127.0.0.1".into());
+                let ip = lan_ip();
                 format!("Open {} on a phone or tablet of the same network", format!("http://{ip}:{}", r.port()))
             }
             None if self.integrations.remote.failed_port.is_some() => format!("Port {} is taken by another program", self.settings.remote_cockpit_port),
@@ -147,6 +161,14 @@ impl App {
         let Some(server) = self.integrations.remote.server.as_ref() else { return };
         for c in server.take_commands() {
             self.remote_command(c);
+        }
+        let Some(server) = self.integrations.remote.server.as_ref() else { return };
+        if let (Some(d), Some(p), false) = (server.drive(), self.player.as_mut(), self.paused) {
+            let a = &mut p.analog;
+            a.steering = Some(d.steering);
+            a.stick = false;
+            a.throttle = Some(a.throttle.unwrap_or(0.0).max(d.throttle));
+            a.brake = Some(a.brake.unwrap_or(0.0).max(d.brake));
         }
     }
 
@@ -251,7 +273,7 @@ impl App {
         if let (Some(sign), Some(p), true) = (r.sign.as_mut(), self.player.as_ref(), r.sign_t <= 0.0) {
             r.sign_t = 0.25;
             if let Some(png) = sign.render(&p.vehicle) {
-                server.set_sign(Some(png));
+                server.set_sign(png);
             }
         }
         r.publish_t -= dt;
@@ -265,3 +287,4 @@ impl App {
         }
     }
 }
+

@@ -30,6 +30,9 @@ fn commands_are_read_and_odd_names_refused() {
     assert_eq!(c(json!({ "t": "line", "line": "" })), None);
     assert_eq!(c(json!({ "t": "game", "name": "view_set_outside" })), Some(Command::Game("view_set_outside".into())));
     assert_eq!(c(json!({ "t": "nope" })), None);
+    assert_eq!(json::drive(&json!({ "s": 0.25, "g": 2.0, "b": -1.0 })), Some((0.25, 1.0, 0.0)));
+    assert_eq!(json::drive(&json!({ "s": "left", "g": 0.0, "b": 0.0 })), None);
+    assert_eq!(json::drive(&json!({ "s": 0.0, "g": 0.0 })), None);
 }
 
 #[test]
@@ -154,7 +157,7 @@ fn the_page_its_files_and_the_icons_are_served() {
 
 #[test]
 fn every_text_of_the_page_is_listed_for_translation() {
-    let page = [include_str!("../page/index.html"), include_str!("../page/app.js"), include_str!("../page/widgets.js"), include_str!("../page/editor.js")].concat();
+    let page = [include_str!("../page/index.html"), include_str!("../page/app.js"), include_str!("../page/widgets.js"), include_str!("../page/editor.js"), include_str!("../page/drive.js")].concat();
     for t in TEXTS {
         assert!(page.contains(&format!("\"{t}\"")), "{t} is no longer on the page");
     }
@@ -202,7 +205,7 @@ fn a_device_pairs_drives_and_lets_go_of_what_it_held() {
     let dir = temp_dir("session");
     let mut remote = Remote::start(0, dir.clone()).unwrap();
     remote.set_texts("fr", &[("Doors", "Portes".into()), ("Horn", "Horn".into())]);
-    remote.set_vehicle(Some(Vehicle { key: "Bus/a.bus".into(), name: "Bus A".into(), folder: dir.join("none"), actions: vec!["horn".into()], aliases: Vec::new(), depot: None }));
+    remote.set_vehicle(Some(Vehicle { key: "Bus/a.bus".into(), name: "Bus A".into(), folder: dir.join("none"), actions: vec!["horn".into()], aliases: Vec::new(), depot: None, doors: Vec::new() }));
     remote.set_state(None, &omsi_sim::vehicle_api::ApiValue::Null, false);
 
     let mut c = Client::open(remote.port());
@@ -230,8 +233,13 @@ fn a_device_pairs_drives_and_lets_go_of_what_it_held() {
     c.send(json!({ "t": "indicator", "value": 1 }));
     assert_eq!(wait_for(&remote, 2), vec![Command::Action { name: "horn".into(), down: true }, Command::Indicator(1)]);
 
+    c.send(json!({ "t": "drive", "s": -2.0, "g": 0.5, "b": 0.0 }));
     c.send(json!({ "t": "ping", "id": 7 }));
     assert_eq!(c.next("pong")["id"], 7);
+    let d = remote.drive().unwrap();
+    assert_eq!((d.steering, d.throttle, d.brake), (-1.0, 0.5, 0.0));
+    std::thread::sleep(Duration::from_millis(300));
+    assert!(remote.drive().is_none());
     c.send(json!({ "t": "layout.save", "scope": "vehicle", "layout": layout("cockpit") }));
     assert_eq!(c.next("layout.done")["ok"], true);
     let v = c.next("vehicle");
@@ -258,8 +266,10 @@ fn a_device_pairs_drives_and_lets_go_of_what_it_held() {
     stranger.send(json!({ "t": "hello", "token": "0".repeat(64) }));
     assert_eq!(stranger.next("denied")["reason"], "token");
     stranger.send(json!({ "t": "act", "name": "horn", "down": true }));
+    stranger.send(json!({ "t": "drive", "s": 1.0, "g": 1.0, "b": 0.0 }));
     std::thread::sleep(Duration::from_millis(200));
     assert!(remote.take_commands().is_empty());
+    assert!(remote.drive().is_none());
 }
 
 #[test]

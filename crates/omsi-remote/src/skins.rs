@@ -11,6 +11,8 @@ pub(crate) struct Face {
     pub(crate) slot: u32,
     pub(crate) lo: Vec2,
     pub(crate) hi: Vec2,
+    pub(crate) lo3: Vec3,
+    pub(crate) hi3: Vec3,
     area: f32,
 }
 
@@ -69,9 +71,12 @@ pub(crate) fn front_face(positions: &[Vec3], uvs: &[Vec2], indices: &[u32], rang
         let r = root(&mut parent, t.v[0]);
         let lo = uvs[t.v[0]].min(uvs[t.v[1]]).min(uvs[t.v[2]]);
         let hi = uvs[t.v[0]].max(uvs[t.v[1]]).max(uvs[t.v[2]]);
-        let f = islands.entry(r).or_insert(Face { slot: side.3, lo, hi, area: 0.0 });
+        let p = t.v.map(|i| positions[i]);
+        let f = islands.entry(r).or_insert(Face { slot: side.3, lo, hi, lo3: p[0], hi3: p[0], area: 0.0 });
         f.lo = f.lo.min(lo);
         f.hi = f.hi.max(hi);
+        f.lo3 = f.lo3.min(p[0]).min(p[1]).min(p[2]);
+        f.hi3 = f.hi3.max(p[0]).max(p[1]).max(p[2]);
         f.area += t.area;
     }
     islands.into_values().max_by(|a, b| a.area.total_cmp(&b.area))

@@ -59,6 +59,7 @@ pub(crate) fn vehicle_message(v: Option<&Vehicle>, store: &Store, skins: &[Strin
         "depot": v.depot.as_ref().map_or(Value::Null, api),
         "layout": layout,
         "skins": skins,
+        "doors": v.doors,
         "aliases": v.aliases.iter().map(|(a, b)| json!([a, b])).collect::<Vec<_>>(),
         "saved": { "vehicle": store.has(&v.key, Scope::Vehicle), "all": store.has(&v.key, Scope::All) },
     })
@@ -72,6 +73,11 @@ pub(crate) fn action_name(s: &str) -> Option<String> {
 
 fn index(v: &Value) -> Option<usize> {
     v.get("index").and_then(Value::as_u64).and_then(|i| usize::try_from(i).ok()).filter(|i| *i < 100_000)
+}
+
+pub(crate) fn drive(v: &Value) -> Option<(f32, f32, f32)> {
+    let f = |k: &str| v.get(k).and_then(Value::as_f64).filter(|x| x.is_finite()).map(|x| x as f32);
+    Some((f("s")?.clamp(-1.0, 1.0), f("g")?.clamp(0.0, 1.0), f("b")?.clamp(0.0, 1.0)))
 }
 
 pub(crate) fn command(v: &Value) -> Option<Command> {

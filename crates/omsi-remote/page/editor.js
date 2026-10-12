@@ -1,6 +1,6 @@
 "use strict";
 
-const THEMES = [["night", "Night"], ["citaro", "Citaro"], ["cockpit", "Cockpit"], ["day", "Day"], ["amber", "Amber LED"], ["contrast", "High contrast"]];
+const THEMES = [["night", "Night"], ["cockpit", "Cockpit"], ["day", "Day"], ["amber", "Amber LED"], ["contrast", "High contrast"]];
 const STYLES = [["vdv", "Dashboard"], ["default", "Standard"], ["round", "Round"], ["rocker", "Rocker"], ["flat", "Flat"], ["key", "Key"]];
 const COLORS = ["", "#f5a623", "#e03131", "#2f9e44", "#1c7ed6", "#7048e8", "#f08c00", "#ffffff", "#495057"];
 const ACTION_TYPES = [["act", "Bus key"], ["game", "Game"], ["indicator", "Indicator"], ["startup", "Start the bus"], ["saloon", "Saloon lights"], ["sign", "Destination sign"], ["clearline", "Clear line"], ["page", "Page"], ["none", "Nothing"]];
@@ -22,6 +22,7 @@ const Editor = {
     this.sel = null;
     this.active = true;
     document.body.classList.add("editing");
+    Drive.letGo();
     $("btn-edit").setAttribute("aria-pressed", "true");
     this.bar();
     App.render();
@@ -349,6 +350,7 @@ const Editor = {
       body.append(this.field("Unit", this.input(w.unit, (v) => this.change(w, (x) => { x.unit = v; }))));
       body.append(this.field("Value", this.input(w.path || "vehicle.motion.speedKmh", set("path"))));
     }
+    if (w.kind === "wheel") body.append(this.field("Steering lock", this.input(w.max || 270, (v) => set("max")(Math.max(45, Math.min(1440, Number(v) || 270))), "number")));
     if (w.kind === "doors" || w.kind === "vdo") body.append(this.field("Look", this.seg([["line", "Line drawing"], ["lcd", "Green display"]], w.look || "line", set("look"))));
     if (w.kind === "telltales") {
       const list = R.el("div", "list");

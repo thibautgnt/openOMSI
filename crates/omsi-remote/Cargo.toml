@@ -18,3 +18,8 @@ sha2.workspace = true
 ring.workspace = true
 qrcodegen = "1.8"
 tungstenite = { version = "0.30", default-features = false, features = ["handshake"] }
+
+[dev-dependencies]
+omsi-vehicle = { path = "../omsi-vehicle" }
+omsi-cfg = { path = "../omsi-cfg" }
+parking_lot.workspace = true

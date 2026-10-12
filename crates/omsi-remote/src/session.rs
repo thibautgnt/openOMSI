@@ -118,6 +118,15 @@ fn handle(ws: &mut Ws, text: &str, shared: &Shared, id: u64) -> Result<(), Strin
         }
         return Ok(());
     }
+    if t == "drive" {
+        if let Some((steering, throttle, brake)) = json::drive(&v) {
+            let mut drive = lock(&shared.drive);
+            if drive.is_none_or(|d| d.session == id || d.at.elapsed() > crate::DRIVE_FRESH) {
+                *drive = Some(crate::Drive { session: id, at: Instant::now(), steering, throttle, brake });
+            }
+        }
+        return Ok(());
+    }
     let Some(cmd) = json::command(&v) else { return Ok(()) };
     if let Command::Action { name, down } = &cmd {
         let mut held = lock(&shared.held);
@@ -138,6 +147,11 @@ fn handle(ws: &mut Ws, text: &str, shared: &Shared, id: u64) -> Result<(), Strin
 }
 
 fn release(shared: &Shared, id: u64) {
+    let mut drive = lock(&shared.drive);
+    if drive.is_some_and(|d| d.session == id) {
+        *drive = None;
+    }
+    drop(drive);
     let names = lock(&shared.held).remove(&id).unwrap_or_default();
     for name in names {
         shared.send(Command::Action { name, down: false });

@@ -5,6 +5,8 @@ mod pairing;
 mod server;
 mod session;
 pub mod sign;
+mod doors;
+pub use doors::doorways;
 mod skins;
 mod texts;
 
@@ -40,6 +42,7 @@ pub struct Vehicle {
     pub actions: Vec<String>,
     pub aliases: Vec<(String, String)>,
     pub depot: Option<ApiValue>,
+    pub doors: Vec<Vec<usize>>,
 }
 
 #[derive(Default)]
@@ -74,7 +77,19 @@ pub(crate) struct Shared {
     pub skins: Mutex<HashMap<String, Arc<Vec<u8>>>>,
     pub sign: Mutex<Option<Arc<Vec<u8>>>>,
     pub sign_seq: AtomicU64,
+    pub drive: Mutex<Option<Drive>>,
 }
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct Drive {
+    pub session: u64,
+    pub at: std::time::Instant,
+    pub steering: f32,
+    pub throttle: f32,
+    pub brake: f32,
+}
+
+pub(crate) const DRIVE_FRESH: std::time::Duration = std::time::Duration::from_millis(250);
 
 impl Shared {
     pub(crate) fn feed(&self) -> MutexGuard<'_, Feed> {
@@ -127,6 +142,7 @@ impl Remote {
             skins: Mutex::new(HashMap::new()),
             sign: Mutex::new(None),
             sign_seq: AtomicU64::new(0),
+            drive: Mutex::new(None),
         });
         shared.rebuild_vehicle();
         let port = server::start(port, shared.clone())?;
@@ -218,6 +234,14 @@ impl Remote {
 
     pub fn take_commands(&self) -> Vec<Command> {
         self.commands.try_iter().collect()
+    }
+
+    pub fn drive(&self) -> Option<Drive> {
+        let mut d = lock(&self.shared.drive);
+        if d.is_some_and(|x| x.at.elapsed() > DRIVE_FRESH) {
+            *d = None;
+        }
+        *d
     }
 }
 

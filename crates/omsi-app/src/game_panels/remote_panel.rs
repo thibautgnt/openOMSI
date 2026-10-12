@@ -49,7 +49,7 @@ impl RemotePanel {
         let remote = &app.integrations.remote;
         match remote.server.as_ref() {
             Some(server) => {
-                let ip = omsi_net::addrs::joinable_addresses().first().map(|a| a.ip.to_string()).unwrap_or_else(|| "127.0.0.1".into());
+                let ip = crate::remote::lan_ip();
                 let address = format!("http://{ip}:{}", server.port());
                 let url = omsi_remote::pairing_url(&ip, server.port(), &server.pin());
                 let steps = vec![

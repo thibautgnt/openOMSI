@@ -28,11 +28,16 @@ const R = {
   doorways(s) {
     const leaves = R.get(s, "vehicle.doors.list") || [];
     const exits = R.get(s, "vehicle.passengers.exits") || [];
+    const open = (n) => Number(leaves[n] && leaves[n].open) || 0;
     const ways = new Set(((App.vehicle && App.vehicle.aliases) || []).map(([a]) => a).filter((a) => /^door_\d$/.test(a))).size;
-    const n = Math.max(1, Math.min(5, ways || exits.length || Math.ceil(leaves.length / 2) || R.get(s, "vehicle.doors.count") || 2));
-    const per = Math.max(1, Math.round(leaves.length / n));
-    return Array.from({ length: n }, (_, i) => {
-      const o = Math.max(0, Math.min(1, Math.max(0, ...leaves.slice(i * per, i * per + per).map((l) => Number(l && l.open) || 0))));
+    let groups = ((App.vehicle && App.vehicle.doors) || []).filter((g) => Array.isArray(g) && g.length).slice(0, 5);
+    if (!groups.length) {
+      const n = Math.max(1, Math.min(5, ways || exits.length || Math.ceil(leaves.length / 2) || R.get(s, "vehicle.doors.count") || 2));
+      const per = Math.min(2, Math.max(1, Math.round(leaves.length / n)));
+      groups = Array.from({ length: n }, (_, i) => Array.from({ length: per }, (_, k) => i * per + k));
+    }
+    return groups.map((g, i) => {
+      const o = Math.max(0, Math.min(1, Math.max(0, ...g.map(open))));
       return { o, open: o > 0.05, moving: o > 0.05 && o < 0.95, request: R.truthy(exits[i] && exits[i].requested) };
     });
   },
@@ -219,6 +224,7 @@ const KINDS = {
       const unit = w.unit ?? show.unit;
       if (val.dataset.v === text + unit) return;
       val.dataset.v = text + unit;
+      val.style.setProperty("--n", Math.max(4, text.length + (unit ? unit.length * 0.45 : 0)));
       val.textContent = text;
       if (unit && text !== "–") val.append(R.el("small", null, unit));
     },
@@ -232,13 +238,18 @@ const KINDS = {
       const img = R.el("img", "real");
       img.alt = "";
       img.hidden = true;
+      img.addEventListener("error", () => {
+        img.dataset.bad = img.getAttribute("src");
+        d.classList.remove("has-real");
+        img.hidden = true;
+      });
       d.append(R.el("span", "line"), R.el("span", "dest"), img);
       d.addEventListener("click", () => App.routeSheet());
       return d;
     },
     update(node, w, s) {
       const img = node.querySelector("img.real");
-      const real = w.real !== false && App.sign;
+      const real = w.real !== false && App.sign && img.dataset.bad !== App.sign;
       node.classList.toggle("has-real", !!real);
       img.hidden = !real;
       if (real && img.getAttribute("src") !== App.sign) img.src = App.sign;
@@ -363,6 +374,18 @@ const KINDS = {
         i.classList.toggle("on", !!t && t.on(s));
       }
     },
+  },
+  wheel: {
+    name: "Steering wheel",
+    size: [4, 4],
+    make(w) { return Drive.wheel(w); },
+    update() {},
+  },
+  pedals: {
+    name: "Pedals",
+    size: [2, 3],
+    make() { return Drive.pedals(); },
+    update() {},
   },
   map: {
     name: "Map",
@@ -606,60 +629,47 @@ function pack(widgets, cols, orient, minRows) {
 
 function defaultLayout(state) {
   const doors = Math.max(1, Math.min(4, R.doorways(state).length));
-  const sized = (w, l, p) => Object.assign(w, { sz: { l, p } });
-  const drive = [
-    sized(widget("sign", {}), [6, 1], [4, 1]),
-    sized(widget("display", { show: "time" }), [2, 1], [2, 1]),
-    sized(widget("gauge", {}), [2, 2], [2, 2]),
-    sized(widget("doors", {}), [4, 1], [4, 1]),
-    sized(widget("display", { show: "nextStop" }), [2, 1], [2, 1]),
-  ];
-  for (let k = 1; k <= doors; k++) drive.push(presetWidget(`door${k}`));
-  drive.push(presetWidget("doorsAll"), presetWidget("stopBrake"), presetWidget("parkingBrake"));
-  drive.push(sized(widget("blinkers", {}), [3, 1], [3, 1]));
-  drive.push(presetWidget("horn"), presetWidget("headlights"), presetWidget("saloon"), presetWidget("wipers"));
-  const cab = [
-    presetWidget("battery"), presetWidget("startup"), presetWidget("engine"), presetWidget("highBeam"),
-    presetWidget("fog"), presetWidget("driverLight"), presetWidget("ticket"), presetWidget("pram"),
-    presetWidget("gearD"), presetWidget("gearN"), presetWidget("gearR"), presetWidget("microphone"),
-    widget("display", { show: "rpm" }), widget("display", { show: "tank" }), widget("display", { show: "passengers" }), widget("display", { show: "temperature" }),
-  ];
-  const route = [
-    sized(widget("sign", {}), [8, 2], [4, 1]),
-    sized(widget("stops", {}), [5, 3], [4, 5]),
-    sized(presetWidget("route"), [3, 1], [2, 1]),
-    sized(widget("display", { show: "delay" }), [3, 1], [2, 1]),
-    sized(presetWidget("clearLine"), [3, 1], [4, 1]),
-  ];
   const at = (w, l, p) => Object.assign(w, { pos: { l, p } });
   const dash = [
-    at(widget("gauge", { label: "Speed" }), [2, 0, 4, 4], [0, 0, 4, 3]),
-    at(widget("gauge", { label: "RPM", path: "vehicle.engine.rpm", max: 3000, unit: "" }), [0, 0, 2, 2], [0, 4, 2, 2]),
-    at(widget("vdo", {}), [0, 2, 2, 2], [2, 4, 2, 2]),
-    at(widget("display", { show: "time" }), [6, 0, 2, 1], [0, 6, 2, 1]),
-    at(widget("display", { show: "date" }), [6, 1, 2, 1], [0, 7, 2, 1]),
-    at(widget("display", { show: "outside" }), [6, 2, 1, 1], [0, 8, 1, 1]),
-    at(widget("display", { show: "temperature" }), [7, 2, 1, 1], [1, 8, 1, 1]),
-    at(widget("display", { show: "tank" }), [6, 3, 1, 1], [2, 6, 1, 1]),
-    at(widget("display", { show: "passengers" }), [7, 3, 1, 1], [3, 6, 1, 1]),
-    at(widget("telltales", {}), [0, 4, 8, 1], [0, 3, 4, 1]),
-    at(widget("messages", {}), [0, 5, 4, 1], [0, 9, 4, 1]),
-    at(widget("display", { show: "nextStop" }), [4, 5, 2, 1], [2, 8, 2, 1]),
-    at(widget("display", { show: "delay" }), [6, 5, 2, 1], [2, 7, 2, 1]),
+    at(widget("map", {}), [0, 0, 6, 6], [0, 3, 4, 5]),
+    at(widget("gauge", { label: "Speed" }), [6, 0, 3, 3], [0, 1, 2, 2]),
+    at(widget("vdo", {}), [9, 0, 3, 3], [2, 1, 2, 2]),
+    at(widget("sign", {}), [6, 3, 6, 1], [0, 0, 4, 1]),
+    at(widget("display", { show: "time" }), [6, 4, 2, 1], [0, 8, 2, 1]),
+    at(widget("display", { show: "nextStop" }), [8, 4, 4, 1], [2, 8, 2, 1]),
+    at(widget("display", { show: "delay" }), [6, 5, 2, 1], [0, 9, 2, 1]),
+    at(widget("display", { show: "tank" }), [8, 5, 2, 1], [2, 9, 1, 1]),
+    at(widget("display", { show: "temperature" }), [10, 5, 2, 1], [3, 9, 1, 1]),
+    at(widget("telltales", {}), [0, 6, 7, 1], [0, 10, 4, 1]),
+    at(widget("messages", {}), [7, 6, 5, 1], [0, 11, 4, 1]),
   ];
-  const navigation = [at(widget("map", {}), [0, 0, 8, 5], [0, 0, 4, 9])];
-  const views = ["viewDriver", "viewPax", "viewOutside", "viewMap", "camPrev", "camNext", "viewReset", "pause", "screenshot"].map((id) => presetWidget(id));
+  const buttons = [];
+  for (let k = 1; k <= doors; k++) buttons.push(presetWidget(`door${k}`));
+  buttons.push(presetWidget("doorsAll"), presetWidget("stopBrake"), presetWidget("parkingBrake"));
+  buttons.push(Object.assign(widget("blinkers", {}), { sz: { l: [3, 1], p: [3, 1] } }));
+  for (const id of ["gearD", "gearN", "gearR", "horn", "headlights", "highBeam", "fog", "saloon", "driverLight", "wipers", "battery", "startup", "engine", "ticket", "pram", "microphone", "route", "clearLine", "viewDriver", "viewPax", "viewOutside", "camPrev", "camNext", "pause"]) buttons.push(presetWidget(id));
+  const second = doors > 1 ? presetWidget("door2") : presetWidget("headlights");
+  const wheel = [
+    at(widget("blinkers", {}), [0, 0, 3, 1], [0, 0, 3, 1]),
+    at(presetWidget("horn"), [2, 2, 1, 1], [3, 0, 1, 1]),
+    at(presetWidget("door1"), [0, 1, 1, 1], [0, 8, 1, 1]),
+    at(second, [1, 1, 1, 1], [1, 8, 1, 1]),
+    at(presetWidget("doorsAll"), [2, 1, 1, 1], [2, 8, 1, 1]),
+    at(presetWidget("stopBrake"), [0, 2, 1, 1], [3, 8, 1, 1]),
+    at(presetWidget("parkingBrake"), [1, 2, 1, 1], [3, 9, 1, 1]),
+    at(presetWidget("gearD"), [0, 3, 1, 1], [0, 9, 1, 1]),
+    at(presetWidget("gearN"), [1, 3, 1, 1], [1, 9, 1, 1]),
+    at(presetWidget("gearR"), [2, 3, 1, 1], [2, 9, 1, 1]),
+    at(widget("gauge", { label: "Speed" }), [0, 4, 3, 2], [0, 5, 1, 3]),
+    at(widget("wheel", {}), [3, 0, 6, 6], [0, 1, 4, 4]),
+    at(widget("pedals", {}), [9, 0, 3, 6], [1, 5, 3, 3]),
+  ];
   const pages = [
-    { name: "Driving", widgets: drive, grid: { l: [8, 5], p: [4, 9] } },
-    { name: "Navigation", widgets: navigation, grid: { l: [8, 5], p: [4, 9] } },
-    { name: "Dashboard", widgets: dash, grid: { l: [8, 6], p: [4, 10] } },
-    { name: "Cab", widgets: cab, grid: { l: [8, 4], p: [4, 8] } },
-    { name: "Route", widgets: route, grid: { l: [8, 5], p: [4, 9] } },
-    { name: "Views", widgets: views, grid: { l: [5, 2], p: [3, 4] } },
+    { name: "Dashboard", widgets: dash, grid: { l: [12, 7], p: [4, 12] } },
+    { name: "Buttons", widgets: buttons, grid: { l: [8, 5], p: [4, 9] } },
+    { name: "Steering wheel", widgets: wheel, grid: { l: [12, 6], p: [4, 10] } },
   ];
-  for (const page of pages) {
-    for (const o of ["l", "p"]) page.grid[o][1] = pack(page.widgets, page.grid[o][0], o, 1);
-    for (const w of page.widgets) delete w.sz;
-  }
+  for (const o of ["l", "p"]) pages[1].grid[o][1] = pack(buttons, pages[1].grid[o][0], o, 1);
+  for (const w of buttons) delete w.sz;
   return { v: 1, theme: "night", accent: "#f5a623", pages };
 }

@@ -24,6 +24,7 @@ static FILES: &[(&str, &str, &str)] = &[
     ("/picto.js", "text/javascript; charset=utf-8", include_str!("../page/picto.js")),
     ("/widgets.js", "text/javascript; charset=utf-8", include_str!("../page/widgets.js")),
     ("/map.js", "text/javascript; charset=utf-8", include_str!("../page/map.js")),
+    ("/drive.js", "text/javascript; charset=utf-8", include_str!("../page/drive.js")),
     ("/editor.js", "text/javascript; charset=utf-8", include_str!("../page/editor.js")),
     ("/manifest.webmanifest", "application/manifest+json", include_str!("../page/manifest.webmanifest")),
 ];

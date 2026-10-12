@@ -48,26 +48,54 @@ fn state(b: &Bus, t: f64) -> ApiValue {
     ])
 }
 
+fn lap() -> &'static (Vec<[f64; 2]>, Vec<f64>) {
+    static LAP: std::sync::OnceLock<(Vec<[f64; 2]>, Vec<f64>)> = std::sync::OnceLock::new();
+    LAP.get_or_init(|| {
+        let pts: Vec<[f64; 2]> = (0..=480)
+            .map(|i| {
+                let a = i as f64 / 480.0 * std::f64::consts::TAU;
+                [230.0 * a.cos() + 50.0 * (2.0 * a).cos(), 170.0 * a.sin() + 35.0 * (3.0 * a).sin()]
+            })
+            .collect();
+        let mut len = vec![0.0];
+        for w in pts.windows(2) {
+            len.push(len.last().unwrap() + ((w[1][0] - w[0][0]).powi(2) + (w[1][1] - w[0][1]).powi(2)).sqrt());
+        }
+        (pts, len)
+    })
+}
+
+fn at(d: f64) -> (usize, [f64; 2]) {
+    let (pts, len) = lap();
+    let d = d.rem_euclid(*len.last().unwrap());
+    let i = len.partition_point(|l| *l <= d).clamp(1, pts.len() - 1);
+    let k = (d - len[i - 1]) / (len[i] - len[i - 1]).max(1e-6);
+    (i, [pts[i - 1][0] + (pts[i][0] - pts[i - 1][0]) * k, pts[i - 1][1] + (pts[i][1] - pts[i - 1][1]) * k])
+}
+
 fn pose(t: f64) -> (f64, f64, f64) {
-    let d = (t * 9.0) % 1600.0;
-    let (side, along) = ((d / 400.0) as i32, d % 400.0);
-    match side {
-        0 => (0.0, along, 0.0),
-        1 => (along, 400.0, 90.0),
-        2 => (400.0, 400.0 - along, 180.0),
-        _ => (400.0 - along, 0.0, 270.0),
-    }
+    let d = t * 9.0;
+    let (_, p) = at(d);
+    let (_, q) = at(d + 2.0);
+    (p[0], p[1], (q[0] - p[0]).atan2(q[1] - p[1]).to_degrees().rem_euclid(360.0))
 }
 
 fn corners(t: f64) -> Vec<[f32; 2]> {
-    let pts = [[0.0, 0.0], [0.0, 400.0], [400.0, 400.0], [400.0, 0.0]];
-    let side = (((t * 9.0) % 1600.0) / 400.0) as usize;
-    let (x, y, _) = pose(t);
-    let mut out = vec![[x as f32, y as f32]];
-    for k in 1..=4 {
-        out.push(pts[(side + k) % 4]);
+    (0..=60).map(|k| at(t * 9.0 + k as f64 * 10.0).1).map(|p| [p[0] as f32, p[1] as f32]).collect()
+}
+
+fn streets() -> Vec<(Vec<[f32; 2]>, f32)> {
+    let mut roads = vec![(lap().0.iter().map(|p| [p[0] as f32, p[1] as f32]).collect(), 9.0)];
+    roads.push(((0..=40).map(|i| { let x = -450.0 + i as f32 * 25.0; [x, 40.0 * (x / 120.0).sin() + x * 0.15] }).collect(), 13.0));
+    roads.push(((0..=40).map(|i| { let y = -400.0 + i as f32 * 22.0; [60.0 * (y / 150.0).cos() - 40.0, y] }).collect(), 11.0));
+    for k in 0..9 {
+        let a = k as f64 / 9.0 * std::f64::consts::TAU + 0.3;
+        let (_, o) = at(a / std::f64::consts::TAU * lap().1.last().unwrap());
+        let (dx, dy) = (a.cos() as f32, a.sin() as f32);
+        let bend = if k % 2 == 0 { 1.0 } else { -1.0 };
+        roads.push(((0..=12).map(|j| { let s = j as f32 * 22.0; let w = bend * (s / 70.0).sin() * 18.0; [o[0] as f32 + dx * s - dy * w, o[1] as f32 + dy * s + dx * w] }).collect(), 6.5));
     }
-    out
+    roads
 }
 
 fn env(t: f64) -> ApiValue {
@@ -95,7 +123,7 @@ fn main() {
     println!("http://127.0.0.1:{}  code {}", r.port(), r.pin());
     r.set_texts("en", &[]);
     r.set_pairing(true);
-    r.set_vehicle(Some(Vehicle { key: "MAN_SD202/SD202.bus".into(), name: "MAN SD202".into(), folder: std::env::temp_dir(), actions: vec!["bus_doorfront0".into(), "bus_dooraft".into(), "horn".into()], aliases: vec![("door_1".into(), "door_haltewunsch".into()), ("door_2".into(), "bus_doorfront1".into()), ("door_3".into(), "bus_doorfront2".into()), ("parking_brake_toggle".into(), "notloese_p".into()), ("kw_m_enginestart".into(), "kw_m_enginestart".into())], depot: Some(depot()) }));
+    r.set_vehicle(Some(Vehicle { key: "MAN_SD202/SD202.bus".into(), name: "MAN SD202".into(), folder: std::env::temp_dir(), actions: vec!["bus_doorfront0".into(), "bus_dooraft".into(), "horn".into()], aliases: vec![("door_1".into(), "door_haltewunsch".into()), ("door_2".into(), "bus_doorfront1".into()), ("door_3".into(), "bus_doorfront2".into()), ("parking_brake_toggle".into(), "notloese_p".into()), ("kw_m_enginestart".into(), "kw_m_enginestart".into())], depot: Some(depot()), doors: vec![vec![0, 1], vec![2, 3]] }));
     if let (Some(root), Some(bus)) = (args.get(2), args.get(3)) {
         let root = std::path::PathBuf::from(root);
         let ty = omsi_sim::VehicleType::load(&root, std::path::Path::new(bus)).expect("vehicle");
@@ -131,14 +159,9 @@ fn main() {
         r.set_state(Some(&state(&b, t)), &env(t), false);
         frame += 1;
         if frame % 24 == 1 {
-            let mut roads = Vec::new();
-            for i in -2..=6 {
-                let c = i as f32 * 100.0;
-                roads.push((vec![[c, -200.0], [c, 600.0]], if i % 4 == 0 { 12.0 } else { 7.0 }));
-                roads.push((vec![[-200.0, c], [600.0, c]], if i % 4 == 0 { 12.0 } else { 7.0 }));
-            }
+            let roads = streets();
             r.publish("roads", omsi_remote::nav::roads_message([0.0, 0.0], &roads));
-            let left = 400.0 - ((t * 9.0) % 400.0) as f32;
+            let left = 380.0 - ((t * 9.0) % 380.0) as f32;
             let info = omsi_remote::nav::NavInfo {
                 anchor: [0.0, 0.0],
                 route: corners(t),

@@ -92,6 +92,7 @@ const App = {
       if (this.ws !== ws) return;
       this.releaseAll();
       this.pressed.clear();
+      Drive.letGo();
       if (this.conn[1] !== "Too many devices are connected") this.status("off", "Disconnected");
       this.ws = null;
       const wait = Math.min(8000, 500 * 2 ** this.retry++);
@@ -259,6 +260,7 @@ const App = {
 
   render() {
     this.releaseAll();
+    Drive.letGo();
     this.applyTheme();
     this.renderTabs();
     const board = $("board");
