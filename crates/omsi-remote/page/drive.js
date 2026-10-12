@@ -12,6 +12,7 @@ const Drive = {
   quiet: 0,
   last: 0,
   sent: null,
+  centring: false,
 
   holding() {
     for (const f of this.fingers.values()) if (f.kind === "wheel") return true;
@@ -29,7 +30,11 @@ const Drive = {
     const now = performance.now();
     const dt = Math.min(0.1, (now - this.last) / 1000);
     this.last = now;
-    if (!this.holding() && this.steer !== 0) {
+    if (this.centring && !this.holding()) {
+      const back = 1.1 * dt;
+      this.steer = Math.abs(this.steer) <= back ? 0 : this.steer - Math.sign(this.steer) * back;
+      if (this.steer === 0) this.centring = false;
+    } else if (!this.holding() && this.steer !== 0) {
       const kmh = Math.abs(Number(R.get(App.state, "vehicle.motion.speedKmh")) || 0);
       const back = Math.min(1, kmh / 25) * 1.6 * dt;
       this.steer = Math.abs(this.steer) <= back ? 0 : this.steer - Math.sign(this.steer) * back;
@@ -61,6 +66,7 @@ const Drive = {
     const deg = this.steer * (Number(node.dataset.lock) || this.lock);
     node.querySelector(".rim").style.transform = `rotate(${deg}deg)`;
     node.querySelector(".deg").textContent = `${Math.round(deg)}°`;
+    node.classList.toggle("centring", this.centring);
   },
 
   release(id) {
@@ -100,13 +106,23 @@ const Drive = {
   wheel(w) {
     const d = R.el("div", "wheel");
     d.dataset.lock = String(w.max || this.lock);
-    d.innerHTML = '<svg class="rim" viewBox="0 0 200 200"><circle cx="100" cy="100" r="88" fill="none" stroke-width="16"/><circle class="top" cx="100" cy="12" r="5"/><path class="spoke" d="M24 112 L76 104 L100 128 L124 104 L176 112" fill="none" stroke-width="14" stroke-linejoin="round"/><circle class="hub" cx="100" cy="104" r="24"/></svg><span class="deg">0°</span>';
+    d.innerHTML = '<svg class="rim" viewBox="0 0 200 200"><circle cx="100" cy="100" r="88" fill="none" stroke-width="16"/><circle class="top" cx="100" cy="12" r="5"/><path class="spoke" d="M24 112 L76 104 L100 128 L124 104 L176 112" fill="none" stroke-width="14" stroke-linejoin="round"/><circle class="hub" cx="100" cy="104" r="24"/><path class="centre" d="M84 104l7-6v12z M116 104l-7-6v12z M99 96h2v16h-2z"/></svg><span class="deg">0°</span>';
     const at = (e) => {
       const r = d.getBoundingClientRect();
       return Math.atan2(e.clientY - (r.top + r.height / 2), e.clientX - (r.left + r.width / 2));
     };
     d.addEventListener("pointerdown", (e) => {
+      const r = d.getBoundingClientRect();
+      const reach = Math.hypot(e.clientX - (r.left + r.width / 2), e.clientY - (r.top + r.height / 2)) / (Math.min(r.width, r.height) / 2);
+      if (reach < 0.3 && !document.body.classList.contains("editing")) {
+        e.preventDefault();
+        R.buzz();
+        this.centring = true;
+        this.wake();
+        return;
+      }
       if (!this.grab(e, d, "wheel")) return;
+      this.centring = false;
       this.fingers.get(e.pointerId).angle = at(e);
       this.wake();
     });
