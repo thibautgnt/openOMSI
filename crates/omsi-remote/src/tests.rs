@@ -5,7 +5,8 @@ use serde_json::{json, Value};
 use std::time::{Duration, Instant};
 
 fn temp_dir(name: &str) -> PathBuf {
-    let d = std::env::temp_dir().join(format!("omsi-remote-{name}-{}-{:?}", std::process::id(), Instant::now()));
+    let nanos = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map_or(0, |d| d.as_nanos());
+    let d = std::env::temp_dir().join(format!("omsi-remote-{name}-{}-{nanos}", std::process::id()));
     let _ = std::fs::remove_dir_all(&d);
     std::fs::create_dir_all(&d).unwrap();
     d
