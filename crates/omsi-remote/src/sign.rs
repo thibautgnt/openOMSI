@@ -2,6 +2,8 @@ use glam::Vec2;
 use omsi_sim::{VehicleInstance, VehicleType};
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
+use omsi_sim::texttex::TextTextureState;
+use std::sync::mpsc::{Receiver, Sender};
 use std::sync::Arc;
 
 const SIGN: &[&str] = &["girouette", "ziel", "matrix", "dest", "annax", "krueger", "kruger", "lawo", "mobitec", "aesys", "buse", "hanover"];
@@ -46,10 +48,18 @@ struct Group {
 
 pub struct Sign {
     parts: Vec<Group>,
-    dirs: Vec<PathBuf>,
-    colours: HashMap<String, Option<Arc<omsi_texture::Image>>>,
-    last: u64,
+    jobs: Sender<Vec<Shot>>,
+    done: Receiver<Option<Option<Vec<u8>>>>,
+    busy: bool,
 }
+
+enum Pixels {
+    Script(u32, u32, Vec<u8>),
+    Text(Box<TextTextureState>, String),
+    Mask(u32, u32, Vec<u8>, String),
+}
+
+type Shot = (Vec<(Pixels, Vec2, Vec2)>, (f32, f32), (f32, f32));
 
 type Face = (Vec2, Vec2, f32, f32, (f32, f32), (f32, f32));
 type Placed = (image::RgbaImage, (f32, f32), (f32, f32));
@@ -58,7 +68,7 @@ fn slot_face(data: &omsi_geometry::MeshData, slot: u32) -> Option<Face> {
     let p = |i: u32| data.positions.get(i as usize).copied().unwrap_or_default();
     let (mut indices, mut ahead) = (Vec::new(), Vec::new());
     for &(first, count, _) in data.ranges.iter().filter(|r| r.2 == slot) {
-        let Some(tris) = data.indices.get(first as usize..(first + count) as usize) else { continue };
+        let Some(tris) = data.indices.get(first as usize..first.saturating_add(count) as usize) else { continue };
         for t in tris.chunks_exact(3) {
             let n = (p(t[1]) - p(t[0])).cross(p(t[2]) - p(t[0])).normalize_or_zero();
             indices.extend_from_slice(t);
@@ -171,9 +181,76 @@ impl Sign {
         let parts = groups;
         let mut dirs = ty.texture_dirs(root);
         dirs.push(ty.def.dir().to_path_buf());
-        (!parts.is_empty()).then_some(Sign { parts, dirs, colours: HashMap::new(), last: 1 })
+        if parts.is_empty() {
+            return None;
+        }
+        let (jobs, inbox) = std::sync::mpsc::channel::<Vec<Shot>>();
+        let (outbox, done) = std::sync::mpsc::channel();
+        let mut painter = Painter { dirs, colours: HashMap::new(), last: 1 };
+        std::thread::Builder::new()
+            .name("remote cockpit sign".into())
+            .spawn(move || {
+                while let Ok(shots) = inbox.recv() {
+                    if outbox.send(painter.paint(shots)).is_err() {
+                        break;
+                    }
+                }
+            })
+            .ok()?;
+        Some(Sign { parts, jobs, done, busy: false })
     }
 
+    fn shown(&self, v: &VehicleInstance) -> Vec<usize> {
+        let visible = |g: &Group| g.layers.first().is_none_or(|p| v.mesh_props.get(p.mesh).is_none_or(|m| m.visible));
+        let Some(best) = self.parts.iter().filter(|g| visible(g)).map(|g| g.rank).max() else { return Vec::new() };
+        let front = self.parts.iter().filter(|g| visible(g) && g.rank == best).map(|g| g.y).fold(f32::MIN, f32::max);
+        (0..self.parts.len()).filter(|&i| visible(&self.parts[i]) && self.parts[i].rank == best && self.parts[i].y > front - 0.3).collect()
+    }
+
+    fn snapshot(&self, i: usize, v: &VehicleInstance) -> Shot {
+        let g = &self.parts[i];
+        let mut layers = Vec::new();
+        for p in &g.layers {
+            if v.mesh_props.get(p.mesh).and_then(|m| m.slot_alpha.get(p.slot)).is_some_and(|a| *a < 0.05) {
+                continue;
+            }
+            let pixels = match &p.source {
+                Source::Script(n) => v.host.script_textures.get(*n).map(|st| Pixels::Script(st.width, st.height, st.rgba.clone())),
+                Source::Text(n) => v.text_textures.get(*n).map(|tt| Pixels::Text(Box::new(tt.clone()), tt.last_text.clone().unwrap_or_default())),
+                Source::Mask { script, colour, freetex } => {
+                    let name = freetex.as_ref().map(|var| v.str_var(var)).filter(|s| !s.trim().is_empty()).unwrap_or_else(|| colour.clone());
+                    v.host.script_textures.get(*script).map(|st| Pixels::Mask(st.width, st.height, st.rgba.clone(), name))
+                }
+            };
+            if let Some(px) = pixels {
+                let (lo, hi) = (p.lo - p.lo.floor(), p.hi - p.lo.floor());
+                layers.push((px, lo, hi));
+            }
+        }
+        (layers, g.layers[0].xs, g.layers[0].zs)
+    }
+
+    pub fn render(&mut self, v: &VehicleInstance) -> Option<Option<Vec<u8>>> {
+        let mut out = None;
+        while let Ok(r) = self.done.try_recv() {
+            self.busy = false;
+            out = r.or(out);
+        }
+        if !self.busy {
+            let shots: Vec<Shot> = self.shown(v).into_iter().map(|i| self.snapshot(i, v)).collect();
+            self.busy = self.jobs.send(shots).is_ok();
+        }
+        out
+    }
+}
+
+struct Painter {
+    dirs: Vec<PathBuf>,
+    colours: HashMap<String, Option<Arc<omsi_texture::Image>>>,
+    last: u64,
+}
+
+impl Painter {
     fn colour(&mut self, name: &str) -> Option<Arc<omsi_texture::Image>> {
         let key = name.trim().to_ascii_lowercase();
         if let Some(c) = self.colours.get(&key) {
@@ -185,14 +262,46 @@ impl Sign {
         img
     }
 
-    fn group(&mut self, i: usize, v: &VehicleInstance) -> Option<image::RgbaImage> {
-        let mut out: Option<image::RgbaImage> = None;
-        for l in 0..self.parts[i].layers.len() {
-            let p = &self.parts[i].layers[l];
-            if v.mesh_props.get(p.mesh).and_then(|m| m.slot_alpha.get(p.slot)).is_some_and(|a| *a < 0.05) {
-                continue;
+    fn layer(&mut self, px: &Pixels, lo: Vec2, hi: Vec2) -> image::RgbaImage {
+        let at = |x: u32, y: u32, w: u32, h: u32| (lo.x + (x as f32 + 0.5) / w as f32 * (hi.x - lo.x), lo.y + (y as f32 + 0.5) / h as f32 * (hi.y - lo.y));
+        let scale = |c: u8, a: u32| (c as u32 * a / 255) as u8;
+        match px {
+            Pixels::Script(tw, th, rgba) => {
+                let (w, h) = size_of(lo, hi, *tw, *th);
+                image::RgbaImage::from_fn(w, h, |x, y| {
+                    let (u, v) = at(x, y, w, h);
+                    let p = sample(*tw, *th, rgba, u, v);
+                    image::Rgba([p[0], p[1], p[2], 255])
+                })
             }
-            let Some(layer) = self.part(i, l, v) else { continue };
+            Pixels::Text(tt, text) => {
+                let rgba = tt.image(text);
+                let (tw, th) = (tt.def.width.max(1) as u32, tt.def.height.max(1) as u32);
+                let (w, h) = size_of(lo, hi, tw, th);
+                image::RgbaImage::from_fn(w, h, |x, y| {
+                    let (u, v) = at(x, y, w, h);
+                    let p = sample(tw, th, &rgba, u, v);
+                    let a = p[3] as u32;
+                    image::Rgba([scale(p[0], a), scale(p[1], a), scale(p[2], a), 255])
+                })
+            }
+            Pixels::Mask(tw, th, rgba, name) => {
+                let tint = self.colour(name);
+                let (w, h) = size_of(lo, hi, *tw, *th);
+                image::RgbaImage::from_fn(w, h, |x, y| {
+                    let (u, v) = at(x, y, w, h);
+                    let a = sample(*tw, *th, rgba, u, v)[3] as u32;
+                    let c = tint.as_ref().map_or([255, 176, 0, 255], |t| sample(t.width, t.height, &t.rgba, u, v));
+                    image::Rgba([scale(c[0], a), scale(c[1], a), scale(c[2], a), 255])
+                })
+            }
+        }
+    }
+
+    fn group(&mut self, layers: &[(Pixels, Vec2, Vec2)]) -> Option<image::RgbaImage> {
+        let mut out: Option<image::RgbaImage> = None;
+        for (px, lo, hi) in layers {
+            let layer = self.layer(px, *lo, *hi);
             match out.as_mut() {
                 Some(o) if o.dimensions() == layer.dimensions() => {
                     for (a, b) in o.pixels_mut().zip(layer.pixels()) {
@@ -208,54 +317,8 @@ impl Sign {
         out
     }
 
-    fn part(&mut self, i: usize, l: usize, v: &VehicleInstance) -> Option<image::RgbaImage> {
-        let (lo, hi) = (self.parts[i].layers[l].lo, self.parts[i].layers[l].hi);
-        let (lo, hi) = (lo - lo.floor(), hi - lo.floor());
-        match &self.parts[i].layers[l].source {
-            Source::Script(n) => {
-                let st = v.host.script_textures.get(*n)?;
-                let (w, h) = size_of(lo, hi, st.width, st.height);
-                Some(image::RgbaImage::from_fn(w, h, |x, y| {
-                    let p = sample(st.width, st.height, &st.rgba, lo.x + (x as f32 + 0.5) / w as f32 * (hi.x - lo.x), lo.y + (y as f32 + 0.5) / h as f32 * (hi.y - lo.y));
-                    image::Rgba([p[0], p[1], p[2], 255])
-                }))
-            }
-            Source::Text(n) => {
-                let tt = v.text_textures.get(*n)?;
-                let rgba = tt.image(tt.last_text.as_deref().unwrap_or(""));
-                let (tw, th) = (tt.def.width.max(1) as u32, tt.def.height.max(1) as u32);
-                let (w, h) = size_of(lo, hi, tw, th);
-                Some(image::RgbaImage::from_fn(w, h, |x, y| {
-                    let p = sample(tw, th, &rgba, lo.x + (x as f32 + 0.5) / w as f32 * (hi.x - lo.x), lo.y + (y as f32 + 0.5) / h as f32 * (hi.y - lo.y));
-                    let a = p[3] as u32;
-                    image::Rgba([(p[0] as u32 * a / 255) as u8, (p[1] as u32 * a / 255) as u8, (p[2] as u32 * a / 255) as u8, 255])
-                }))
-            }
-            Source::Mask { script, colour, freetex } => {
-                let (script, colour, freetex) = (*script, colour.clone(), freetex.clone());
-                let name = freetex.map(|var| v.str_var(&var)).filter(|s| !s.trim().is_empty()).unwrap_or(colour);
-                let tint = self.colour(&name);
-                let st = v.host.script_textures.get(script)?;
-                let (w, h) = size_of(lo, hi, st.width, st.height);
-                Some(image::RgbaImage::from_fn(w, h, |x, y| {
-                    let (u, vv) = (lo.x + (x as f32 + 0.5) / w as f32 * (hi.x - lo.x), lo.y + (y as f32 + 0.5) / h as f32 * (hi.y - lo.y));
-                    let a = sample(st.width, st.height, &st.rgba, u, vv)[3] as u32;
-                    let c = tint.as_ref().map_or([255, 176, 0, 255], |t| sample(t.width, t.height, &t.rgba, u, vv));
-                    image::Rgba([(c[0] as u32 * a / 255) as u8, (c[1] as u32 * a / 255) as u8, (c[2] as u32 * a / 255) as u8, 255])
-                }))
-            }
-        }
-    }
-
-    fn shown(&self, v: &VehicleInstance) -> Vec<usize> {
-        let visible = |g: &Group| g.layers.first().is_none_or(|p| v.mesh_props.get(p.mesh).is_none_or(|m| m.visible));
-        let Some(best) = self.parts.iter().filter(|g| visible(g)).map(|g| g.rank).max() else { return Vec::new() };
-        let front = self.parts.iter().filter(|g| visible(g) && g.rank == best).map(|g| g.y).fold(f32::MIN, f32::max);
-        (0..self.parts.len()).filter(|&i| visible(&self.parts[i]) && self.parts[i].rank == best && self.parts[i].y > front - 0.3).collect()
-    }
-
-    pub fn render(&mut self, v: &VehicleInstance) -> Option<Option<Vec<u8>>> {
-        let parts: Vec<Placed> = self.shown(v).into_iter().filter_map(|i| Some((self.group(i, v)?, self.parts[i].layers[0].xs, self.parts[i].layers[0].zs))).collect();
+    fn paint(&mut self, shots: Vec<Shot>) -> Option<Option<Vec<u8>>> {
+        let parts: Vec<Placed> = shots.iter().filter_map(|(layers, xs, zs)| Some((self.group(layers)?, *xs, *zs))).collect();
         let lit = parts.iter().flat_map(|p| p.0.pixels()).filter(|p| p[0].max(p[1]).max(p[2]) > 40).count();
         let total: usize = parts.iter().map(|p| p.0.width() as usize * p.0.height() as usize).sum();
         if lit * 500 < total.max(1) {

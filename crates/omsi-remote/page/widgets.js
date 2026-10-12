@@ -521,6 +521,8 @@ function citaroUpdate(node, w, s, full) {
 
 function bindPress(node, w, title) {
   if (title) node.title = title;
+  const label = title || w.label;
+  if (label && !node.getAttribute("aria-label")) node.setAttribute("aria-label", label);
   let finger = null;
   const d = w.do || { type: "none" };
   const start = (e) => {
@@ -553,7 +555,7 @@ const int = (v, lo, hi) => (Number.isFinite(Number(v)) ? Math.max(lo, Math.min(h
 
 function normalize(l) {
   if (!l || l.v !== 1 || !Array.isArray(l.pages)) return null;
-  const out = { v: 1, theme: typeof l.theme === "string" ? l.theme : "night", accent: /^#[0-9a-f]{3,8}$/i.test(l.accent || "") ? l.accent : "#f5a623", skins: l.skins === true, pages: [] };
+  const out = { v: 1, theme: ["night", "cockpit", "day", "amber", "contrast"].includes(l.theme) ? l.theme : "night", accent: /^#[0-9a-f]{3,8}$/i.test(l.accent || "") ? l.accent : "#f5a623", skins: l.skins === true, pages: [] };
   for (const p of l.pages.slice(0, 12)) {
     if (!p || !Array.isArray(p.widgets)) continue;
     const grid = {};

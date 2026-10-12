@@ -33,7 +33,7 @@ fn root(parent: &mut [usize], mut i: usize) -> usize {
 pub(crate) fn front_face(positions: &[Vec3], uvs: &[Vec2], indices: &[u32], ranges: &[(u32, u32, u32)]) -> Option<Face> {
     let mut tris = Vec::new();
     for &(first, count, slot) in ranges {
-        let Some(list) = indices.get(first as usize..(first + count) as usize) else { continue };
+        let Some(list) = indices.get(first as usize..first.saturating_add(count) as usize) else { continue };
         for t in list.chunks_exact(3) {
             let v = [t[0], t[1], t[2]].map(|i| i as usize);
             if v.iter().any(|&i| i >= positions.len() || i >= uvs.len()) {

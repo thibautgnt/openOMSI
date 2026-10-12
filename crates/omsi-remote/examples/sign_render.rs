@@ -60,8 +60,18 @@ fn main() {
             println!("mesh {i}: {}", ty.model.meshes[m.def_index].file);
         }
     }
-    match sign.render(&v) {
-        Some(Some(png)) => std::fs::write(&out, png).unwrap(),
-        _ => println!("no picture"),
+    let started = std::time::Instant::now();
+    let picture = loop {
+        if let Some(p) = sign.render(&v) {
+            break p;
+        }
+        if started.elapsed().as_secs() > 10 {
+            break None;
+        }
+        std::thread::sleep(std::time::Duration::from_millis(5));
+    };
+    match picture {
+        Some(png) => std::fs::write(&out, png).unwrap(),
+        None => println!("no picture"),
     }
 }

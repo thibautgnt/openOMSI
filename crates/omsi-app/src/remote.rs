@@ -2,7 +2,7 @@ use super::*;
 use omsi_remote::{Command, Remote, Vehicle};
 use omsi_sim::htmltex::HtmlRequest;
 
-const PUBLISH_EVERY: f32 = 1.0 / 60.0;
+const PUBLISH_EVERY: f32 = 1.0 / 30.0;
 
 type Skins = std::sync::mpsc::Receiver<(String, Vec<(String, Vec<u8>)>)>;
 
@@ -63,6 +63,9 @@ fn direct_doors(name: &str, down: bool, r: &mut RemoteCockpit, v: &omsi_sim::Veh
         if !down {
             return Some(std::mem::take(&mut r.all_fired));
         }
+        if !r.all_fired.is_empty() {
+            return Some(Vec::new());
+        }
         let open: Vec<bool> = r.door_ways.iter().map(|w| w.iter().any(|l| v.var(&format!("door_{l}")).is_some_and(|x| x > 0.05))).collect();
         let any = open.contains(&true);
         r.all_fired = r.door_triggers.iter().zip(&open).filter(|(_, o)| !any || **o).map(|(t, _)| t.clone()).collect();
@@ -92,7 +95,7 @@ fn vehicle_key(p: &crate::player::Player) -> String {
     format!("{folder}/{file}#{hof}")
 }
 
-fn vehicle(p: &crate::player::Player) -> Vehicle {
+fn vehicle(p: &crate::player::Player, doors: Vec<Vec<usize>>) -> Vehicle {
     let def = &p.vehicle.ty.def;
     let short = omsi_launcher_lib::vehicle_type_label(&def.type_name, &def.path);
     let mut actions = p.vehicle.ty.program.trigger_names();
@@ -107,7 +110,7 @@ fn vehicle(p: &crate::player::Player) -> Vehicle {
         actions,
         aliases: aliases(p),
         depot: p.vehicle.host.hof.as_deref().map(omsi_sim::vehicle_api::depot),
-        doors: doors(p).0,
+        doors,
     }
 }
 
@@ -136,8 +139,8 @@ impl App {
     pub(crate) fn remote_description(&self) -> String {
         match self.integrations.remote.server.as_ref() {
             Some(r) => {
-                let ip = lan_ip();
-                format!("Open {} on a phone or tablet of the same network", format!("http://{ip}:{}", r.port()))
+                let url = format!("http://{}:{}", lan_ip(), r.port());
+                format!("Open {url} on a phone or tablet of the same network")
             }
             None if self.integrations.remote.failed_port.is_some() => format!("Port {} is taken by another program", self.settings.remote_cockpit_port),
             None => "The bus's switches, its destination sign and a dashboard on a phone or tablet of the same network".into(),
@@ -298,10 +301,12 @@ impl App {
         }
         let key = self.player.as_ref().map(vehicle_key).unwrap_or_default();
         if r.vehicle != key {
-            server.set_vehicle(self.player.as_ref().map(vehicle));
+            let _ = server.release_all();
+            r.all_fired.clear();
+            (r.door_ways, r.door_triggers) = self.player.as_ref().map(doors).unwrap_or_default();
+            server.set_vehicle(self.player.as_ref().map(|p| vehicle(p, r.door_ways.clone())));
             r.skins = self.player.as_ref().map(|p| start_skins(p, &self.args.root, &key));
             r.sign = self.player.as_ref().and_then(|p| omsi_remote::sign::Sign::find(&p.vehicle.ty, &self.args.root));
-            (r.door_ways, r.door_triggers) = self.player.as_ref().map(doors).unwrap_or_default();
             r.vehicle = key;
         }
         if let Some(Ok((for_key, skins))) = r.skins.as_ref().map(|rx| rx.try_recv()) {

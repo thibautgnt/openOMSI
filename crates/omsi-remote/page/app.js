@@ -53,12 +53,21 @@ const App = {
   },
 
   releaseAll() {
-    for (const [node, [d, w]] of this.pressed) {
+    const held = [...this.pressed];
+    this.pressed.clear();
+    for (const [node, [d, w]] of held) {
       node.classList.remove("down");
       if (node.release) node.release();
-      this.press(d, false, w);
+      if (d.type === "act") this.press(d, false, w);
     }
-    this.pressed.clear();
+  },
+
+  dropDetached() {
+    for (const [node, [d, w]] of this.pressed) {
+      if (node.isConnected) continue;
+      this.pressed.delete(node);
+      if (d.type === "act") this.press(d, false, w);
+    }
   },
 
   status(state, key) {
@@ -84,24 +93,35 @@ const App = {
       else this.showPair();
     };
     ws.onmessage = (e) => {
+      this.heard = performance.now();
       let m;
       try { m = JSON.parse(e.data); } catch (_) { return; }
       this.receive(m);
     };
-    ws.onclose = () => {
-      if (this.ws !== ws) return;
-      this.releaseAll();
-      this.pressed.clear();
-      Drive.letGo();
-      if (this.conn[1] !== "Too many devices are connected") this.status("off", "Disconnected");
-      this.ws = null;
-      const wait = Math.min(8000, 500 * 2 ** this.retry++);
-      this.retryTimer = setTimeout(() => this.connect(), wait);
-    };
+    ws.onclose = () => this.dropped(ws);
+  },
+
+  dropped(ws) {
+    if (this.ws !== ws) return;
+    this.releaseAll();
+    this.pressed.clear();
+    Drive.letGo();
+    if (this.conn[1] !== "Too many devices are connected") this.status("off", "Disconnected");
+    this.ws = null;
+    const wait = Math.min(8000, 500 * 2 ** this.retry++);
+    this.retryTimer = setTimeout(() => this.connect(), wait);
   },
 
   ping() {
-    this.send({ t: "ping", id: Math.round(performance.now()) });
+    const ws = this.ws;
+    const now = performance.now();
+    if (ws && ws.readyState === 1 && this.conn[0] === "on" && this.pingAt && this.heard < this.pingAt && now - this.pingAt > 6000) {
+      this.dropped(ws);
+      try { ws.close(); } catch (_) {}
+      return;
+    }
+    if (!this.pingAt || this.heard >= this.pingAt) this.pingAt = now;
+    this.send({ t: "ping", id: Math.round(now) });
   },
 
   receive(m) {
@@ -179,6 +199,9 @@ const App = {
   },
 
   takeVehicle(m) {
+    const same = JSON.stringify(m);
+    if (same === this.lastVehicle && !this.pending) { this.status("on", "Connected"); return; }
+    this.lastVehicle = same;
     this.pending = null;
     this.status("on", "Connected");
     this.vehicle = m.key ? m : null;
@@ -215,7 +238,10 @@ const App = {
     $("pin-error").textContent = "";
     this.pairing = true;
     const name = /iPad/.test(navigator.userAgent) ? "iPad" : /iPhone/.test(navigator.userAgent) ? "iPhone" : /Android/.test(navigator.userAgent) ? "Android" : "Browser";
-    if (!this.send({ t: "pair", pin, name })) $("pin-go").disabled = false;
+    if (!this.send({ t: "pair", pin, name })) {
+      $("pin-go").disabled = false;
+      this.connect();
+    }
   },
 
   translateStatic() {
@@ -437,11 +463,13 @@ const App = {
       if (o !== last) { last = o; this.render(); }
     });
     document.addEventListener("visibilitychange", () => {
+      this.pingAt = 0;
       if (document.visibilityState === "visible") this.connect();
       else this.releaseAll();
     });
     addEventListener("pagehide", () => this.releaseAll());
     document.addEventListener("gesturestart", (e) => e.preventDefault());
+    for (const type of ["lostpointercapture", "pointercancel"]) document.addEventListener(type, () => this.dropDetached(), true);
     setInterval(() => this.ping(), 2000);
     this.connect();
   },

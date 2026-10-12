@@ -12,6 +12,7 @@ const Drive = {
   quiet: 0,
   last: 0,
   sent: null,
+  sentAt: 0,
   centring: false,
 
   holding() {
@@ -46,17 +47,19 @@ const Drive = {
     if (Math.abs(this.out - target) < 0.0005) this.out = target;
     const msg = { t: "drive", s: Math.round(this.out * 1000) / 1000, g: Math.round(this.throttle * 1000) / 1000, b: Math.round(this.brake * 1000) / 1000 };
     const moved = !this.sent || msg.s !== this.sent.s;
+    const stale = this.out !== 0 && now - this.sentAt > 100;
     const busy = this.holding() || this.throttle > 0 || this.brake > 0 || moved;
     this.quiet = busy ? 0 : this.quiet + 1;
-    if (App.ws && App.ws.readyState === 1 && this.quiet < 6) {
+    if (App.ws && App.ws.readyState === 1 && (this.quiet < 6 || stale)) {
       App.send(msg);
       this.sent = msg;
+      this.sentAt = now;
     }
     for (const w of this.wheels) {
       if (w.isConnected) this.paint(w);
       else this.wheels.delete(w);
     }
-    if (this.quiet >= 6) {
+    if (this.quiet >= 6 && this.out === 0) {
       clearInterval(this.timer);
       this.timer = null;
     }
@@ -87,6 +90,9 @@ const Drive = {
 
   letGo() {
     this.fingers.clear();
+    this.steer = 0;
+    this.out = 0;
+    this.centring = false;
     this.throttle = 0;
     this.brake = 0;
     for (const p of document.querySelectorAll(".pedal")) for (const v of ["--p", "--up", "--down"]) p.style.setProperty(v, 0);

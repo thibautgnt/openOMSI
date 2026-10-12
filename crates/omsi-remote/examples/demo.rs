@@ -158,6 +158,11 @@ fn main() {
         let t = start.elapsed().as_secs_f64();
         r.set_state(Some(&state(&b, t)), &env(t), false);
         frame += 1;
+        if frame % 30 == 0 {
+            if let Some(d) = r.drive() {
+                println!("drive {:.2} {:.2} {:.2}", d.steering, d.throttle, d.brake);
+            }
+        }
         if frame % 24 == 1 {
             let roads = streets();
             r.publish("roads", omsi_remote::nav::roads_message([0.0, 0.0], &roads));

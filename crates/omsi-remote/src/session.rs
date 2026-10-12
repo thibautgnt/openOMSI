@@ -3,7 +3,7 @@ use crate::pairing::Pairing;
 use crate::{json, lock, Command, Shared};
 use serde_json::{json as j, Value};
 use std::io::ErrorKind;
-use std::net::TcpStream;
+use std::net::{IpAddr, TcpStream};
 use std::sync::atomic::Ordering;
 use std::time::{Duration, Instant};
 use tungstenite::handshake::server::{ErrorResponse, Request, Response};
@@ -16,6 +16,7 @@ const HELLO_WITHIN: Duration = Duration::from_secs(10);
 const RELEASE_AFTER: Duration = Duration::from_secs(4);
 const SILENT_FOR: Duration = Duration::from_secs(30);
 const PING_EVERY: Duration = Duration::from_secs(1);
+const MAX_BACKLOG: usize = 4 << 20;
 
 type Ws = WebSocket<TcpStream>;
 
@@ -32,10 +33,7 @@ fn receive(ws: &mut Ws, last_in: &mut Instant) -> Result<Got, String> {
             Ok(Got::Text(t.to_string()))
         }
         Ok(Message::Close(_)) => Ok(Got::Closed),
-        Ok(_) => {
-            *last_in = Instant::now();
-            Ok(Got::Nothing)
-        }
+        Ok(_) => Ok(Got::Nothing),
         Err(tungstenite::Error::Io(e)) if matches!(e.kind(), ErrorKind::WouldBlock | ErrorKind::TimedOut) => Ok(Got::Nothing),
         Err(tungstenite::Error::ConnectionClosed) | Err(tungstenite::Error::AlreadyClosed) => Ok(Got::Closed),
         Err(e) => Err(e.to_string()),
@@ -50,7 +48,7 @@ fn send(ws: &mut Ws, text: &str) -> Result<(), String> {
     }
 }
 
-fn authenticate(ws: &mut Ws, shared: &Shared) -> Result<bool, String> {
+fn authenticate(ws: &mut Ws, shared: &Shared, from: IpAddr) -> Result<bool, String> {
     let since = Instant::now();
     let mut last_in = Instant::now();
     while since.elapsed() < HELLO_WITHIN && !shared.stop.load(Ordering::Relaxed) {
@@ -70,7 +68,7 @@ fn authenticate(ws: &mut Ws, shared: &Shared) -> Result<bool, String> {
             "pair" if !shared.pairing_open.load(Ordering::Relaxed) => j!({ "t": "denied", "reason": "closed" }),
             "pair" => {
                 let pin = lock(&shared.pin).clone();
-                let result = lock(&shared.devices).pair(&pin, &field("pin"), &field("name"));
+                let result = lock(&shared.devices).pair(&pin, &field("pin"), &field("name"), from);
                 match result {
                     Pairing::Paired(token) => {
                         shared.new_pin();
@@ -78,14 +76,16 @@ fn authenticate(ws: &mut Ws, shared: &Shared) -> Result<bool, String> {
                         send(ws, &j!({ "t": "paired", "token": token }).to_string())?;
                         return Ok(true);
                     }
-                    Pairing::Wrong => j!({ "t": "denied", "reason": "pin" }),
-                    Pairing::Locked => {
-                        shared.new_pin();
-                        j!({ "t": "denied", "reason": "locked" })
+                    Pairing::Wrong { renew } => {
+                        if renew {
+                            shared.new_pin();
+                        }
+                        j!({ "t": "denied", "reason": "pin" })
                     }
+                    Pairing::Locked => j!({ "t": "denied", "reason": "locked" }),
                 }
             }
-            _ => return Ok(false),
+            _ => continue,
         };
         send(ws, &answer.to_string())?;
         let _ = ws.flush();
@@ -121,7 +121,7 @@ fn handle(ws: &mut Ws, text: &str, shared: &Shared, id: u64) -> Result<(), Strin
     if t == "drive" {
         if let Some((steering, throttle, brake)) = json::drive(&v) {
             let mut drive = lock(&shared.drive);
-            if drive.is_none_or(|d| d.session == id || d.at.elapsed() > crate::DRIVE_FRESH) {
+            if drive.is_none_or(|d| d.session == id || d.at.elapsed() > crate::STEER_FRESH) {
                 *drive = Some(crate::Drive { session: id, at: Instant::now(), steering, throttle, brake });
             }
         }
@@ -132,14 +132,13 @@ fn handle(ws: &mut Ws, text: &str, shared: &Shared, id: u64) -> Result<(), Strin
         let mut held = lock(&shared.held);
         let mine = held.entry(id).or_default();
         let was = mine.iter().position(|h| h == name);
-        if *down && was.is_none() && mine.len() >= MAX_HELD {
-            return Ok(());
-        }
-        if let Some(i) = was {
-            mine.swap_remove(i);
-        }
-        if *down {
-            mine.push(name.clone());
+        match (*down, was) {
+            (true, Some(_)) | (false, None) => return Ok(()),
+            (true, None) if mine.len() >= MAX_HELD => return Ok(()),
+            (true, None) => mine.push(name.clone()),
+            (false, Some(i)) => {
+                mine.swap_remove(i);
+            }
         }
     }
     shared.send(cmd);
@@ -249,19 +248,28 @@ fn pump(ws: &mut Ws, shared: &Shared, id: u64) -> Result<(), String> {
     Ok(())
 }
 
+pub(crate) fn local_host(host: &str) -> bool {
+    let name = host.rsplit_once(':').filter(|(h, p)| !h.ends_with(':') && p.bytes().all(|b| b.is_ascii_digit())).map_or(host, |(h, _)| h);
+    let name = name.trim_start_matches('[').trim_end_matches(']');
+    let lower = name.to_ascii_lowercase();
+    let local = [".local", ".lan", ".home.arpa", ".internal", ".localdomain"].iter().any(|s| lower.ends_with(s));
+    !lower.is_empty() && (!lower.contains('.') || local || name.parse::<IpAddr>().is_ok())
+}
+
 fn same_origin(req: &Request) -> bool {
     let header = |n: &str| req.headers().get(n).and_then(|v| v.to_str().ok());
     match (header("origin"), header("host")) {
         (None, _) => true,
-        (Some(origin), Some(host)) => origin.strip_prefix("http://").is_some_and(|o| o.eq_ignore_ascii_case(host)),
+        (Some(origin), Some(host)) => local_host(host) && origin.strip_prefix("http://").is_some_and(|o| o.eq_ignore_ascii_case(host)),
         _ => false,
     }
 }
 
 pub(crate) fn run(stream: TcpStream, shared: &Shared) -> Result<(), String> {
-    let peer = stream.peer_addr().map(|a| a.ip().to_string()).unwrap_or_default();
+    let ip = stream.peer_addr().map_err(|e| e.to_string())?.ip();
+    let peer = ip.to_string();
     let _ = stream.set_nodelay(true);
-    let config = WebSocketConfig::default().max_message_size(Some(MAX_LAYOUT * 2)).max_frame_size(Some(MAX_LAYOUT * 2));
+    let config = WebSocketConfig::default().max_message_size(Some(MAX_LAYOUT * 2)).max_frame_size(Some(MAX_LAYOUT * 2)).max_write_buffer_size(MAX_BACKLOG);
     let check = |req: &Request, res: Response| -> Result<Response, ErrorResponse> {
         if same_origin(req) {
             return Ok(res);
@@ -277,7 +285,7 @@ pub(crate) fn run(stream: TcpStream, shared: &Shared) -> Result<(), String> {
     if !texts.is_empty() {
         let _ = send(&mut ws, &texts);
     }
-    if !authenticate(&mut ws, shared)? {
+    if !authenticate(&mut ws, shared, ip)? {
         let _ = ws.close(None);
         return Ok(());
     }

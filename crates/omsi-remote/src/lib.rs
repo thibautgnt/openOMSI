@@ -90,6 +90,7 @@ pub struct Drive {
 }
 
 pub(crate) const DRIVE_FRESH: std::time::Duration = std::time::Duration::from_millis(250);
+pub(crate) const STEER_FRESH: std::time::Duration = std::time::Duration::from_millis(1500);
 
 impl Shared {
     pub(crate) fn feed(&self) -> MutexGuard<'_, Feed> {
@@ -238,10 +239,13 @@ impl Remote {
 
     pub fn drive(&self) -> Option<Drive> {
         let mut d = lock(&self.shared.drive);
-        if d.is_some_and(|x| x.at.elapsed() > DRIVE_FRESH) {
+        if d.is_some_and(|x| x.at.elapsed() > STEER_FRESH) {
             *d = None;
         }
-        *d
+        d.map(|x| match x.at.elapsed() > DRIVE_FRESH {
+            true => Drive { throttle: 0.0, brake: 0.0, ..x },
+            false => x,
+        })
     }
 }
 

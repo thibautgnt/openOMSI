@@ -1,9 +1,11 @@
 use ring::rand::{SecureRandom, SystemRandom};
 use sha2::{Digest, Sha256};
+use std::net::IpAddr;
 use std::path::PathBuf;
 use std::time::{Duration, Instant};
 
 const LOCK_AFTER: usize = 5;
+const LOCK_ALL_AFTER: usize = 30;
 const LOCK_WINDOW: Duration = Duration::from_secs(120);
 const MAX_DEVICES: usize = 32;
 
@@ -35,15 +37,23 @@ pub(crate) fn same(a: &str, b: &str) -> bool {
     d == 0
 }
 
+fn network(ip: IpAddr) -> IpAddr {
+    match ip {
+        IpAddr::V6(v6) if v6.to_ipv4_mapped().is_none() => IpAddr::V6((u128::from(v6) & !((1u128 << 64) - 1)).into()),
+        IpAddr::V6(v6) => IpAddr::V4(v6.to_ipv4_mapped().unwrap_or(std::net::Ipv4Addr::UNSPECIFIED)),
+        v4 => v4,
+    }
+}
+
 pub(crate) struct Devices {
     path: PathBuf,
     known: Vec<(String, String)>,
-    failures: Vec<Instant>,
+    failures: Vec<(IpAddr, Instant)>,
 }
 
 pub(crate) enum Pairing {
     Paired(String),
-    Wrong,
+    Wrong { renew: bool },
     Locked,
 }
 
@@ -75,18 +85,19 @@ impl Devices {
         self.known.iter().fold(false, |found, (k, _)| found | same(k, &h))
     }
 
-    fn locked(&mut self) -> bool {
-        self.failures.retain(|t| t.elapsed() < LOCK_WINDOW);
-        self.failures.len() >= LOCK_AFTER
+    fn locked(&mut self, from: IpAddr) -> bool {
+        let from = network(from);
+        self.failures.retain(|(_, t)| t.elapsed() < LOCK_WINDOW);
+        self.failures.len() >= LOCK_ALL_AFTER || self.failures.iter().filter(|(ip, _)| *ip == from).count() >= LOCK_AFTER
     }
 
-    pub(crate) fn pair(&mut self, pin: &str, wanted: &str, name: &str) -> Pairing {
-        if self.locked() {
+    pub(crate) fn pair(&mut self, pin: &str, wanted: &str, name: &str, from: IpAddr) -> Pairing {
+        if self.locked(from) {
             return Pairing::Locked;
         }
         if !same(pin, wanted.trim()) {
-            self.failures.push(Instant::now());
-            return Pairing::Wrong;
+            self.failures.push((network(from), Instant::now()));
+            return Pairing::Wrong { renew: self.failures.len() == LOCK_ALL_AFTER };
         }
         let token = hex(&random_bytes::<32>());
         let name: String = name.chars().filter(|c| !c.is_control()).take(48).collect();

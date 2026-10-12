@@ -17,6 +17,7 @@ const Editor = {
 
   start() {
     if (!App.layout) return;
+    this.drag = null;
     this.backup = clone(App.layout);
     this.undo = [];
     this.sel = null;
@@ -30,6 +31,7 @@ const Editor = {
 
   stop() {
     this.active = false;
+    this.drag = null;
     this.sel = null;
     document.body.classList.remove("editing");
     $("btn-edit").setAttribute("aria-pressed", "false");

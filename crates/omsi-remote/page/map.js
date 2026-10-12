@@ -10,6 +10,7 @@ const MapView = {
   take(m) {
     if (m.t === "roads") this.roads = m;
     if (m.t === "nav") this.nav = m;
+    this.version = (this.version || 0) + 1;
     this.wake();
   },
 
@@ -29,7 +30,7 @@ const MapView = {
     const canvas = view.querySelector("canvas");
     const s = App.state;
     const box = { width: canvas.clientWidth, height: canvas.clientHeight };
-    const key = [R.get(s, "vehicle.motion.x"), R.get(s, "vehicle.motion.y"), R.get(s, "vehicle.motion.heading"), this.roads, this.nav, box.width, box.height, Math.round(this.scale * 100)].join("|");
+    const key = [R.get(s, "vehicle.motion.x"), R.get(s, "vehicle.motion.y"), R.get(s, "vehicle.motion.heading"), this.version, box.width, box.height, Math.round(this.scale * 100)].join("|");
     if (view.drawn === key) return;
     view.drawn = key;
     const dpr = Math.min(3, devicePixelRatio || 1);

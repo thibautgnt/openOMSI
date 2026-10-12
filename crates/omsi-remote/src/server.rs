@@ -44,11 +44,10 @@ pub(crate) fn start(port: u16, shared: Arc<Shared>) -> std::io::Result<u16> {
                     let ip = peer.ip();
                     {
                         let mut counts = lock(&by_address);
-                        let n = counts.entry(ip).or_default();
-                        if open.load(Ordering::Relaxed) >= MAX_CONNECTIONS || *n >= MAX_PER_ADDRESS {
+                        if open.load(Ordering::Relaxed) >= MAX_CONNECTIONS || counts.get(&ip).is_some_and(|n| *n >= MAX_PER_ADDRESS) {
                             continue;
                         }
-                        *n += 1;
+                        *counts.entry(ip).or_default() += 1;
                     }
                     open.fetch_add(1, Ordering::Relaxed);
                     let (client_shared, client_open, client_counts) = (shared.clone(), open.clone(), by_address.clone());
@@ -70,8 +69,12 @@ pub(crate) fn start(port: u16, shared: Arc<Shared>) -> std::io::Result<u16> {
                     });
                     if spawned.is_err() {
                         open.fetch_sub(1, Ordering::Relaxed);
-                        if let Some(n) = lock(&by_address).get_mut(&ip) {
+                        let mut counts = lock(&by_address);
+                        if let Some(n) = counts.get_mut(&ip) {
                             *n = n.saturating_sub(1);
+                            if *n == 0 {
+                                counts.remove(&ip);
+                            }
                         }
                     }
                 }
@@ -130,7 +133,7 @@ fn skin(rest: &str, shared: &Shared) -> (&'static str, &'static str, Vec<u8>) {
     }
 }
 
-fn head(stream: &TcpStream) -> Result<String, String> {
+fn head(stream: &TcpStream) -> Result<(String, usize), String> {
     let since = Instant::now();
     let mut buf = vec![0u8; MAX_HEAD];
     loop {
@@ -138,9 +141,10 @@ fn head(stream: &TcpStream) -> Result<String, String> {
         if n == 0 {
             return Err("closed".into());
         }
-        let text = String::from_utf8_lossy(&buf[..n]).to_string();
-        if text.contains("\r\n\r\n") || n >= MAX_HEAD {
-            return Ok(text);
+        let end = buf[..n].windows(4).position(|w| w == b"\r\n\r\n").map(|i| i + 4);
+        if end.is_some() || n >= MAX_HEAD {
+            let size = end.unwrap_or(n);
+            return Ok((String::from_utf8_lossy(&buf[..size]).into_owned(), size));
         }
         if since.elapsed() > HEAD_WITHIN {
             return Err("request too slow".into());
@@ -153,7 +157,7 @@ fn serve(stream: TcpStream, shared: &Shared) -> Result<(), String> {
     stream.set_nonblocking(false).map_err(|e| e.to_string())?;
     stream.set_read_timeout(Some(HEAD_WITHIN)).map_err(|e| e.to_string())?;
     stream.set_write_timeout(Some(HEAD_WITHIN)).map_err(|e| e.to_string())?;
-    let req = head(&stream)?;
+    let (req, size) = head(&stream)?;
     let mut words = req.split_whitespace();
     let method = words.next().unwrap_or("").to_string();
     let path = words.next().unwrap_or("/").to_string();
@@ -161,7 +165,7 @@ fn serve(stream: TcpStream, shared: &Shared) -> Result<(), String> {
         return crate::session::run(stream, shared);
     }
     let mut s = stream;
-    let mut drain = vec![0u8; req.len()];
+    let mut drain = vec![0u8; size];
     let _ = s.read_exact(&mut drain);
     let (status, ctype, body) = match (method.as_str(), path.strip_prefix("/vt/")) {
         ("GET" | "HEAD", Some(rest)) => skin(rest, shared),

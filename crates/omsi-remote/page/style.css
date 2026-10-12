@@ -516,7 +516,7 @@ body.offline #board { opacity: .35; filter: grayscale(1); pointer-events: none; 
 .field { display: flex; flex-direction: column; gap: 4px; margin: 10px 0; }
 .field > span { font-size: 13px; color: var(--muted); font-weight: 600; }
 .field input, .field select, .field textarea { font: inherit; font-size: 16px; padding: 9px 10px; border-radius: 10px; border: 1px solid var(--edge); background: var(--bg); color: var(--text); }
-.field textarea { min-height: 140px; font-family: ui-monospace, Menlo, monospace; font-size: 12px; }
+.field textarea { min-height: 140px; font-family: ui-monospace, Menlo, monospace; font-size: 16px; }
 .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .row4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 .seg { display: flex; flex-wrap: wrap; gap: 6px; }

@@ -119,16 +119,23 @@ fn pairing_needs_the_code_and_closes_after_five_wrong_ones() {
     let path = dir.join("devices.txt");
     let mut d = Devices::load(path.clone());
     assert!(!d.knows("whatever"));
-    let token = match d.pair("123456", " 123456 ", "iPad") {
+    let (a, b): (std::net::IpAddr, std::net::IpAddr) = ("192.168.1.20".parse().unwrap(), "192.168.1.30".parse().unwrap());
+    let token = match d.pair("123456", " 123456 ", "iPad", a) {
         Pairing::Paired(t) => t,
         _ => panic!("the right code pairs"),
     };
     assert!(d.knows(&token));
     assert!(Devices::load(path.clone()).knows(&token));
     for _ in 0..5 {
-        assert!(matches!(d.pair("123456", "000000", ""), Pairing::Wrong));
+        assert!(matches!(d.pair("123456", "000000", "", a), Pairing::Wrong { renew: false }));
     }
-    assert!(matches!(d.pair("123456", "123456", ""), Pairing::Locked));
+    assert!(matches!(d.pair("123456", "123456", "", a), Pairing::Locked));
+    assert!(matches!(d.pair("123456", "123456", "", b), Pairing::Paired(_)));
+    for k in 0..25 {
+        let ip = std::net::IpAddr::from([10, 0, 0, k]);
+        assert!(matches!(d.pair("123456", "000000", "", ip), Pairing::Wrong { renew } if renew == (k == 24)));
+    }
+    assert!(matches!(d.pair("123456", "123456", "", b), Pairing::Locked));
     d.forget_all();
     assert!(!Devices::load(path).knows(&token));
 }
@@ -239,6 +246,9 @@ fn a_device_pairs_drives_and_lets_go_of_what_it_held() {
     let d = remote.drive().unwrap();
     assert_eq!((d.steering, d.throttle, d.brake), (-1.0, 0.5, 0.0));
     std::thread::sleep(Duration::from_millis(300));
+    let d = remote.drive().unwrap();
+    assert_eq!((d.steering, d.throttle, d.brake), (-1.0, 0.0, 0.0));
+    std::thread::sleep(Duration::from_millis(1300));
     assert!(remote.drive().is_none());
     c.send(json!({ "t": "layout.save", "scope": "vehicle", "layout": layout("cockpit") }));
     assert_eq!(c.next("layout.done")["ok"], true);
@@ -278,7 +288,7 @@ fn the_pairing_address_fits_a_qr_code() {
     assert_eq!(url, "http://192.168.1.20:8642/#pin=012345");
     let (n, cells) = qr(&url).unwrap();
     assert_eq!(cells.len(), n * n);
-    assert!(n >= 21 && n <= 41);
+    assert!((21..=41).contains(&n));
 }
 
 #[test]
@@ -290,4 +300,14 @@ fn map_messages_carry_rounded_points() {
     let v: Value = serde_json::from_str(&crate::nav::nav_message(&info)).unwrap();
     assert_eq!(v["turn"]["m"], 120.4);
     assert_eq!(v["turn"]["street"], "Hauptstr.");
+}
+
+#[test]
+fn the_socket_is_only_opened_by_a_page_reached_by_its_address() {
+    for host in ["192.168.1.20:8642", "127.0.0.1", "[fe80::1]:8642", "[::1]", "localhost:8642", "my-pc.local:8642", "DESKTOP-ABC:8642", "pc.home.arpa"] {
+        assert!(crate::session::local_host(host), "{host}");
+    }
+    for host in ["evil.example:8642", "evil.example", "192.168.1.20.evil.example:8642", ""] {
+        assert!(!crate::session::local_host(host), "{host}");
+    }
 }
