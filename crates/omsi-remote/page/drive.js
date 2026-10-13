@@ -150,13 +150,13 @@ const Drive = {
     return d;
   },
 
-  pedal() {
+  pedal(sink) {
     const d = R.el("div", "pedals one");
-    const p = R.el("div", "pedal combined");
-    p.append(R.el("div", "fill up"), R.el("div", "fill down"), R.el("span", "txt top", R.T("Throttle")), R.el("span", "txt bottom", R.T("Brake")), R.el("div", "mid"));
+    const p = R.el("div", sink ? "pedal combined sink" : "pedal combined");
+    p.append(R.el("div", "fill up"), R.el("div", "fill down"), R.el("span", "txt top", R.T(sink ? "Brake" : "Throttle")), R.el("span", "txt bottom", R.T(sink ? "Throttle" : "Brake")), R.el("div", "mid"));
     const set = (e) => {
       const r = p.getBoundingClientRect();
-      const y = ((r.top + r.height / 2 - e.clientY) / Math.max(1, r.height / 2)) * 1.1;
+      const y = ((r.top + r.height / 2 - e.clientY) / Math.max(1, r.height / 2)) * (sink ? -1.1 : 1.1);
       const v = Math.abs(y) < 0.08 ? 0 : Math.max(-1, Math.min(1, y - Math.sign(y) * 0.08));
       this.throttle = Math.max(0, v);
       this.brake = Math.max(0, -v);
@@ -179,14 +179,16 @@ const Drive = {
   },
 
   pedals(w) {
-    if (w && w.look === "one") return this.pedal();
-    const d = R.el("div", "pedals");
+    if (w && (w.look === "one" || w.look === "oneDown")) return this.pedal(w.look === "oneDown");
+    const rise = !!(w && w.push === "up");
+    const d = R.el("div", rise ? "pedals rise" : "pedals");
     for (const [k, label] of [["brake", "Brake"], ["throttle", "Throttle"]]) {
       const p = R.el("div", "pedal " + k);
       p.append(R.el("div", "fill"), R.el("span", "txt", R.T(label)));
       const set = (e) => {
         const r = p.getBoundingClientRect();
-        const v = Math.max(0, Math.min(1, ((e.clientY - r.top) / Math.max(1, r.height)) * 1.15 - 0.05));
+        const at = (e.clientY - r.top) / Math.max(1, r.height);
+        const v = Math.max(0, Math.min(1, (rise ? 1 - at : at) * 1.15 - 0.05));
         this[k] = v;
         p.style.setProperty("--p", v);
         this.wake();
