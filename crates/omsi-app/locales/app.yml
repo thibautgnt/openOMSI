@@ -4,18 +4,25 @@ _version: 2
 
 "Ambience volume":
   zh-tw: "環境音量"
+  sv: "Omgivningsljudets volym"
 "Yaw sensitivity (left / right)":
   zh-tw: "水平旋轉靈敏度（左／右）"
+  sv: "Känslighet för horisontell rotation (vänster / höger)"
 "Pitch sensitivity (up / down)":
   zh-tw: "俯仰靈敏度（上／下）"
+  sv: "Känslighet för vertikal rotation (upp / ned)"
 "Roll sensitivity":
   zh-tw: "側傾靈敏度"
+  sv: "Känslighet för sidolutning"
 "X sensitivity (left / right)":
   zh-tw: "X 軸靈敏度（左／右）"
+  sv: "X-känslighet (vänster / höger)"
 "Y sensitivity (up / down)":
   zh-tw: "Y 軸靈敏度（上／下）"
+  sv: "Y-känslighet (upp / ned)"
 "Z sensitivity (forward / back)":
   zh-tw: "Z 軸靈敏度（前／後）"
+  sv: "Z-känslighet (framåt / bakåt)"
 "Light theme":
   zh-tw: "淺色"
   de: "Hell"
@@ -37062,6 +37069,7 @@ _version: 2
   ru: "{name} настроено автоматически ({what}). Проверьте ниже и измените, если что-то не так."
   de: "{name} wurde automatisch eingerichtet ({what}). Unten prüfen und ändern, was nicht stimmt."
   fr: "{name} a été configuré automatiquement ({what}). Vérifiez ci-dessous et corrigez ce qui ne va pas."
+  sv: "{name} konfigurerades automatiskt ({what}). Kontrollera nedan och ändra det som är fel."
 "A door is open":
   de: "Eine Tür ist offen"
   fr: "Une porte est ouverte"
@@ -37089,6 +37097,7 @@ _version: 2
   zh: "有车门未关"
   hi: "एक दरवाज़ा खुला है"
   ca: "Hi ha una porta oberta"
+  sv: "En dörr är öppen"
 "Accent colour":
   de: "Akzentfarbe"
   fr: "Couleur d'accent"
@@ -37116,6 +37125,7 @@ _version: 2
   zh: "强调色"
   hi: "एक्सेंट रंग"
   ca: "Color d'accent"
+  sv: "Accentfärg"
 "All doors":
   de: "Alle Türen"
   fr: "Toutes les portes"
@@ -37143,6 +37153,7 @@ _version: 2
   zh: "全部车门"
   hi: "सभी दरवाज़े"
   ca: "Totes les portes"
+  sv: "Alla dörrar"
 "Amber LED":
   de: "Amber-LED"
   fr: "LED ambre"
@@ -37170,6 +37181,7 @@ _version: 2
   zh: "琥珀色 LED"
   hi: "एम्बर LED"
   ca: "LED ambre"
+  sv: "Bärnstensfärgad lysdiod"
 "Bus key":
   de: "Bustaste"
   fr: "Touche du bus"
@@ -37197,6 +37209,7 @@ _version: 2
   zh: "巴士按键"
   hi: "बस की कुंजी"
   ca: "Tecla de l'autobús"
+  sv: "Bussknapp"
 "Bus symbols":
   de: "Bus-Symbole"
   fr: "Symboles du bus"
@@ -37224,6 +37237,7 @@ _version: 2
   zh: "巴士符号"
   hi: "बस के प्रतीक"
   ca: "Símbols de l'autobús"
+  sv: "Bussymboler"
 
 "Not saved: {folder} is not a complete OMSI 2 installation, it lacks {what}":
   de: "Nicht gespeichert: {folder} ist keine vollständige OMSI-2-Installation, es fehlt {what}"
@@ -37252,6 +37266,7 @@ _version: 2
   zh: "未保存：{folder} 不是完整的 OMSI 2 安装，缺少 {what}"
   hi: "सहेजा नहीं गया: {folder} OMSI 2 का पूरा इंस्टॉलेशन नहीं है, इसमें {what} नहीं है"
   ca: "No desat: {folder} no és una instal·lació completa d'OMSI 2, hi falta {what}"
+  sv: "Inte sparat: {folder} är ingen komplett OMSI 2-installation, {what} saknas"
 
 "Saved, but the OMSI 2 folder used is {folder}":
   de: "Gespeichert, aber verwendet wird der OMSI-2-Ordner {folder}"
@@ -37280,11 +37295,13 @@ _version: 2
   zh: "已保存，但使用的 OMSI 2 文件夹是 {folder}"
   hi: "सहेजा गया, पर इस्तेमाल हो रहा OMSI 2 फ़ोल्डर {folder} है"
   ca: "Desat, però la carpeta d'OMSI 2 que s'usa és {folder}"
+  sv: "Sparat, men OMSI 2-mappen som används är {folder}"
 
 "Door release (passengers open), any bus":
   zh-tw: "車門釋放（乘客開門），適用所有巴士"
   de: "Türfreigabe (Fahrgäste öffnen), jeder Bus"
   fr: "Déverrouillage des portes (les voyageurs ouvrent), tous bus"
+  sv: "Dörrfrigöring (passagerarna öppnar), alla bussar"
 
 "Connected to {host}":
   de: "Verbunden mit {host}"
@@ -37313,6 +37330,7 @@ _version: 2
   zh: "已连接到 {host}"
   hi: "{host} से जुड़ा"
   ca: "Connectat a {host}"
+  sv: "Ansluten till {host}"
 
 "Not connected: {why}":
   de: "Nicht verbunden: {why}"
@@ -37341,6 +37359,7 @@ _version: 2
   zh: "未连接：{why}"
   hi: "जुड़ा नहीं: {why}"
   ca: "No connectat: {why}"
+  sv: "Inte ansluten: {why}"
 
 "{n} passengers":
   de: "{n} Fahrgäste"
@@ -37369,6 +37388,7 @@ _version: 2
   zh: "{n} 名乘客"
   hi: "{n} यात्री"
   ca: "{n} passatgers"
+  sv: "{n} passagerare"
 
 "Set by {server}":
   de: "Von {server} festgelegt"
@@ -37397,6 +37417,7 @@ _version: 2
   zh: "由 {server} 设定"
   hi: "{server} द्वारा तय"
   ca: "Fixat per {server}"
+  sv: "Angivet av {server}"
 
 "No line matches.":
   de: "Keine Linie passt."
@@ -37425,6 +37446,7 @@ _version: 2
   zh: "没有匹配的线路。"
   hi: "कोई लाइन मेल नहीं खाती।"
   ca: "Cap línia coincideix."
+  sv: "Ingen linje matchar."
 
 "runs {date}":
   de: "fährt am {date}"
@@ -37453,6 +37475,7 @@ _version: 2
   zh: "{date} 运行"
   hi: "{date} को चलता है"
   ca: "circula el {date}"
+  sv: "går {date}"
 
 "never within a year":
   de: "innerhalb eines Jahres nie"
@@ -37481,6 +37504,7 @@ _version: 2
   zh: "一年内不运行"
   hi: "एक साल में कभी नहीं"
   ca: "mai en un any"
+  sv: "aldrig inom ett år"
 
 "ended":
   de: "beendet"
@@ -37509,6 +37533,7 @@ _version: 2
   zh: "已结束"
   hi: "समाप्त"
   ca: "acabat"
+  sv: "avslutad"
 
 "{n} trips":
   de: "{n} Fahrten"
@@ -37537,6 +37562,7 @@ _version: 2
   zh: "{n} 个行程"
   hi: "{n} यात्राएँ"
   ca: "{n} trajectes"
+  sv: "{n} turer"
 
 "via {stop}":
   de: "über {stop}"
@@ -37565,6 +37591,7 @@ _version: 2
   zh: "经 {stop}"
   hi: "{stop} होकर"
   ca: "per {stop}"
+  sv: "via {stop}"
 
 "openOMSI {version} is available":
   de: "openOMSI {version} ist verfügbar"
@@ -37593,6 +37620,7 @@ _version: 2
   zh: "openOMSI {version} 已推出"
   hi: "openOMSI {version} उपलब्ध है"
   ca: "openOMSI {version} ja és disponible"
+  sv: "openOMSI {version} finns tillgänglig"
 
 "Choose a version…":
   de: "Version wählen…"
@@ -37621,6 +37649,7 @@ _version: 2
   zh: "选择版本…"
   hi: "वर्ज़न चुनें…"
   ca: "Tria una versió…"
+  sv: "Välj en version…"
 
 "Choose a version":
   de: "Version wählen"
@@ -37649,6 +37678,7 @@ _version: 2
   zh: "选择版本"
   hi: "वर्ज़न चुनें"
   ca: "Tria una versió"
+  sv: "Välj en version"
 
 "Asking GitHub for the releases…":
   de: "Die Releases werden bei GitHub abgefragt…"
@@ -37677,6 +37707,7 @@ _version: 2
   zh: "正在向 GitHub 获取发布版本…"
   hi: "GitHub से रिलीज़ की सूची मँगाई जा रही है…"
   ca: "S'estan demanant les versions a GitHub…"
+  sv: "Hämtar versionerna från GitHub…"
 
 "Latest":
   de: "Neueste"
@@ -37705,6 +37736,7 @@ _version: 2
   zh: "最新"
   hi: "नवीनतम"
   ca: "La més recent"
+  sv: "Senaste"
 
 "Installed":
   de: "Installiert"
@@ -37733,6 +37765,7 @@ _version: 2
   zh: "已安装"
   hi: "इंस्टॉल है"
   ca: "Instal|lada"
+  sv: "Installerad"
 
 "Did not start on this computer":
   de: "Auf diesem Computer nicht gestartet"
@@ -37761,6 +37794,7 @@ _version: 2
   zh: "在这台电脑上启动失败"
   hi: "इस कंप्यूटर पर शुरू नहीं हुआ"
   ca: "No es va iniciar en aquest ordinador"
+  sv: "Startade inte på den här datorn"
 
 "Known to be broken":
   de: "Als fehlerhaft bekannt"
@@ -37789,6 +37823,7 @@ _version: 2
   zh: "已知有问题"
   hi: "ज्ञात रूप से ख़राब"
   ca: "Se sap que falla"
+  sv: "Känd för att inte fungera"
 
 "Downloading openOMSI {version}":
   de: "openOMSI {version} wird heruntergeladen"
@@ -37817,6 +37852,7 @@ _version: 2
   zh: "正在下载 openOMSI {version}"
   hi: "openOMSI {version} डाउनलोड हो रहा है"
   ca: "S'està baixant openOMSI {version}"
+  sv: "Laddar ned openOMSI {version}"
 
 "Installing openOMSI {version}":
   de: "openOMSI {version} wird installiert"
@@ -37845,6 +37881,7 @@ _version: 2
   zh: "正在安装 openOMSI {version}"
   hi: "openOMSI {version} इंस्टॉल हो रहा है"
   ca: "S'està instal·lant openOMSI {version}"
+  sv: "Installerar openOMSI {version}"
 
 "{done} of {total} from GitHub":
   de: "{done} von {total} von GitHub"
@@ -37873,6 +37910,7 @@ _version: 2
   zh: "从 GitHub 下载 {done} / {total}"
   hi: "GitHub से {total} में से {done}"
   ca: "{done} de {total} des de GitHub"
+  sv: "{done} av {total} från GitHub"
 
 "Looking for updates…":
   de: "Suche nach Updates…"
@@ -37901,6 +37939,7 @@ _version: 2
   zh: "正在检查更新…"
   hi: "अपडेट खोजे जा रहे हैं…"
   ca: "S'estan cercant actualitzacions…"
+  sv: "Söker efter uppdateringar…"
 
 "openOMSI {version} is the latest version.":
   de: "openOMSI {version} ist die neueste Version."
@@ -37929,6 +37968,7 @@ _version: 2
   zh: "openOMSI {version} 是最新版本。"
   hi: "openOMSI {version} नवीनतम संस्करण है।"
   ca: "openOMSI {version} és la versió més recent."
+  sv: "openOMSI {version} är den senaste versionen."
 
 "Updated to openOMSI {version}":
   de: "Auf openOMSI {version} aktualisiert"
@@ -37957,6 +37997,7 @@ _version: 2
   zh: "已更新到 openOMSI {version}"
   hi: "openOMSI {version} में अपडेट हुआ"
   ca: "Actualitzat a openOMSI {version}"
+  sv: "Uppdaterad till openOMSI {version}"
 
 "openOMSI {version} is installed: start it again yourself ({e}).":
   de: "openOMSI {version} ist installiert: Starte es selbst neu ({e})."
@@ -37985,6 +38026,7 @@ _version: 2
   zh: "openOMSI {version} 已安装：请自行重新启动（{e}）。"
   hi: "openOMSI {version} इंस्टॉल हो गया: इसे खुद फिर से शुरू करें ({e})।"
   ca: "openOMSI {version} està instal·lat: torna'l a obrir tu mateix ({e})."
+  sv: "openOMSI {version} är installerad: starta den igen själv ({e})."
 
 "You have {current}. The launcher downloads the new version ({size}) from GitHub and Android installs it; openOMSI then starts again. Your mods and settings stay as they are.":
   de: "Du hast {current}. Der Launcher lädt die neue Version ({size}) von GitHub herunter und Android installiert sie; danach startet openOMSI neu. Deine Mods und Einstellungen bleiben, wie sie sind."
@@ -38013,6 +38055,7 @@ _version: 2
   zh: "你当前是 {current}。启动器会从 GitHub 下载新版本（{size}），由 Android 安装，之后 openOMSI 会重新启动。你的模组和设置都会保留。"
   hi: "आपके पास {current} है। लॉन्चर नया संस्करण ({size}) GitHub से डाउनलोड करता है और Android उसे इंस्टॉल करता है; फिर openOMSI दोबारा शुरू होता है। आपके मॉड और सेटिंग्स वैसे ही रहते हैं।"
   ca: "Tens la {current}. El launcher baixa la nova versió ({size}) de GitHub i Android la instal·la; després openOMSI torna a obrir-se. Els teus mods i ajustos es queden com estan."
+  sv: "Du har {current}. Startprogrammet laddar ned den nya versionen ({size}) från GitHub och Android installerar den; sedan startar openOMSI igen. Dina moddar och inställningar förblir som de är."
 
 "You have {current}. The launcher downloads the new version ({size}) from GitHub, puts it in place of this one and starts again. Your mods and settings stay as they are.":
   de: "Du hast {current}. Der Launcher lädt die neue Version ({size}) von GitHub herunter, ersetzt diese und startet neu. Deine Mods und Einstellungen bleiben, wie sie sind."
@@ -38041,6 +38084,7 @@ _version: 2
   zh: "你当前是 {current}。启动器会从 GitHub 下载新版本（{size}），替换当前版本并重新启动。你的模组和设置都会保留。"
   hi: "आपके पास {current} है। लॉन्चर नया संस्करण ({size}) GitHub से डाउनलोड करके इसकी जगह लगाता है और फिर से शुरू होता है। आपके मॉड और सेटिंग्स वैसे ही रहते हैं।"
   ca: "Tens la {current}. El launcher baixa la nova versió ({size}) de GitHub, la posa al lloc d'aquesta i torna a obrir-se. Els teus mods i ajustos es queden com estan."
+  sv: "Du har {current}. Startprogrammet laddar ned den nya versionen ({size}) från GitHub, ersätter den här och startar igen. Dina moddar och inställningar förblir som de är."
 
 "openOMSI {version} was not installed":
   de: "openOMSI {version} wurde nicht installiert"
@@ -38069,6 +38113,7 @@ _version: 2
   zh: "openOMSI {version} 未安装"
   hi: "openOMSI {version} इंस्टॉल नहीं हुआ"
   ca: "No s'ha instal|lat openOMSI {version}"
+  sv: "openOMSI {version} installerades inte"
 
 "openOMSI {version} is installed: start it again yourself.":
   de: "openOMSI {version} ist installiert: Starte es selbst neu."
@@ -38097,6 +38142,7 @@ _version: 2
   zh: "openOMSI {version} 已安装：请自行重新启动。"
   hi: "openOMSI {version} इंस्टॉल हो गया है: इसे ख़ुद फिर से शुरू करें।"
   ca: "openOMSI {version} s'ha instal|lat: torna'l a obrir tu mateix."
+  sv: "openOMSI {version} är installerad: starta den igen själv."
 
 "The list of versions could not be read.":
   de: "Die Liste der Versionen konnte nicht gelesen werden."
@@ -38125,6 +38171,7 @@ _version: 2
   zh: "无法读取版本列表。"
   hi: "वर्ज़न की सूची पढ़ी नहीं जा सकी।"
   ca: "No s'ha pogut llegir la llista de versions."
+  sv: "Listan över versioner kunde inte läsas."
 
 "Versions cannot be installed here.":
   de: "Versionen können hier nicht installiert werden."
@@ -38153,6 +38200,7 @@ _version: 2
   zh: "无法在此安装版本。"
   hi: "यहाँ वर्ज़न इंस्टॉल नहीं किए जा सकते।"
   ca: "Aquí no es poden instal|lar versions."
+  sv: "Versioner kan inte installeras här."
 
 "No release to choose from":
   de: "Keine Version zur Auswahl"
@@ -38181,6 +38229,7 @@ _version: 2
   zh: "没有可选择的版本"
   hi: "चुनने के लिए कोई वर्ज़न नहीं"
   ca: "No hi ha cap versió per triar"
+  sv: "Ingen version att välja"
 
 "openOMSI {version} is downloaded from GitHub and takes the place of this version; the launcher then starts again. Your mods, settings and saves stay as they are.":
   de: "openOMSI {version} wird von GitHub heruntergeladen und ersetzt diese Version; danach startet der Launcher neu. Deine Mods, Einstellungen und Spielstände bleiben, wie sie sind."
@@ -38209,6 +38258,7 @@ _version: 2
   zh: "将从 GitHub 下载 openOMSI {version} 并替换此版本，随后启动器会重新启动。你的模组、设置和存档都会保持原样。"
   hi: "openOMSI {version} GitHub से डाउनलोड होकर इस वर्ज़न की जगह लेगा; फिर लॉन्चर दोबारा शुरू होगा। आपके मॉड, सेटिंग्स और सेव जैसे हैं वैसे ही रहेंगे।"
   ca: "openOMSI {version} es baixa de GitHub i ocupa el lloc d'aquesta versió; després el launcher es reinicia. Els teus mods, ajustos i partides desades es queden tal com són."
+  sv: "openOMSI {version} laddas ned från GitHub och ersätter den här versionen; sedan startar startprogrammet igen. Dina moddar, inställningar och sparade spel förblir som de är."
 
 "Update checks are turned off so that this version stays. To come back, choose the latest version in this list, or download it from GitHub if openOMSI {version} does not have this list yet.":
   de: "Die Suche nach Updates wird ausgeschaltet, damit diese Version bleibt. Um zurückzukehren, wähle in dieser Liste die neueste Version oder lade sie von GitHub herunter, falls openOMSI {version} diese Liste noch nicht hat."
@@ -38237,6 +38287,7 @@ _version: 2
   zh: "为保留此版本，将关闭更新检查。若要回到最新版，请在此列表中选择最新版本；如果 openOMSI {version} 还没有这个列表，请从 GitHub 下载。"
   hi: "यह वर्ज़न बना रहे, इसलिए अपडेट की जाँच बंद कर दी जाती है। वापस आने के लिए इस सूची में नवीनतम वर्ज़न चुनें, या अगर openOMSI {version} में यह सूची अभी नहीं है तो उसे GitHub से डाउनलोड करें।"
   ca: "La cerca d'actualitzacions es desactiva perquè aquesta versió es quedi. Per tornar, tria la versió més recent en aquesta llista, o baixa-la de GitHub si openOMSI {version} encara no té aquesta llista."
+  sv: "Uppdateringskontroller stängs av så att den här versionen behålls. För att gå tillbaka, välj den senaste versionen i listan, eller ladda ned den från GitHub om openOMSI {version} inte har den här listan än."
 
 "Install openOMSI {version}":
   de: "openOMSI {version} installieren"
@@ -38265,6 +38316,7 @@ _version: 2
   zh: "安装 openOMSI {version}"
   hi: "openOMSI {version} इंस्टॉल करें"
   ca: "Instal|la openOMSI {version}"
+  sv: "Installera openOMSI {version}"
 
 "Install":
   de: "Installieren"
@@ -38293,6 +38345,7 @@ _version: 2
   zh: "安装"
   hi: "इंस्टॉल करें"
   ca: "Instal|la"
+  sv: "Installera"
 
 "openOMSI {version} is installed":
   de: "openOMSI {version} ist installiert"
@@ -38321,6 +38374,7 @@ _version: 2
   zh: "已安装 openOMSI {version}"
   hi: "openOMSI {version} इंस्टॉल हो गया"
   ca: "openOMSI {version} s'ha instal|lat"
+  sv: "openOMSI {version} är installerad"
 
 "Close the game first: openOMSI cannot be replaced while it runs.":
   de: "Beende zuerst das Spiel: openOMSI kann nicht ersetzt werden, solange es läuft."
@@ -38349,6 +38403,7 @@ _version: 2
   zh: "请先关闭游戏：openOMSI 运行时无法被替换。"
   hi: "पहले गेम बंद करें: openOMSI चलते समय बदला नहीं जा सकता।"
   ca: "Tanca primer el joc: openOMSI no es pot substituir mentre s'executa."
+  sv: "Stäng spelet först: openOMSI kan inte ersättas medan det körs."
 
 "Another version is being installed.":
   de: "Es wird bereits eine andere Version installiert."
@@ -38377,6 +38432,7 @@ _version: 2
   zh: "正在安装另一个版本。"
   hi: "कोई दूसरा वर्ज़न इंस्टॉल हो रहा है।"
   ca: "Ja s'està instal|lant una altra versió."
+  sv: "En annan version installeras redan."
 
 "Open the list of versions again.":
   de: "Öffne die Liste der Versionen erneut."
@@ -38405,6 +38461,7 @@ _version: 2
   zh: "请重新打开版本列表。"
   hi: "वर्ज़न की सूची फिर से खोलें।"
   ca: "Torna a obrir la llista de versions."
+  sv: "Öppna listan över versioner igen."
 
 "This version is installed already.":
   de: "Diese Version ist bereits installiert."
@@ -38433,6 +38490,7 @@ _version: 2
   zh: "此版本已经安装。"
   hi: "यह वर्ज़न पहले से इंस्टॉल है।"
   ca: "Aquesta versió ja està instal|lada."
+  sv: "Den här versionen är redan installerad."
 
 "{n} mods, {on} on":
   de: "{n} Mods, {on} an"
@@ -38461,6 +38519,7 @@ _version: 2
   zh: "{n} 个模组，{on} 个已开启"
   hi: "{n} मॉड, {on} चालू"
   ca: "{n} mods, {on} actius"
+  sv: "{n} moddar, {on} på"
 
 "Buses":
   de: "Busse"
@@ -38489,6 +38548,7 @@ _version: 2
   zh: "巴士"
   hi: "बसें"
   ca: "Autobusos"
+  sv: "Bussar"
 
 "Maps":
   de: "Karten"
@@ -38517,6 +38577,7 @@ _version: 2
   zh: "地图"
   hi: "मानचित्र"
   ca: "Mapes"
+  sv: "Kartor"
 
 "{name} installed":
   de: "{name} installiert"
@@ -38545,6 +38606,7 @@ _version: 2
   zh: "已安装 {name}"
   hi: "{name} इंस्टॉल हुआ"
   ca: "{name} instal·lat"
+  sv: "{name} installerad"
 
 "{size} archive, {files} files, {unpacked} unpacked":
   de: "{size} Archiv, {files} Dateien, {unpacked} entpackt"
@@ -38573,6 +38635,7 @@ _version: 2
   zh: "压缩包 {size}，{files} 个文件，解压后 {unpacked}"
   hi: "{size} आर्काइव, {files} फ़ाइलें, खोलने पर {unpacked}"
   ca: "Arxiu de {size}, {files} fitxers, {unpacked} descomprimit"
+  sv: "{size} arkiv, {files} filer, {unpacked} uppackat"
 
 "fits ({free} free)":
   de: "passt ({free} frei)"
@@ -38601,6 +38664,7 @@ _version: 2
   zh: "空间足够（剩余 {free}）"
   hi: "जगह है ({free} खाली)"
   ca: "hi cap ({free} lliures)"
+  sv: "får plats ({free} ledigt)"
 
 "does not fit: needs {needed}, {free} free":
   de: "passt nicht: braucht {needed}, {free} frei"
@@ -38629,6 +38693,7 @@ _version: 2
   zh: "空间不足：需要 {needed}，剩余 {free}"
   hi: "जगह नहीं: {needed} चाहिए, {free} खाली"
   ca: "no hi cap: cal {needed}, {free} lliures"
+  sv: "får inte plats: behöver {needed}, {free} ledigt"
 
 "{done} / {total} files":
   de: "{done} / {total} Dateien"
@@ -38657,6 +38722,7 @@ _version: 2
   zh: "{done} / {total} 个文件"
   hi: "{done} / {total} फ़ाइलें"
   ca: "{done} / {total} fitxers"
+  sv: "{done} / {total} filer"
 
 "queued":
   de: "in der Warteschlange"
@@ -38685,6 +38751,7 @@ _version: 2
   zh: "排队中"
   hi: "कतार में"
   ca: "a la cua"
+  sv: "i kö"
 
 "planning":
   de: "wird geplant"
@@ -38713,6 +38780,7 @@ _version: 2
   zh: "规划中"
   hi: "योजना बन रही है"
   ca: "planificant"
+  sv: "planeras"
 
 "checking":
   de: "wird geprüft"
@@ -38741,6 +38809,7 @@ _version: 2
   zh: "检查中"
   hi: "जाँच हो रही है"
   ca: "comprovant"
+  sv: "kontrolleras"
 
 "unpacking":
   de: "wird entpackt"
@@ -38769,6 +38838,7 @@ _version: 2
   zh: "解压中"
   hi: "खोला जा रहा है"
   ca: "descomprimint"
+  sv: "packas upp"
 
 "copying":
   de: "wird kopiert"
@@ -38797,6 +38867,7 @@ _version: 2
   zh: "复制中"
   hi: "कॉपी हो रहा है"
   ca: "copiant"
+  sv: "kopieras"
 
 "moving":
   de: "wird verschoben"
@@ -38825,6 +38896,7 @@ _version: 2
   zh: "移动中"
   hi: "ले जाया जा रहा है"
   ca: "movent"
+  sv: "flyttas"
 
 "done":
   de: "fertig"
@@ -38853,6 +38925,7 @@ _version: 2
   zh: "完成"
   hi: "पूरा"
   ca: "fet"
+  sv: "klar"
 
 "failed":
   de: "fehlgeschlagen"
@@ -38881,6 +38954,7 @@ _version: 2
   zh: "失败"
   hi: "विफल"
   ca: "ha fallat"
+  sv: "misslyckades"
 
 "cancelled":
   de: "abgebrochen"
@@ -38909,6 +38983,7 @@ _version: 2
   zh: "已取消"
   hi: "रद्द"
   ca: "cancel·lat"
+  sv: "avbruten"
 
 "Filter by bus folder or bus file (.bus)":
   de: "Nach Busordner oder Busdatei (.bus) filtern"
@@ -38937,6 +39012,7 @@ _version: 2
   zh: "按巴士文件夹或巴士文件 (.bus) 筛选"
   hi: "बस फ़ोल्डर या बस फ़ाइल (.bus) से छाँटें"
   ca: "Filtra per carpeta o fitxer d'autobús (.bus)"
+  sv: "Filtrera efter bussmapp eller bussfil (.bus)"
 
 "{n} buses read":
   de: "{n} Busse gelesen"
@@ -38965,6 +39041,7 @@ _version: 2
   zh: "已读取 {n} 辆巴士"
   hi: "{n} बसें पढ़ी गईं"
   ca: "{n} autobusos llegits"
+  sv: "{n} bussar lästa"
 
 "Reading the buses' scripts: {done} / {total}":
   de: "Skripte der Busse werden gelesen: {done} / {total}"
@@ -38993,6 +39070,7 @@ _version: 2
   zh: "正在读取巴士的脚本：{done} / {total}"
   hi: "बसों की स्क्रिप्ट पढ़ी जा रही हैं: {done} / {total}"
   ca: "Llegint els scripts dels autobusos: {done} / {total}"
+  sv: "Läser bussarnas skript: {done} / {total}"
 
 "Looking for the installed buses...":
   de: "Installierte Busse werden gesucht..."
@@ -39021,6 +39099,7 @@ _version: 2
   zh: "正在查找已安装的巴士..."
   hi: "इंस्टॉल की गई बसें खोजी जा रही हैं..."
   ca: "Cercant els autobusos instal·lats..."
+  sv: "Söker efter installerade bussar..."
 
 "Used by {n} / {total} buses":
   de: "Von {n} / {total} Bussen genutzt"
@@ -39049,6 +39128,7 @@ _version: 2
   zh: "{n} / {total} 辆巴士使用"
   hi: "{n} / {total} बसों में इस्तेमाल"
   ca: "Usat per {n} / {total} autobusos"
+  sv: "Används av {n} / {total} bussar"
 
 "Showing the first {shown} of {n}: search to narrow the list.":
   de: "Die ersten {shown} von {n} werden gezeigt: Suche, um die Liste einzugrenzen."
@@ -39077,6 +39157,7 @@ _version: 2
   zh: "显示 {n} 项中的前 {shown} 项：请搜索以缩小列表。"
   hi: "{n} में से पहले {shown} दिखाए जा रहे हैं: सूची छोटी करने के लिए खोजें।"
   ca: "Es mostren els primers {shown} de {n}: cerca per reduir la llista."
+  sv: "Visar de första {shown} av {n}: sök för att begränsa listan."
 
 "Show more":
   de: "Mehr zeigen"
@@ -39105,6 +39186,7 @@ _version: 2
   zh: "显示更多"
   hi: "और दिखाएँ"
   ca: "Mostra'n més"
+  sv: "Visa fler"
 
 "The buses' scripts are read once the game is closed.":
   de: "Die Skripte der Busse werden gelesen, sobald das Spiel geschlossen ist."
@@ -39133,6 +39215,7 @@ _version: 2
   zh: "巴士的脚本会在游戏关闭后读取。"
   hi: "गेम बंद होने के बाद बसों की स्क्रिप्ट पढ़ी जाएँगी।"
   ca: "Els scripts dels autobusos es llegiran quan es tanqui el joc."
+  sv: "Bussarnas skript läses när spelet har stängts."
 
 "H-pattern gears are assigned. If your shifter has no neutral button, turn on return to neutral:":
   de: "H-Schaltungsgänge sind belegt. Hat dein Schalthebel keine Leerlauftaste, schalte die Rückkehr in den Leerlauf ein:"
@@ -42942,57 +43025,75 @@ _version: 2
 
 "Mirror quality":
   zh-tw: "後視鏡品質"
+  sv: "Speglarnas kvalitet"
 
 "As the picture (Enhanced)":
   zh-tw: "與主畫面相同（增強）"
+  sv: "Som bilden (Förbättrad)"
 
 "Every frame (smoothest)":
   zh-tw: "每幀更新（最流暢）"
+  sv: "Varje bildruta (jämnast)"
 
 "(the server's clock)":
   zh-tw: "（伺服器的時間）"
+  sv: "(serverns klocka)"
 
 "the map's (the server's)":
   zh-tw: "地圖（伺服器）的"
+  sv: "kartans (serverns)"
 
 "Check now":
   zh-tw: "立即檢查"
+  sv: "Kontrollera nu"
 
 "Choose…":
   zh-tw: "選擇……"
+  sv: "Välj…"
 
 "Clear finished":
   zh-tw: "清除已完成項目"
+  sv: "Rensa färdiga"
 
 "Copy code":
   zh-tw: "複製連線碼"
+  sv: "Kopiera kod"
 
 "Copy report":
   zh-tw: "複製報告"
+  sv: "Kopiera rapport"
 
 "Copy the report (the end of the game's log), or open a GitHub issue with it: it tells what went wrong on this computer.":
   zh-tw: "複製報告（遊戲記錄的末段），或附上報告在 GitHub 回報問題：報告會說明這台電腦發生的錯誤。"
+  sv: "Kopiera rapporten (slutet av spelets logg), eller öppna ett GitHub-ärende med den: den visar vad som gick fel på den här datorn."
 
 "Install updates without asking from now on":
   zh-tw: "今後自動安裝更新"
+  sv: "Installera uppdateringar utan att fråga från och med nu"
 
 "Multiplayer: show / hide the chat":
   zh-tw: "多人遊戲：顯示／隱藏聊天"
+  sv: "Flerspelarläge: visa / dölj chatten"
 
 "No tour has a trip still to come that matches.":
   zh-tw: "沒有符合條件且仍有未出發行程的班次。"
+  sv: "Inget omlopp har en kommande tur som matchar."
 
 "No tour left at this time: show the ended tours, or start earlier.":
   zh-tw: "此時間已無可用班次：顯示已結束班次，或提早開始。"
+  sv: "Inga omlopp kvar vid den här tiden: visa de avslutade omloppen, eller starta tidigare."
 
 "Not updated":
   zh-tw: "尚未更新"
+  sv: "Inte uppdaterad"
 
 "Open / close the main menu":
   zh-tw: "開啟／關閉主選單"
+  sv: "Öppna / stäng huvudmenyn"
 
 "Open on GitHub":
   zh-tw: "在 GitHub 開啟"
+  sv: "Öppna på GitHub"
 
 "Search":
   zh-tw: "搜尋"
@@ -43021,6 +43122,7 @@ _version: 2
   zh: "搜索"
   hi: "खोजें"
   ca: "Cerca"
+  sv: "Sök"
 "Set the line":
   de: "Linie einstellen"
   fr: "Définir la ligne"
@@ -43048,6 +43150,7 @@ _version: 2
   zh: "设置线路"
   hi: "लाइन सेट करें"
   ca: "Estableix la línia"
+  sv: "Ställ in linjen"
 "Short press":
   de: "Kurz drücken"
   fr: "Appui bref"
@@ -43075,6 +43178,7 @@ _version: 2
   zh: "短按"
   hi: "शॉर्ट प्रेस"
   ca: "Pulsació curta"
+  sv: "Kort tryck"
 "Shows":
   de: "Zeigt"
   fr: "Affiche"
@@ -43102,6 +43206,7 @@ _version: 2
   zh: "显示内容"
   hi: "दिखाता है"
   ca: "Mostra"
+  sv: "Visar"
 "Speedometer":
   de: "Tachometer"
   fr: "Compteur de vitesse"
@@ -43129,6 +43234,7 @@ _version: 2
   zh: "车速表"
   hi: "स्पीडोमीटर"
   ca: "Velocímetre"
+  sv: "Hastighetsmätare"
 "Start again from the standard layout":
   de: "Mit dem Standard-Layout neu beginnen"
   fr: "Repartir de la disposition standard"
@@ -43156,6 +43262,7 @@ _version: 2
   zh: "从标准布局重新开始"
   hi: "मानक लेआउट से फिर शुरू करें"
   ca: "Torna a començar amb la disposició estàndard"
+  sv: "Börja om från standardlayouten"
 "Start the bus":
   de: "Bus starten"
   fr: "Démarrer le bus"
@@ -43183,6 +43290,7 @@ _version: 2
   zh: "启动巴士"
   hi: "बस स्टार्ट करें"
   ca: "Arrenca l'autobús"
+  sv: "Starta bussen"
 "Stop brake":
   de: "Haltestellenbremse"
   fr: "Frein d'arrêt"
@@ -43210,6 +43318,7 @@ _version: 2
   zh: "停车制动"
   hi: "स्टॉप ब्रेक"
   ca: "Fre de parada"
+  sv: "Hållplatsbroms"
 "Stop request":
   de: "Haltewunsch"
   fr: "Demande d'arrêt"
@@ -43237,6 +43346,7 @@ _version: 2
   zh: "下车请求"
   hi: "रुकने का अनुरोध"
   ca: "Petició de parada"
+  sv: "Stoppsignal"
 "The bus has no depot file":
   de: "Der Bus hat keine Betriebshofdatei"
   fr: "Le bus n'a pas de fichier girouette"
@@ -43264,6 +43374,7 @@ _version: 2
   zh: "这辆巴士没有车场文件"
   hi: "बस में कोई डिपो फ़ाइल नहीं है"
   ca: "L'autobús no té fitxer de cotxeres"
+  sv: "Bussen har ingen depåfil"
 "The bus's own buttons":
   de: "Tasten des Busses"
   fr: "Boutons du bus"
@@ -43291,6 +43402,7 @@ _version: 2
   zh: "巴士自带按钮"
   hi: "बस के अपने बटन"
   ca: "Botons de l'autobús"
+  sv: "Bussens egna knappar"
 "The cockpit appears as soon as you drive a vehicle in the game.":
   de: "Das Cockpit erscheint, sobald du im Spiel ein Fahrzeug fährst."
   fr: "Le cockpit apparaît dès que vous conduisez un véhicule dans le jeu."
@@ -43318,6 +43430,7 @@ _version: 2
   zh: "在游戏中驾驶车辆后，驾驶舱就会出现。"
   hi: "गेम में कोई वाहन चलाते ही कॉकपिट दिखाई देगा।"
   ca: "El cockpit apareix tan bon punt condueixes un vehicle al joc."
+  sv: "Förarplatsen visas så snart du kör ett fordon i spelet."
 "The code has six digits":
   de: "Der Code hat sechs Ziffern"
   fr: "Le code comporte six chiffres"
@@ -43345,6 +43458,7 @@ _version: 2
   zh: "配对码为六位数字"
   hi: "कोड छह अंकों का है"
   ca: "El codi té sis xifres"
+  sv: "Koden har sex siffror"
 "The game refused this layout":
   de: "Das Spiel hat dieses Layout abgelehnt"
   fr: "Le jeu a refusé cette disposition"
@@ -43372,6 +43486,7 @@ _version: 2
   zh: "游戏拒绝了此布局"
   hi: "गेम ने यह लेआउट अस्वीकार कर दिया"
   ca: "El joc ha rebutjat aquesta disposició"
+  sv: "Spelet avvisade den här layouten"
 "The grid of the landscape layout: turn the device to arrange the portrait one.":
   de: "Das Raster des Querformat-Layouts: Dreh das Gerät, um das Hochformat-Layout anzuordnen."
   fr: "La grille de la disposition paysage : tournez l'appareil pour arranger celle en portrait."
@@ -43399,6 +43514,7 @@ _version: 2
   zh: "横屏布局的网格：旋转设备即可编排竖屏布局。"
   hi: "लैंडस्केप लेआउट का ग्रिड: पोर्ट्रेट लेआउट सजाने के लिए डिवाइस घुमाएँ।"
   ca: "La graella de la disposició horitzontal: gira el dispositiu per organitzar la vertical."
+  sv: "Rutnätet för liggande layout: vrid enheten för att ordna den stående."
 "The grid of the portrait layout: turn the device to arrange the landscape one.":
   de: "Das Raster des Hochformat-Layouts: Dreh das Gerät, um das Querformat-Layout anzuordnen."
   fr: "La grille de la disposition portrait : tournez l'appareil pour arranger celle en paysage."
@@ -43426,6 +43542,7 @@ _version: 2
   zh: "竖屏布局的网格：旋转设备即可编排横屏布局。"
   hi: "पोर्ट्रेट लेआउट का ग्रिड: लैंडस्केप लेआउट सजाने के लिए डिवाइस घुमाएँ।"
   ca: "La graella de la disposició vertical: gira el dispositiu per organitzar l'horitzontal."
+  sv: "Rutnätet för stående layout: vrid enheten för att ordna den liggande."
 "Theme":
   de: "Farbschema"
   fr: "Thème"
@@ -43453,6 +43570,7 @@ _version: 2
   zh: "主题"
   hi: "थीम"
   ca: "Tema"
+  sv: "Tema"
 "This is not a layout":
   de: "Das ist kein Layout"
   fr: "Ce n'est pas une disposition"
@@ -43480,6 +43598,7 @@ _version: 2
   zh: "这不是布局"
   hi: "यह लेआउट नहीं है"
   ca: "Això no és una disposició"
+  sv: "Det här är ingen layout"
 "Ticket":
   de: "Fahrschein"
   fr: "Ticket"
@@ -43507,6 +43626,7 @@ _version: 2
   zh: "车票"
   hi: "टिकट"
   ca: "Bitllet"
+  sv: "Biljett"
 "Tip: add this page to the home screen to use it full screen, like an app.":
   de: "Tipp: Füge diese Seite zum Startbildschirm hinzu, um sie wie eine App im Vollbild zu nutzen."
   fr: "Astuce : ajoutez cette page à l'écran d'accueil pour l'utiliser en plein écran, comme une application."
@@ -43534,6 +43654,7 @@ _version: 2
   zh: "提示：将此页面添加到主屏幕，即可像应用一样全屏使用。"
   hi: "सुझाव: इस पेज को होम स्क्रीन पर जोड़ें, ताकि इसे ऐप की तरह फ़ुलस्क्रीन में इस्तेमाल कर सकें।"
   ca: "Consell: afegeix aquesta pàgina a la pantalla d'inici per fer-la servir a pantalla completa, com una app."
+  sv: "Tips: lägg till den här sidan på hemskärmen för att använda den i helskärm, som en app."
 "Too many devices are connected":
   de: "Zu viele Geräte sind verbunden"
   fr: "Trop d'appareils sont connectés"
@@ -43561,6 +43682,7 @@ _version: 2
   zh: "连接的设备过多"
   hi: "बहुत सारे डिवाइस कनेक्टेड हैं"
   ca: "Hi ha massa dispositius connectats"
+  sv: "För många enheter är anslutna"
 "Too many tries, wait two minutes":
   de: "Zu viele Versuche, warte zwei Minuten"
   fr: "Trop de tentatives, patientez deux minutes"
@@ -43588,6 +43710,7 @@ _version: 2
   zh: "尝试次数过多，请等待两分钟"
   hi: "बहुत ज़्यादा कोशिशें, दो मिनट रुकें"
   ca: "Massa intents, espera dos minuts"
+  sv: "För många försök, vänta två minuter"
 "Undo":
   de: "Rückgängig"
   fr: "Annuler la modification"
@@ -43615,6 +43738,7 @@ _version: 2
   zh: "撤销"
   hi: "पूर्ववत करें"
   ca: "Desfés"
+  sv: "Ångra"
 "Unit":
   de: "Einheit"
   fr: "Unité"
@@ -43642,6 +43766,7 @@ _version: 2
   zh: "单位"
   hi: "इकाई"
   ca: "Unitat"
+  sv: "Enhet"
 "Value":
   de: "Wert"
   fr: "Valeur"
@@ -43669,6 +43794,7 @@ _version: 2
   zh: "数值"
   hi: "मान"
   ca: "Valor"
+  sv: "Värde"
 "Vehicles with a layout of their own keep it":
   de: "Fahrzeuge mit eigenem Layout behalten es"
   fr: "Les véhicules qui ont leur propre disposition la conservent"
@@ -43696,6 +43822,7 @@ _version: 2
   zh: "已有专属布局的车辆将保留其布局"
   hi: "जिन वाहनों का अपना लेआउट है, उनका वही रहता है"
   ca: "Els vehicles amb disposició pròpia la conserven"
+  sv: "Fordon med en egen layout behåller den"
 "Waiting for a bus":
   de: "Warte auf einen Bus"
   fr: "En attente d'un bus"
@@ -43723,6 +43850,7 @@ _version: 2
   zh: "等待巴士"
   hi: "बस का इंतज़ार है"
   ca: "Esperant un autobús"
+  sv: "Väntar på en buss"
 "Warning lamps":
   de: "Warnleuchten"
   fr: "Voyants"
@@ -43750,6 +43878,7 @@ _version: 2
   zh: "警告灯"
   hi: "चेतावनी लैंप"
   ca: "Pilots d'avís"
+  sv: "Varningslampor"
 "While held":
   de: "Gedrückt halten"
   fr: "Appui maintenu"
@@ -43777,6 +43906,7 @@ _version: 2
   zh: "按住时"
   hi: "दबाए रखने तक"
   ca: "Mentre es prem"
+  sv: "Medan den hålls nedtryckt"
 "Widgets":
   de: "Widgets"
   fr: "Widgets"
@@ -43804,6 +43934,7 @@ _version: 2
   zh: "小组件"
   hi: "विजेट"
   ca: "Ginys"
+  sv: "Widgetar"
 "Wrong code":
   de: "Falscher Code"
   fr: "Code incorrect"
@@ -43831,6 +43962,7 @@ _version: 2
   zh: "配对码错误"
   hi: "गलत कोड"
   ca: "Codi incorrecte"
+  sv: "Fel kod"
 "The bus's switches, its destination sign and a dashboard on a phone or tablet of the same network":
   de: "Die Schalter des Busses, seine Zielanzeige und ein Armaturenbrett auf einem Handy oder Tablet im selben Netzwerk"
   fr: "Les commandes du bus, sa girouette et un tableau de bord sur un téléphone ou une tablette du même réseau"
@@ -43858,6 +43990,7 @@ _version: 2
   zh: "在同一网络的手机或平板上显示巴士的开关、路牌和仪表盘"
   hi: "बस के स्विच, उसका गंतव्य बोर्ड और एक डैशबोर्ड, उसी नेटवर्क के फ़ोन या टैबलेट पर"
   ca: "Els interruptors de l'autobús, el seu rètol de destinació i un tauler en un mòbil o tauleta de la mateixa xarxa"
+  sv: "Bussens reglage, dess destinationsskylt och en instrumentpanel på en telefon eller surfplatta i samma nätverk"
 "Connect the phone or tablet to the same network (Wi-Fi) as this computer.":
   de: "Verbinde das Handy oder Tablet mit demselben Netzwerk (Wi-Fi) wie diesen Computer."
   fr: "Connectez le téléphone ou la tablette au même réseau (Wi-Fi) que cet ordinateur."
@@ -43885,6 +44018,7 @@ _version: 2
   zh: "将手机或平板连接到与此电脑相同的网络（Wi-Fi）。"
   hi: "फ़ोन या टैबलेट को उसी नेटवर्क (Wi-Fi) से जोड़ें जिस पर यह कंप्यूटर है।"
   ca: "Connecta el mòbil o la tauleta a la mateixa xarxa (Wi-Fi) que aquest ordinador."
+  sv: "Anslut telefonen eller surfplattan till samma nätverk (Wi-Fi) som den här datorn."
 "Scan this picture with its camera: the cockpit opens and pairs by itself.":
   de: "Scanne dieses Bild mit seiner Kamera: Das Cockpit öffnet sich und koppelt sich von selbst."
   fr: "Scannez cette image avec son appareil photo : le cockpit s'ouvre et s'appaire tout seul."
@@ -43912,6 +44046,7 @@ _version: 2
   zh: "用手机或平板的相机扫描此图像：驾驶舱会打开并自动配对。"
   hi: "इस तस्वीर को उसके कैमरे से स्कैन करें: कॉकपिट खुल जाएगा और अपने आप पेयर हो जाएगा।"
   ca: "Escaneja aquesta imatge amb la seva càmera: el cockpit s'obre i es vincula tot sol."
+  sv: "Skanna den här bilden med dess kamera: förarplatsen öppnas och parkopplas av sig själv."
 "Or open this address in its browser and enter the code:":
   de: "Oder öffne diese Adresse in seinem Browser und gib den Code ein:"
   fr: "Ou ouvrez cette adresse dans son navigateur et saisissez le code :"
@@ -43939,6 +44074,7 @@ _version: 2
   zh: "或在浏览器中打开此地址并输入配对码："
   hi: "या उसके ब्राउज़र में यह पता खोलें और कोड डालें:"
   ca: "O obre aquesta adreça al seu navegador i introdueix el codi:"
+  sv: "Eller öppna den här adressen i dess webbläsare och ange koden:"
 "Devices connected:":
   de: "Verbundene Geräte:"
   fr: "Appareils connectés :"
@@ -43966,6 +44102,7 @@ _version: 2
   zh: "已连接设备："
   hi: "कनेक्टेड डिवाइस:"
   ca: "Dispositius connectats:"
+  sv: "Anslutna enheter:"
 "No device connected yet":
   de: "Noch kein Gerät verbunden"
   fr: "Aucun appareil connecté pour l'instant"
@@ -43993,6 +44130,7 @@ _version: 2
   zh: "尚无设备连接"
   hi: "अभी तक कोई डिवाइस कनेक्ट नहीं है"
   ca: "Encara no hi ha cap dispositiu connectat"
+  sv: "Ingen enhet ansluten än"
 "A device that does not connect: allow openOMSI in this computer's firewall, and check that both are on the same network.":
   de: "Ein Gerät verbindet sich nicht? Erlaube openOMSI in der Firewall dieses Computers und stelle sicher, dass beide im selben Netzwerk sind."
   fr: "Un appareil ne se connecte pas : autorisez openOMSI dans le pare-feu de cet ordinateur et vérifiez que les deux sont sur le même réseau."
@@ -44020,6 +44158,7 @@ _version: 2
   zh: "设备无法连接时：请在此电脑的防火墙中允许 openOMSI，并确认两者在同一网络中。"
   hi: "कोई डिवाइस कनेक्ट न हो तो: इस कंप्यूटर के फ़ायरवॉल में openOMSI को अनुमति दें, और जाँचें कि दोनों एक ही नेटवर्क पर हैं।"
   ca: "Un dispositiu no es connecta: permet openOMSI al tallafoc d'aquest ordinador i comprova que tots dos siguin a la mateixa xarxa."
+  sv: "En enhet som inte ansluter: tillåt openOMSI i den här datorns brandvägg och kontrollera att båda är i samma nätverk."
 "Forget paired devices":
   de: "Gekoppelte Geräte vergessen"
   fr: "Oublier les appareils appairés"
@@ -44047,6 +44186,7 @@ _version: 2
   zh: "清除已配对设备"
   hi: "पेयर किए गए डिवाइस भूल जाएँ"
   ca: "Oblida els dispositius vinculats"
+  sv: "Glöm parkopplade enheter"
 "Switch off":
   de: "Ausschalten"
   fr: "Désactiver"
@@ -44074,6 +44214,7 @@ _version: 2
   zh: "关闭"
   hi: "बंद करें"
   ca: "Desactiva"
+  sv: "Stäng av"
 "Switch on":
   de: "Einschalten"
   fr: "Activer"
@@ -44101,6 +44242,7 @@ _version: 2
   zh: "开启"
   hi: "चालू करें"
   ca: "Activa"
+  sv: "Slå på"
 "Nothing is reachable from the network while it is off.":
   de: "Solange es aus ist, ist nichts aus dem Netzwerk erreichbar."
   fr: "Tant qu'il est désactivé, rien n'est accessible depuis le réseau."
@@ -44128,6 +44270,7 @@ _version: 2
   zh: "关闭期间，网络上无法访问任何内容。"
   hi: "बंद रहने पर नेटवर्क से कुछ भी एक्सेस नहीं किया जा सकता।"
   ca: "Mentre està desactivat, no s'hi pot accedir des de la xarxa."
+  sv: "Inget går att nå från nätverket medan den är avstängd."
 "Every device has to enter the code again":
   de: "Jedes Gerät muss den Code erneut eingeben"
   fr: "Chaque appareil devra saisir à nouveau le code"
@@ -44155,6 +44298,7 @@ _version: 2
   zh: "所有设备都需要重新输入配对码"
   hi: "हर डिवाइस को कोड फिर से डालना होगा"
   ca: "Cada dispositiu haurà de tornar a introduir el codi"
+  sv: "Varje enhet måste ange koden igen"
 "Open {} on a phone or tablet of the same network":
   de: "Öffne {} auf einem Handy oder Tablet im selben Netzwerk"
   fr: "Ouvrez {} sur un téléphone ou une tablette du même réseau"
@@ -44182,6 +44326,7 @@ _version: 2
   zh: "在同一网络的手机或平板上打开 {}"
   hi: "उसी नेटवर्क के फ़ोन या टैबलेट पर {} खोलें"
   ca: "Obre {} en un mòbil o tauleta de la mateixa xarxa"
+  sv: "Öppna {} på en telefon eller surfplatta i samma nätverk"
 "Port {} is taken by another program":
   de: "Port {} wird von einem anderen Programm belegt"
   fr: "Le port {} est utilisé par un autre programme"
@@ -44209,6 +44354,7 @@ _version: 2
   zh: "端口 {} 已被其他程序占用"
   hi: "पोर्ट {} किसी दूसरे प्रोग्राम द्वारा इस्तेमाल हो रहा है"
   ca: "El port {} l'ocupa un altre programa"
+  sv: "Port {} används av ett annat program"
 "Remote cockpit (phone or tablet)":
   de: "Remote-Cockpit (Handy oder Tablet)"
   fr: "Cockpit à distance (téléphone ou tablette)"
@@ -44236,6 +44382,7 @@ _version: 2
   zh: "远程驾驶舱（手机或平板）"
   hi: "रिमोट कॉकपिट (फ़ोन या टैबलेट)"
   ca: "Cockpit remot (mòbil o tauleta)"
+  sv: "Fjärrförarplats (telefon eller surfplatta)"
 "All good":
   de: "Alles in Ordnung"
   fr: "Tout va bien"
@@ -44263,6 +44410,7 @@ _version: 2
   zh: "一切正常"
   hi: "सब ठीक है"
   ca: "Tot correcte"
+  sv: "Allt i ordning"
 "Bus lowered":
   de: "Bus abgesenkt"
   fr: "Bus baraqué"
@@ -44290,6 +44438,7 @@ _version: 2
   zh: "车身已侧跪"
   hi: "बस झुकी हुई है"
   ca: "Autobús agenollat"
+  sv: "Bussen sänkt"
 "Citaro":
   de: "Citaro"
   fr: "Citaro"
@@ -44317,6 +44466,7 @@ _version: 2
   zh: "Citaro"
   hi: "Citaro"
   ca: "Citaro"
+  sv: "Citaro"
 "Doors open":
   de: "Türen offen"
   fr: "Portes ouvertes"
@@ -44344,6 +44494,7 @@ _version: 2
   zh: "车门已开"
   hi: "दरवाज़े खुले"
   ca: "Portes obertes"
+  sv: "Dörrar öppna"
 "Fuel low":
   de: "Kraftstoff niedrig"
   fr: "Carburant bas"
@@ -44371,6 +44522,7 @@ _version: 2
   zh: "燃油不足"
   hi: "ईंधन कम"
   ca: "Combustible baix"
+  sv: "Lite bränsle"
 "Green display":
   de: "Grünes Display"
   fr: "Écran vert"
@@ -44398,6 +44550,7 @@ _version: 2
   zh: "绿色屏幕"
   hi: "हरा डिस्प्ले"
   ca: "Pantalla verda"
+  sv: "Grön display"
 "Hazard lights on":
   de: "Warnblinker an"
   fr: "Feux de détresse allumés"
@@ -44425,6 +44578,7 @@ _version: 2
   zh: "双闪已开启"
   hi: "हैज़र्ड लाइट चालू"
   ca: "Llums d'emergència enceses"
+  sv: "Varningsblinkers på"
 "Line drawing":
   de: "Strichzeichnung"
   fr: "Dessin au trait"
@@ -44452,6 +44606,7 @@ _version: 2
   zh: "线条图"
   hi: "रेखाचित्र"
   ca: "Dibuix lineal"
+  sv: "Linjeteckning"
 "Messages":
   de: "Meldungen"
   fr: "Messages"
@@ -44479,6 +44634,7 @@ _version: 2
   zh: "信息"
   hi: "संदेश"
   ca: "Missatges"
+  sv: "Meddelanden"
 "Parking brake applied":
   de: "Feststellbremse angezogen"
   fr: "Frein de parc serré"
@@ -44506,6 +44662,7 @@ _version: 2
   zh: "驻车制动已启用"
   hi: "पार्किंग ब्रेक लगा है"
   ca: "Fre d'estacionament activat"
+  sv: "Parkeringsbroms ansatt"
 "Plain text":
   de: "Einfacher Text"
   fr: "Texte simple"
@@ -44533,6 +44690,7 @@ _version: 2
   zh: "纯文本"
   hi: "सादा टेक्स्ट"
   ca: "Text simple"
+  sv: "Ren text"
 "Stop brake applied":
   de: "Haltestellenbremse aktiv"
   fr: "Frein d'arrêt activé"
@@ -44560,6 +44718,7 @@ _version: 2
   zh: "停车制动已启用"
   hi: "स्टॉप ब्रेक लगा है"
   ca: "Fre de parada activat"
+  sv: "Hållplatsbroms ansatt"
 "Stop requested":
   de: "Wagen hält"
   fr: "Arrêt demandé"
@@ -44587,6 +44746,7 @@ _version: 2
   zh: "已按下车铃"
   hi: "रुकने का अनुरोध हुआ"
   ca: "Parada sol·licitada"
+  sv: "Stannar"
 "The bus's own display":
   de: "Anzeige des Busses"
   fr: "Girouette du bus"
@@ -44614,6 +44774,7 @@ _version: 2
   zh: "巴士自带路牌"
   hi: "बस का अपना डिस्प्ले"
   ca: "Rètol de l'autobús"
+  sv: "Bussens egen display"
 "Navigation":
   de: "Navigation"
   fr: "Navigation"
@@ -44641,6 +44802,7 @@ _version: 2
   zh: "导航"
   hi: "नेविगेशन"
   ca: "Navegació"
+  sv: "Navigering"
 "The map appears once the game has read the map's roads":
   de: "Die Karte erscheint, sobald das Spiel die Straßen der Karte gelesen hat"
   fr: "La carte s'affiche dès que le jeu a lu les routes de la carte"
@@ -44668,6 +44830,7 @@ _version: 2
   zh: "游戏读取完地图的道路后，就会显示地图"
   hi: "गेम द्वारा मैप की सड़कें पढ़ लेने के बाद मैप दिखाई देगा"
   ca: "El mapa apareixerà quan el joc hagi llegit les carreteres del mapa"
+  sv: "Kartan visas när spelet har läst kartans vägar"
 "Bus display":
   de: "Busdisplay"
   fr: "Écran du bus"
@@ -44695,6 +44858,7 @@ _version: 2
   zh: "巴士显示屏"
   hi: "बस डिस्प्ले"
   ca: "Pantalla de l'autobús"
+  sv: "Bussdisplay"
 "Phone or tablet connected":
   de: "Handy oder Tablet verbunden"
   fr: "Téléphone ou tablette connecté"
@@ -44722,102 +44886,135 @@ _version: 2
   zh: "手机或平板已连接"
   hi: "फ़ोन या टैबलेट कनेक्ट हो गया"
   ca: "Telèfon o tauleta connectat"
+  sv: "Telefon eller surfplatta ansluten"
 
 "The bus's own keys":
   zh-tw: "巴士專用按鍵"
+  sv: "Bussens egna tangenter"
 
 "The game closed on an error":
   zh-tw: "遊戲因錯誤而關閉"
+  sv: "Spelet stängdes på grund av ett fel"
 
 "The game was closed by the system":
   zh-tw: "遊戲被系統關閉"
+  sv: "Spelet stängdes av systemet"
 
 "The report is copied: paste it into a GitHub issue or a message.":
   zh-tw: "報告已複製：可貼到 GitHub 問題回報或訊息中。"
+  sv: "Rapporten är kopierad: klistra in den i ett GitHub-ärende eller ett meddelande."
 
 "Tours of this line on the chosen day":
   zh-tw: "此路線在所選日期的班次"
+  sv: "Omlopp på den här linjen den valda dagen"
 
 "Update now":
   zh-tw: "立即更新"
+  sv: "Uppdatera nu"
 
 "Use DirectX 12":
   zh-tw: "使用 DirectX 12"
+  sv: "Använd DirectX 12"
 
 "What's new":
   zh-tw: "更新內容"
+  sv: "Nyheter"
 
 "Your friends paste it into Multiplayer → Connect by Code.":
   zh-tw: "朋友可將它貼到「多人遊戲 → 使用連線碼連線」。"
+  sv: "Dina vänner klistrar in den under Flerspelarläge → Anslut med kod."
 
 "stopping - saving the run...":
   zh-tw: "正在結束：儲存行程……"
+  sv: "stoppar - sparar körningen..."
 
 "Android asks whether to update openOMSI: press Update there. The app then starts again by itself.":
   zh-tw: "Android 會詢問是否更新 openOMSI：請按「更新」。完成後應用程式會自動重新啟動。"
+  sv: "Android frågar om openOMSI ska uppdateras: tryck på Uppdatera där. Appen startar sedan om av sig själv."
 
 "CHAT  (V in the game to write)":
   zh-tw: "聊天（遊戲中按 V 輸入）"
+  sv: "CHATT  (V i spelet för att skriva)"
 
 "no key bindings":
   zh-tw: "沒有按鍵綁定"
+  sv: "inga tangentbindningar"
 
 "On a server the map, the time, the date and the weather are the same for everybody: the server keeps the world's clock. You choose your bus and your duty.":
   zh-tw: "伺服器上的所有玩家共用地圖、時間、日期與天氣，由伺服器控制世界時間。你可以選擇自己的巴士與執勤班次。"
+  sv: "På en server är kartan, tiden, datumet och vädret desamma för alla: servern håller världens klocka. Du väljer din buss och din tjänst."
 
 "The Vulkan graphics driver stopped while compiling shaders. Starting the game again will switch to OpenGL (or change it in Settings → Graphics API).":
   zh-tw: "Vulkan 顯示驅動程式在編譯著色器時停止運作。重新啟動遊戲將切換至 OpenGL（也可在「設定 → 圖形 API」變更）。"
+  sv: "Vulkan-grafikdrivrutinen slutade fungera när shaders kompilerades. När spelet startas igen byts det till OpenGL (eller ändra det i Inställningar → Grafik-API)."
 
 "The game draws with DirectX 12 from the next start (Settings → Graphics API to change it back).":
   zh-tw: "下次啟動遊戲時將使用 DirectX 12 繪圖（可在「設定 → 圖形 API」切換回原設定）。"
+  sv: "Spelet ritar med DirectX 12 från nästa start (Inställningar → Grafik-API för att ändra tillbaka)."
 
 "The server ended your game. Its message:":
   zh-tw: "伺服器已結束你的遊戲。伺服器訊息："
+  sv: "Servern avslutade ditt spel. Dess meddelande:"
 
 "The system closed the game while it was running, typically because the device ran out of memory (RAM). Lowering texture resolution or reducing AI traffic in Settings helps prevent memory exhaustion.":
   zh-tw: "系統在遊戲執行期間將它關閉，通常是因為記憶體（RAM）不足。在設定中降低材質解析度或減少 AI 交通，有助於避免記憶體耗盡。"
+  sv: "Systemet stängde spelet medan det kördes, vanligtvis för att enheten fick slut på minne (RAM). Att sänka texturupplösningen eller minska AI-trafiken i Inställningar hjälper till att förhindra minnesbrist."
 
 "Controls...":
   zh-tw: "操作設定……"
+  sv: "Kontroller..."
 
 "Ambience":
   zh-tw: "環境音效"
+  sv: "Omgivningsljud"
 
 "Draws the clouds":
   zh-tw: "顯示雲層"
+  sv: "Ritar molnen"
 
 "Enhanced graphics: how much brighter the night is shown":
   zh-tw: "增強畫面模式下夜間亮度的提升幅度"
+  sv: "Förbättrad grafik: hur mycket ljusare natten visas"
 
 "How loud the ambience is":
   zh-tw: "環境音效的音量"
+  sv: "Hur högt omgivningsljudet är"
 
 "The place, the weather, the birds of the season and the town's life, from real recordings":
   zh-tw: "以實際錄音呈現場所、天氣、季節鳥鳴與城鎮生活的聲音"
+  sv: "Platsen, vädret, årstidens fåglar och stadens liv, från riktiga inspelningar"
 
 "Hold the cursor while steering":
   zh-tw: "轉向時鎖定游標"
+  sv: "Håll kvar markören under styrning"
 
 "The wheel reaches its lock past the window's edges; off: the crosshair stays free and without delay, as in OMSI":
   zh-tw: "超出視窗邊緣時方向盤達到轉向極限；關閉時準星可自由移動且沒有延遲，如同 OMSI"
+  sv: "Ratten når fullt utslag bortom fönstrets kanter; av: hårkorset är fritt och utan fördröjning, som i OMSI"
 
 "Steering and view":
   zh-tw: "轉向與視角"
+  sv: "Styrning och vy"
 
 "Stick smoothing":
   zh-tw: "搖桿平滑度"
+  sv: "Utjämning av spaken"
 
 "Steering speed":
   zh-tw: "轉向速度"
+  sv: "Styrhastighet"
 
 "Evens out the small shakes of the stick (off: the stick as it reads)":
   zh-tw: "平滑搖桿的細微晃動（關閉時直接使用讀取值）"
+  sv: "Jämnar ut spakens små skakningar (av: spaken som den läses)"
 
 "Ignore movement round the stick's centre (raise it if the bus steers by itself)":
   zh-tw: "忽略搖桿中心附近的移動（若巴士自行轉向，請提高此值）"
+  sv: "Ignorera rörelse runt spakens mittläge (höj om bussen styr av sig själv)"
 
 "Seconds the stick takes to turn the wheel from the middle to the full lock - more is smoother":
   zh-tw: "搖桿將方向盤從中央轉至極限所需的秒數：越高越平滑"
+  sv: "Sekunder som spaken behöver för att vrida ratten från mitten till fullt utslag - mer är jämnare"
 
 "Pedals":
   zh-tw: "踏板"
@@ -44846,6 +45043,7 @@ _version: 2
   id: "Pedal"
   ms: "Pedal"
   tl: "Mga pedal"
+  sv: "Pedaler"
 
 "Steering lock":
   ca: "Gir del volant"
@@ -44874,6 +45072,7 @@ _version: 2
   id: "Putaran setir"
   ms: "Putaran stereng"
   tl: "Ikot ng manibela"
+  sv: "Rattutslag"
 
 "Door 5":
   de: "Tür 5"
@@ -44902,6 +45101,7 @@ _version: 2
   zh: "车门 5"
   hi: "दरवाज़ा 5"
   ca: "Porta 5"
+  sv: "Dörr 5"
 
 "Door 6":
   de: "Tür 6"
@@ -44930,6 +45130,7 @@ _version: 2
   zh: "车门 6"
   hi: "दरवाज़ा 6"
   ca: "Porta 6"
+  sv: "Dörr 6"
 
 "Door 5 open":
   de: "Tür 5 offen"
@@ -44958,6 +45159,7 @@ _version: 2
   zh: "车门 5 已开"
   hi: "दरवाज़ा 5 खुला"
   ca: "Porta 5 oberta"
+  sv: "Dörr 5 öppen"
 
 "Door 6 open":
   de: "Tür 6 offen"
@@ -44986,6 +45188,7 @@ _version: 2
   zh: "车门 6 已开"
   hi: "दरवाज़ा 6 खुला"
   ca: "Porta 6 oberta"
+  sv: "Dörr 6 öppen"
 
 "Two pedals":
   ca: "Dos pedals"
@@ -45014,6 +45217,7 @@ _version: 2
   id: "Dua pedal"
   ms: "Dua pedal"
   tl: "Dalawang pedal"
+  sv: "Två pedaler"
 
 "One pedal: up to accelerate, down to brake":
   ca: "Un pedal: amunt per accelerar, avall per frenar"
@@ -45042,111 +45246,147 @@ _version: 2
   id: "Satu pedal: ke atas untuk gas, ke bawah untuk rem"
   ms: "Satu pedal: ke atas untuk memecut, ke bawah untuk membrek"
   tl: "Isang pedal: pataas para bumilis, pababa para pumreno"
+  sv: "En pedal: upp för att gasa, ned för att bromsa"
 
 "Wheel":
   zh-tw: "方向盤"
+  sv: "Ratt"
 
 "How often the mirrors are drawn: every frame, the street moves through them as smoothly as through the windscreen":
   zh-tw: "後視鏡的更新頻率：每幀更新時，鏡中的道路與擋風玻璃外一樣流暢"
+  sv: "Hur ofta speglarna ritas: varje bildruta rör sig gatan lika jämnt i dem som genom vindrutan"
 
 "In Enhanced and Enhanced+: the mirrors shaded as the picture is, with its light and its sky, instead of the plain light":
   zh-tw: "在 Enhanced 與 Enhanced+ 模式下，後視鏡使用與主畫面相同的光照與天空"
+  sv: "I Förbättrad och Förbättrad+: speglarna skuggas som bilden, med dess ljus och himmel, i stället för det enkla ljuset"
 
 "The mirror panels in the cab (Ctrl+M) are drawn every frame, as in ETS2, instead of taking turns with the other mirrors":
   zh-tw: "車內後視鏡面板（Ctrl+M）會如 ETS2 一樣每幀更新，不與其他後視鏡輪流更新"
+  sv: "Spegelpanelerna i förarhytten (Ctrl+M) ritas varje bildruta, som i ETS2, i stället för att turas om med de andra speglarna"
 
 "Plain":
   zh-tw: "基本"
+  sv: "Enkel"
 
 "Lower is faster: the drops on the glass painted less often, less spray and fewer streaks; Low shows OMSI 2's own rain on the glass (from the next bus loaded)":
   zh-tw: "較低品質可提高效能：減少玻璃雨滴更新、水花與雨線；低品質會使用 OMSI 2 的玻璃雨效（下次載入巴士生效）"
+  sv: "Lägre är snabbare: dropparna på glaset målas mer sällan, mindre stänk och färre strimmor; Låg visar OMSI 2:s eget regn på glaset (från nästa buss som laddas)"
 
 "Switch off to keep the camera still while you steer":
   zh-tw: "關閉後，轉向時視角保持固定"
+  sv: "Stäng av för att hålla kameran still medan du styr"
 
 "TrackIR yaw sensitivity":
   zh-tw: "TrackIR 水平旋轉靈敏度"
+  sv: "TrackIR-känslighet för horisontell rotation"
 
 "TrackIR pitch sensitivity":
   zh-tw: "TrackIR 俯仰靈敏度"
+  sv: "TrackIR-känslighet för vertikal rotation"
 
 "TrackIR roll sensitivity":
   zh-tw: "TrackIR 側傾靈敏度"
+  sv: "TrackIR-känslighet för sidolutning"
 
 "TrackIR X sensitivity":
   zh-tw: "TrackIR X 軸靈敏度"
+  sv: "TrackIR X-känslighet"
 
 "TrackIR Y sensitivity":
   zh-tw: "TrackIR Y 軸靈敏度"
+  sv: "TrackIR Y-känslighet"
 
 "TrackIR Z sensitivity":
   zh-tw: "TrackIR Z 軸靈敏度"
+  sv: "TrackIR Z-känslighet"
 
 "Invert TrackIR yaw":
   zh-tw: "反轉 TrackIR 水平旋轉"
+  sv: "Invertera TrackIR horisontell rotation"
 
 "Invert TrackIR pitch":
   zh-tw: "反轉 TrackIR 俯仰"
+  sv: "Invertera TrackIR vertikal rotation"
 
 "Invert TrackIR roll":
   zh-tw: "反轉 TrackIR 側傾"
+  sv: "Invertera TrackIR sidolutning"
 
 "Invert TrackIR X":
   zh-tw: "反轉 TrackIR X 軸"
+  sv: "Invertera TrackIR X"
 
 "Invert TrackIR Y":
   zh-tw: "反轉 TrackIR Y 軸"
+  sv: "Invertera TrackIR Y"
 
 "Invert TrackIR Z":
   zh-tw: "反轉 TrackIR Z 軸"
+  sv: "Invertera TrackIR Z"
 
 "Use native TrackIR on Windows, or OpenTrack on UDP port {}":
   zh-tw: "在 Windows 使用原生 TrackIR，或透過 UDP 連接埠 {} 使用 OpenTrack"
+  sv: "Använd inbyggd TrackIR på Windows, eller OpenTrack på UDP-port {}"
 
 "Head tilt. 100% is 1:1; the low end is deliberately finer.":
   zh-tw: "頭部側傾。100% 為 1:1；低值範圍提供更細緻的調整。"
+  sv: "Huvudlutning. 100% är 1:1; den lägre delen är avsiktligt finare."
 
 "Left / right head movement. 100% is 1:1; the low end is deliberately finer.":
   zh-tw: "頭部左右移動。100% 為 1:1；低值範圍提供更細緻的調整。"
+  sv: "Huvudrörelse vänster / höger. 100% är 1:1; den lägre delen är avsiktligt finare."
 
 "Up / down head movement. 100% is 1:1; the low end is deliberately finer.":
   zh-tw: "頭部上下移動。100% 為 1:1；低值範圍提供更細緻的調整。"
+  sv: "Huvudrörelse upp / ned. 100% är 1:1; den lägre delen är avsiktligt finare."
 
 "Move your head forward / back. 100% is 1:1; the low end is deliberately finer.":
   zh-tw: "頭部前後移動。100% 為 1:1；低值範圍提供更細緻的調整。"
+  sv: "Flytta huvudet framåt / bakåt. 100% är 1:1; den lägre delen är avsiktligt finare."
 
 "Move your head left / right. 100% is 1:1; the low end is deliberately finer.":
   zh-tw: "頭部左右移動。100% 為 1:1；低值範圍提供更細緻的調整。"
+  sv: "Flytta huvudet vänster / höger. 100% är 1:1; den lägre delen är avsiktligt finare."
 
 "Move your head up / down. 100% is 1:1; the low end is deliberately finer.":
   zh-tw: "頭部上下移動。100% 為 1:1；低值範圍提供更細緻的調整。"
+  sv: "Flytta huvudet upp / ned. 100% är 1:1; den lägre delen är avsiktligt finare."
 
 "Reverse forward / back head movement":
   zh-tw: "反轉頭部前後移動"
+  sv: "Vänd huvudrörelse framåt / bakåt"
 
 "Reverse head tilt":
   zh-tw: "反轉頭部側傾"
+  sv: "Vänd huvudlutning"
 
 "Reverse left / right head movement":
   zh-tw: "反轉頭部左右移動"
+  sv: "Vänd huvudrörelse vänster / höger"
 
 "Reverse left / right head rotation":
   zh-tw: "反轉頭部水平旋轉"
+  sv: "Vänd huvudrotation vänster / höger"
 
 "Reverse up / down head movement":
   zh-tw: "反轉頭部上下移動"
+  sv: "Vänd huvudrörelse upp / ned"
 
 "Reverse up / down head rotation":
   zh-tw: "反轉頭部俯仰"
+  sv: "Vänd huvudrotation upp / ned"
 
 "Action: {value}":
   zh-tw: "動作：{value}"
+  sv: "Åtgärd: {value}"
 
 "Automatic ({})":
   zh-tw: "自動（{}）"
+  sv: "Automatisk ({})"
 
 "Axis":
   zh-tw: "軸"
+  sv: "Axel"
 
 "Button":
   zh-tw: "按鈕"
@@ -45175,6 +45415,7 @@ _version: 2
   zh: "按钮"
   hi: "बटन"
   ca: "Botó"
+  sv: "Knapp"
 "Cab":
   de: "Fahrerplatz"
   fr: "Cabine"
@@ -45202,6 +45443,7 @@ _version: 2
   zh: "驾驶室"
   hi: "ड्राइवर केबिन"
   ca: "Cabina"
+  sv: "Förarplats"
 "Cabin":
   de: "Innen"
   fr: "Intérieur"
@@ -45229,6 +45471,7 @@ _version: 2
   zh: "车内"
   hi: "केबिन"
   ca: "Interior"
+  sv: "Kupé"
 "Camera +":
   de: "Kamera +"
   fr: "Caméra +"
@@ -45256,6 +45499,7 @@ _version: 2
   zh: "视角 +"
   hi: "कैमरा +"
   ca: "Càmera +"
+  sv: "Kamera +"
 "Camera −":
   de: "Kamera −"
   fr: "Caméra −"
@@ -45283,6 +45527,7 @@ _version: 2
   zh: "视角 −"
   hi: "कैमरा −"
   ca: "Càmera −"
+  sv: "Kamera −"
 "Check that both are on the same network, and allow openOMSI in the computer's firewall (Windows asks the first time).":
   de: "Stelle sicher, dass beide im selben Netzwerk sind, und erlaube openOMSI in der Firewall des Computers (Windows fragt beim ersten Mal)."
   fr: "Vérifiez que les deux sont sur le même réseau et autorisez openOMSI dans le pare-feu de l'ordinateur (Windows le demande la première fois)."
@@ -45310,6 +45555,7 @@ _version: 2
   zh: "请确认两者在同一网络中，并在电脑防火墙中允许 openOMSI（Windows 首次会询问）。"
   hi: "जाँचें कि दोनों एक ही नेटवर्क पर हैं, और कंप्यूटर के फ़ायरवॉल में openOMSI को अनुमति दें (Windows पहली बार पूछता है)।"
   ca: "Comprova que tots dos siguin a la mateixa xarxa i permet openOMSI al tallafoc de l'ordinador (Windows ho demana la primera vegada)."
+  sv: "Kontrollera att båda är i samma nätverk och tillåt openOMSI i datorns brandvägg (Windows frågar första gången)."
 "Choose":
   de: "Auswählen"
   fr: "Choisir"
@@ -45337,6 +45583,7 @@ _version: 2
   zh: "选择"
   hi: "चुनें"
   ca: "Tria"
+  sv: "Välj"
 "Clear line":
   de: "Linie löschen"
   fr: "Effacer la ligne"
@@ -45364,6 +45611,7 @@ _version: 2
   zh: "清除线路"
   hi: "लाइन हटाएँ"
   ca: "Esborra la línia"
+  sv: "Rensa linje"
 "Cockpit":
   de: "Cockpit"
   fr: "Cockpit"
@@ -45391,6 +45639,7 @@ _version: 2
   zh: "驾驶舱"
   hi: "कॉकपिट"
   ca: "Cockpit"
+  sv: "Förarplats"
 "Columns":
   de: "Spalten"
   fr: "Colonnes"
@@ -45418,6 +45667,7 @@ _version: 2
   zh: "列数"
   hi: "कॉलम"
   ca: "Columnes"
+  sv: "Kolumner"
 "Connect":
   de: "Verbinden"
   fr: "Se connecter"
@@ -45445,6 +45695,7 @@ _version: 2
   zh: "连接"
   hi: "कनेक्ट करें"
   ca: "Connecta"
+  sv: "Anslut"
 "Connect this device to the same network (Wi-Fi) as the computer that runs the game.":
   de: "Verbinde dieses Gerät mit demselben Netzwerk (Wi-Fi) wie den Computer, auf dem das Spiel läuft."
   fr: "Connectez cet appareil au même réseau (Wi-Fi) que l'ordinateur sur lequel tourne le jeu."
@@ -45472,6 +45723,7 @@ _version: 2
   zh: "请将此设备连接到与运行游戏的电脑相同的网络（Wi-Fi）。"
   hi: "इस डिवाइस को उसी नेटवर्क (Wi-Fi) से जोड़ें जिस पर गेम चलाने वाला कंप्यूटर है।"
   ca: "Connecta aquest dispositiu a la mateixa xarxa (Wi-Fi) que l'ordinador on s'executa el joc."
+  sv: "Anslut den här enheten till samma nätverk (Wi-Fi) som datorn som kör spelet."
 "Connecting…":
   de: "Verbinde…"
   fr: "Connexion…"
@@ -45499,6 +45751,7 @@ _version: 2
   zh: "正在连接…"
   hi: "कनेक्ट हो रहा है…"
   ca: "Connectant…"
+  sv: "Ansluter…"
 "Continue from this stop":
   de: "Ab dieser Haltestelle weiterfahren"
   fr: "Reprendre à cet arrêt"
@@ -45526,6 +45779,7 @@ _version: 2
   zh: "从此站继续"
   hi: "इस स्टॉप से आगे चलें"
   ca: "Continua des d'aquesta parada"
+  sv: "Fortsätt från den här hållplatsen"
 "Copy this text to keep the layout or share it.":
   de: "Kopiere diesen Text, um das Layout aufzubewahren oder zu teilen."
   fr: "Copiez ce texte pour conserver la disposition ou la partager."
@@ -45553,6 +45807,7 @@ _version: 2
   zh: "复制这段文本即可保存或分享此布局。"
   hi: "लेआउट रखने या शेयर करने के लिए यह टेक्स्ट कॉपी करें।"
   ca: "Copia aquest text per conservar la disposició o compartir-la."
+  sv: "Kopiera den här texten för att spara layouten eller dela den."
 "Dashboard":
   de: "Armaturenbrett"
   fr: "Tableau de bord"
@@ -45580,6 +45835,7 @@ _version: 2
   zh: "仪表盘"
   hi: "डैशबोर्ड"
   ca: "Tauler"
+  sv: "Instrumentpanel"
 "Day":
   de: "Tag"
   fr: "Jour"
@@ -45607,6 +45863,7 @@ _version: 2
   zh: "日间"
   hi: "दिन"
   ca: "Dia"
+  sv: "Dag"
 "Delay":
   de: "Verspätung"
   fr: "Retard"
@@ -45634,6 +45891,7 @@ _version: 2
   zh: "晚点"
   hi: "देरी"
   ca: "Retard"
+  sv: "Försening"
 "Delete the page":
   de: "Seite löschen"
   fr: "Supprimer la page"
@@ -45661,6 +45919,7 @@ _version: 2
   zh: "删除页面"
   hi: "पेज हटाएँ"
   ca: "Suprimeix la pàgina"
+  sv: "Ta bort sidan"
 "Destination sign":
   de: "Zielanzeige"
   fr: "Girouette"
@@ -45688,6 +45947,7 @@ _version: 2
   zh: "路牌"
   hi: "गंतव्य बोर्ड"
   ca: "Rètol de destinació"
+  sv: "Destinationsskylt"
 "Destinations":
   de: "Ziele"
   fr: "Destinations"
@@ -45715,33 +45975,43 @@ _version: 2
   zh: "目的地"
   hi: "गंतव्य"
   ca: "Destinacions"
+  sv: "Destinationer"
 
 "Button {}":
   zh-tw: "按鈕 {}"
+  sv: "Knapp {}"
 
 "Clear":
   zh-tw: "清除"
+  sv: "Rensa"
 
 "Clear {}":
   zh-tw: "清除 {}"
+  sv: "Rensa {}"
 
 "Connection":
   zh-tw: "連線"
+  sv: "Anslutning"
 
 "Controller":
   zh-tw: "控制器"
+  sv: "Handkontroll"
 
 "Controller configuration was not saved: {e}":
   zh-tw: "無法儲存控制器設定：{e}"
+  sv: "Handkontrollens konfiguration sparades inte: {e}"
 
 "Controller mappings were not reloaded: {e}":
   zh-tw: "無法重新載入控制器對應設定：{e}"
+  sv: "Handkontrollens mappningar lästes inte in igen: {e}"
 
 "Controller type":
   zh-tw: "控制器類型"
+  sv: "Handkontrollstyp"
 
 "Device":
   zh-tw: "裝置"
+  sv: "Enhet"
 
 "Disconnected":
   zh-tw: "已中斷連線"
@@ -45770,6 +46040,7 @@ _version: 2
   zh: "已断开"
   hi: "डिस्कनेक्टेड"
   ca: "Desconnectat"
+  sv: "Frånkopplad"
 "Does":
   de: "Funktion"
   fr: "Action"
@@ -45797,6 +46068,7 @@ _version: 2
   zh: "动作"
   hi: "क्रिया"
   ca: "Acció"
+  sv: "Funktion"
 "Door 1":
   de: "Tür 1"
   fr: "Porte 1"
@@ -45824,6 +46096,7 @@ _version: 2
   zh: "车门 1"
   hi: "दरवाज़ा 1"
   ca: "Porta 1"
+  sv: "Dörr 1"
 "Door 1 open":
   de: "Tür 1 offen"
   fr: "Porte 1 ouverte"
@@ -45851,6 +46124,7 @@ _version: 2
   zh: "车门 1 已开"
   hi: "दरवाज़ा 1 खुला"
   ca: "Porta 1 oberta"
+  sv: "Dörr 1 öppen"
 "Door 2":
   de: "Tür 2"
   fr: "Porte 2"
@@ -45878,6 +46152,7 @@ _version: 2
   zh: "车门 2"
   hi: "दरवाज़ा 2"
   ca: "Porta 2"
+  sv: "Dörr 2"
 "Door 2 open":
   de: "Tür 2 offen"
   fr: "Porte 2 ouverte"
@@ -45905,6 +46180,7 @@ _version: 2
   zh: "车门 2 已开"
   hi: "दरवाज़ा 2 खुला"
   ca: "Porta 2 oberta"
+  sv: "Dörr 2 öppen"
 "Door 3":
   de: "Tür 3"
   fr: "Porte 3"
@@ -45932,6 +46208,7 @@ _version: 2
   zh: "车门 3"
   hi: "दरवाज़ा 3"
   ca: "Porta 3"
+  sv: "Dörr 3"
 "Door 3 open":
   de: "Tür 3 offen"
   fr: "Porte 3 ouverte"
@@ -45959,6 +46236,7 @@ _version: 2
   zh: "车门 3 已开"
   hi: "दरवाज़ा 3 खुला"
   ca: "Porta 3 oberta"
+  sv: "Dörr 3 öppen"
 "Door 4":
   de: "Tür 4"
   fr: "Porte 4"
@@ -45986,6 +46264,7 @@ _version: 2
   zh: "车门 4"
   hi: "दरवाज़ा 4"
   ca: "Porta 4"
+  sv: "Dörr 4"
 "Door 4 open":
   de: "Tür 4 offen"
   fr: "Porte 4 ouverte"
@@ -46013,6 +46292,7 @@ _version: 2
   zh: "车门 4 已开"
   hi: "दरवाज़ा 4 खुला"
   ca: "Porta 4 oberta"
+  sv: "Dörr 4 öppen"
 "Doors":
   de: "Türen"
   fr: "Portes"
@@ -46040,6 +46320,7 @@ _version: 2
   zh: "车门"
   hi: "दरवाज़े"
   ca: "Portes"
+  sv: "Dörrar"
 "Drawn buttons":
   de: "Gezeichnete Tasten"
   fr: "Boutons dessinés"
@@ -46067,6 +46348,7 @@ _version: 2
   zh: "绘制的按钮"
   hi: "चित्रित बटन"
   ca: "Botons dibuixats"
+  sv: "Ritade knappar"
 "Driver light":
   de: "Fahrerlicht"
   fr: "Lumière conducteur"
@@ -46094,6 +46376,7 @@ _version: 2
   zh: "驾驶员灯"
   hi: "ड्राइवर लाइट"
   ca: "Llum del conductor"
+  sv: "Förarbelysning"
 "Duplicate":
   de: "Duplizieren"
   fr: "Dupliquer"
@@ -46121,6 +46404,7 @@ _version: 2
   zh: "创建副本"
   hi: "डुप्लिकेट करें"
   ca: "Duplica"
+  sv: "Duplicera"
 "Edit the layout":
   de: "Layout bearbeiten"
   fr: "Modifier la disposition"
@@ -46148,6 +46432,7 @@ _version: 2
   zh: "编辑布局"
   hi: "लेआउट संपादित करें"
   ca: "Edita la disposició"
+  sv: "Redigera layouten"
 "Electrics on":
   de: "Zündung an"
   fr: "Contact mis"
@@ -46175,6 +46460,7 @@ _version: 2
   zh: "电源已接通"
   hi: "इलेक्ट्रिक चालू"
   ca: "Contacte posat"
+  sv: "Tändning på"
 "Engine off":
   de: "Motor aus"
   fr: "Moteur arrêté"
@@ -46202,6 +46488,7 @@ _version: 2
   zh: "发动机熄火"
   hi: "इंजन बंद"
   ca: "Motor aturat"
+  sv: "Motor av"
 "Engine running":
   de: "Motor läuft"
   fr: "Moteur en marche"
@@ -46229,6 +46516,7 @@ _version: 2
   zh: "发动机运转中"
   hi: "इंजन चालू"
   ca: "Motor en marxa"
+  sv: "Motorn går"
 "Engine start":
   de: "Motorstart"
   fr: "Démarrage du moteur"
@@ -46256,6 +46544,7 @@ _version: 2
   zh: "发动机启动"
   hi: "इंजन स्टार्ट"
   ca: "Arrenca el motor"
+  sv: "Motorstart"
 "Enter that six-digit code. This device then connects by itself next time.":
   de: "Gib diesen sechsstelligen Code ein. Dieses Gerät verbindet sich dann beim nächsten Mal von selbst."
   fr: "Saisissez ce code à six chiffres. Cet appareil se connectera ensuite tout seul la prochaine fois."
@@ -46283,6 +46572,7 @@ _version: 2
   zh: "输入该六位配对码。此设备下次将自动连接。"
   hi: "वह छह अंकों का कोड डालें। अगली बार यह डिवाइस अपने आप कनेक्ट हो जाएगा।"
   ca: "Introdueix aquest codi de sis xifres. La propera vegada aquest dispositiu es connectarà tot sol."
+  sv: "Ange den sexsiffriga koden. Den här enheten ansluter sedan av sig själv nästa gång."
 "Export":
   de: "Exportieren"
   fr: "Exporter"
@@ -46310,6 +46600,7 @@ _version: 2
   zh: "导出"
   hi: "एक्सपोर्ट"
   ca: "Exporta"
+  sv: "Exportera"
 "Flat":
   de: "Flach"
   fr: "Plat"
@@ -46337,6 +46628,7 @@ _version: 2
   zh: "扁平"
   hi: "फ़्लैट"
   ca: "Pla"
+  sv: "Platt"
 "Fog light":
   de: "Nebellicht"
   fr: "Antibrouillard"
@@ -46364,6 +46656,7 @@ _version: 2
   zh: "雾灯"
   hi: "फ़ॉग लाइट"
   ca: "Llum antiboira"
+  sv: "Dimljus"
 "For every vehicle":
   de: "Für alle Fahrzeuge"
   fr: "Pour tous les véhicules"
@@ -46391,6 +46684,7 @@ _version: 2
   zh: "适用于所有车辆"
   hi: "सभी वाहनों के लिए"
   ca: "Per a tots els vehicles"
+  sv: "För alla fordon"
 "For this vehicle":
   de: "Für dieses Fahrzeug"
   fr: "Pour ce véhicule"
@@ -46418,6 +46712,7 @@ _version: 2
   zh: "适用于此车辆"
   hi: "इस वाहन के लिए"
   ca: "Per a aquest vehicle"
+  sv: "För det här fordonet"
 "Forget the layout for every vehicle":
   de: "Layout für alle Fahrzeuge vergessen"
   fr: "Oublier la disposition pour tous les véhicules"
@@ -46445,6 +46740,7 @@ _version: 2
   zh: "清除所有车辆的布局"
   hi: "सभी वाहनों का लेआउट हटाएँ"
   ca: "Oblida la disposició de tots els vehicles"
+  sv: "Glöm layouten för alla fordon"
 "Forget this vehicle's layout":
   de: "Layout dieses Fahrzeugs vergessen"
   fr: "Oublier la disposition de ce véhicule"
@@ -46472,6 +46768,7 @@ _version: 2
   zh: "清除此车辆的布局"
   hi: "इस वाहन का लेआउट हटाएँ"
   ca: "Oblida la disposició d'aquest vehicle"
+  sv: "Glöm det här fordonets layout"
 "Fuel":
   de: "Kraftstoff"
   fr: "Carburant"
@@ -46499,6 +46796,7 @@ _version: 2
   zh: "燃油"
   hi: "ईंधन"
   ca: "Combustible"
+  sv: "Bränsle"
 "Full screen":
   de: "Vollbild"
   fr: "Plein écran"
@@ -46526,6 +46824,7 @@ _version: 2
   zh: "全屏"
   hi: "फ़ुलस्क्रीन"
   ca: "Pantalla completa"
+  sv: "Helskärm"
 "Game":
   de: "Spiel"
   fr: "Jeu"
@@ -46553,6 +46852,7 @@ _version: 2
   zh: "游戏"
   hi: "गेम"
   ca: "Joc"
+  sv: "Spel"
 "Game action":
   de: "Spielaktion"
   fr: "Action du jeu"
@@ -46580,6 +46880,7 @@ _version: 2
   zh: "游戏操作"
   hi: "गेम क्रिया"
   ca: "Acció del joc"
+  sv: "Spelåtgärd"
 "Gear":
   de: "Gang"
   fr: "Rapport"
@@ -46607,6 +46908,7 @@ _version: 2
   zh: "档位"
   hi: "गियर"
   ca: "Marxa"
+  sv: "Växel"
 "Hazard":
   de: "Warnblinker"
   fr: "Détresse"
@@ -46634,6 +46936,7 @@ _version: 2
   zh: "双闪"
   hi: "हैज़र्ड"
   ca: "Emergència"
+  sv: "Varningsblinkers"
 "High contrast":
   de: "Hoher Kontrast"
   fr: "Contraste élevé"
@@ -46661,6 +46964,7 @@ _version: 2
   zh: "高对比度"
   hi: "हाई कंट्रास्ट"
   ca: "Contrast alt"
+  sv: "Hög kontrast"
 "Highest value":
   de: "Höchstwert"
   fr: "Valeur maximale"
@@ -46688,6 +46992,7 @@ _version: 2
   zh: "最大值"
   hi: "अधिकतम मान"
   ca: "Valor màxim"
+  sv: "Högsta värde"
 "Icon":
   de: "Symbol"
   fr: "Icône"
@@ -46715,6 +47020,7 @@ _version: 2
   zh: "图标"
   hi: "आइकन"
   ca: "Icona"
+  sv: "Ikon"
 "Import":
   de: "Importieren"
   fr: "Importer"
@@ -46742,6 +47048,7 @@ _version: 2
   zh: "导入"
   hi: "इम्पोर्ट"
   ca: "Importa"
+  sv: "Importera"
 "In the game, open Settings → Remote cockpit: the code is shown there.":
   de: "Öffne im Spiel Einstellungen → Remote-Cockpit: Dort wird der Code angezeigt."
   fr: "Dans le jeu, ouvrez Paramètres → Cockpit à distance : le code y est affiché."
@@ -46769,6 +47076,7 @@ _version: 2
   zh: "在游戏中打开 设置 → 远程驾驶舱，配对码就显示在那里。"
   hi: "गेम में सेटिंग्स → रिमोट कॉकपिट खोलें: कोड वहीं दिखता है।"
   ca: "Al joc, obre Configuració → Cockpit remot: hi trobaràs el codi."
+  sv: "Öppna Inställningar → Fjärrförarplats i spelet: koden visas där."
 "Indicator":
   de: "Blinker"
   fr: "Clignotant"
@@ -46796,6 +47104,7 @@ _version: 2
   zh: "转向灯"
   hi: "इंडिकेटर"
   ca: "Intermitent"
+  sv: "Blinkers"
 "Indicators":
   de: "Blinker"
   fr: "Clignotants"
@@ -46823,6 +47132,7 @@ _version: 2
   zh: "转向灯"
   hi: "इंडिकेटर"
   ca: "Intermitents"
+  sv: "Blinkers"
 "It does not connect?":
   de: "Keine Verbindung?"
   fr: "La connexion échoue ?"
@@ -46850,6 +47160,7 @@ _version: 2
   zh: "无法连接？"
   hi: "कनेक्ट नहीं हो रहा?"
   ca: "No es connecta?"
+  sv: "Ansluter den inte?"
 "Key or trigger of the bus":
   de: "Taste oder Trigger des Busses"
   fr: "Touche ou déclencheur du bus"
@@ -46877,6 +47188,7 @@ _version: 2
   zh: "巴士的按键或触发器"
   hi: "बस की कुंजी या ट्रिगर"
   ca: "Tecla o activador de l'autobús"
+  sv: "Bussens tangent eller utlösare"
 "Kneeling":
   de: "Kneeling"
   fr: "Baraquage"
@@ -46904,6 +47216,7 @@ _version: 2
   zh: "侧跪"
   hi: "नीलिंग"
   ca: "Agenollament"
+  sv: "Nigning"
 "Label":
   de: "Beschriftung"
   fr: "Libellé"
@@ -46931,6 +47244,7 @@ _version: 2
   zh: "标签"
   hi: "लेबल"
   ca: "Etiqueta"
+  sv: "Etikett"
 "Lamp":
   de: "Leuchte"
   fr: "Voyant"
@@ -46958,6 +47272,7 @@ _version: 2
   zh: "指示灯"
   hi: "लैंप"
   ca: "Pilot"
+  sv: "Lampa"
 "Lamp colour":
   de: "Leuchtenfarbe"
   fr: "Couleur du voyant"
@@ -46985,6 +47300,7 @@ _version: 2
   zh: "指示灯颜色"
   hi: "लैंप का रंग"
   ca: "Color del pilot"
+  sv: "Lampfärg"
 "Lamps shown":
   de: "Angezeigte Leuchten"
   fr: "Voyants affichés"
@@ -47012,6 +47328,7 @@ _version: 2
   zh: "显示的指示灯"
   hi: "दिखने वाले लैंप"
   ca: "Pilots mostrats"
+  sv: "Visade lampor"
 "Layout forgotten":
   de: "Layout vergessen"
   fr: "Disposition oubliée"
@@ -47039,6 +47356,7 @@ _version: 2
   zh: "布局已清除"
   hi: "लेआउट हटा दिया गया"
   ca: "Disposició oblidada"
+  sv: "Layouten glömd"
 "Layout saved":
   de: "Layout gespeichert"
   fr: "Disposition enregistrée"
@@ -47066,6 +47384,7 @@ _version: 2
   zh: "布局已保存"
   hi: "लेआउट सेव हो गया"
   ca: "Disposició desada"
+  sv: "Layouten sparad"
 "Left indicator":
   de: "Blinker links"
   fr: "Clignotant gauche"
@@ -47093,6 +47412,7 @@ _version: 2
   zh: "左转向灯"
   hi: "बायाँ इंडिकेटर"
   ca: "Intermitent esquerre"
+  sv: "Vänster blinkers"
 "Line number":
   de: "Liniennummer"
   fr: "Numéro de ligne"
@@ -47120,6 +47440,7 @@ _version: 2
   zh: "线路号"
   hi: "लाइन नंबर"
   ca: "Número de línia"
+  sv: "Linjenummer"
 "Look":
   de: "Aussehen"
   fr: "Apparence"
@@ -47147,6 +47468,7 @@ _version: 2
   zh: "外观"
   hi: "रूप"
   ca: "Aspecte"
+  sv: "Utseende"
 "Microphone":
   de: "Mikrofon"
   fr: "Micro"
@@ -47174,6 +47496,7 @@ _version: 2
   zh: "麦克风"
   hi: "माइक्रोफ़ोन"
   ca: "Micròfon"
+  sv: "Mikrofon"
 "New page":
   de: "Neue Seite"
   fr: "Nouvelle page"
@@ -47201,6 +47524,7 @@ _version: 2
   zh: "新建页面"
   hi: "नया पेज"
   ca: "Pàgina nova"
+  sv: "Ny sida"
 "No destination":
   de: "Kein Ziel"
   fr: "Aucune destination"
@@ -47228,6 +47552,7 @@ _version: 2
   zh: "无目的地"
   hi: "कोई गंतव्य नहीं"
   ca: "Sense destinació"
+  sv: "Ingen destination"
 "No icon":
   de: "Kein Symbol"
   fr: "Aucune icône"
@@ -47255,6 +47580,7 @@ _version: 2
   zh: "无图标"
   hi: "कोई आइकन नहीं"
   ca: "Sense icona"
+  sv: "Ingen ikon"
 "No timetable":
   de: "Kein Fahrplan"
   fr: "Aucun horaire"
@@ -47282,6 +47608,7 @@ _version: 2
   zh: "无时刻表"
   hi: "कोई टाइमटेबल नहीं"
   ca: "Sense horari"
+  sv: "Ingen tidtabell"
 "Not paired":
   de: "Nicht gekoppelt"
   fr: "Non appairé"
@@ -47309,6 +47636,7 @@ _version: 2
   zh: "未配对"
   hi: "पेयर नहीं है"
   ca: "No vinculat"
+  sv: "Inte parkopplad"
 "Not saved: the game cannot be reached":
   de: "Nicht gespeichert: Das Spiel ist nicht erreichbar"
   fr: "Non enregistré : le jeu est injoignable"
@@ -47336,6 +47664,7 @@ _version: 2
   zh: "未保存：无法连接到游戏"
   hi: "सेव नहीं हुआ: गेम से संपर्क नहीं हो पा रहा"
   ca: "No desat: no es pot accedir al joc"
+  sv: "Inte sparat: spelet går inte att nå"
 "Open Settings → Remote cockpit in the game to pair this device":
   de: "Öffne im Spiel Einstellungen → Remote-Cockpit, um dieses Gerät zu koppeln"
   fr: "Ouvrez Paramètres → Cockpit à distance dans le jeu pour appairer cet appareil"
@@ -47363,6 +47692,7 @@ _version: 2
   zh: "在游戏中打开 设置 → 远程驾驶舱 以配对此设备"
   hi: "इस डिवाइस को पेयर करने के लिए गेम में सेटिंग्स → रिमोट कॉकपिट खोलें"
   ca: "Obre Configuració → Cockpit remot al joc per vincular aquest dispositiu"
+  sv: "Öppna Inställningar → Fjärrförarplats i spelet för att parkoppla den här enheten"
 "Other icons":
   de: "Weitere Symbole"
   fr: "Autres icônes"
@@ -47390,6 +47720,7 @@ _version: 2
   zh: "其他图标"
   hi: "अन्य आइकन"
   ca: "Altres icones"
+  sv: "Andra ikoner"
 "Other value…":
   de: "Anderer Wert…"
   fr: "Autre valeur…"
@@ -47417,6 +47748,7 @@ _version: 2
   zh: "其他数值…"
   hi: "अन्य मान…"
   ca: "Un altre valor…"
+  sv: "Annat värde…"
 "Outside":
   de: "Außen"
   fr: "Extérieur"
@@ -47444,6 +47776,7 @@ _version: 2
   zh: "车外"
   hi: "बाहर"
   ca: "Exterior"
+  sv: "Ute"
 "Pages":
   de: "Seiten"
   fr: "Pages"
@@ -47471,6 +47804,7 @@ _version: 2
   zh: "页面"
   hi: "पेज"
   ca: "Pàgines"
+  sv: "Sidor"
 "Paste a layout exported from another device.":
   de: "Füge ein Layout ein, das von einem anderen Gerät exportiert wurde."
   fr: "Collez une disposition exportée depuis un autre appareil."
@@ -47498,6 +47832,7 @@ _version: 2
   zh: "粘贴从其他设备导出的布局。"
   hi: "किसी दूसरे डिवाइस से एक्सपोर्ट किया गया लेआउट पेस्ट करें।"
   ca: "Enganxa una disposició exportada des d'un altre dispositiu."
+  sv: "Klistra in en layout som exporterats från en annan enhet."
 "Pram button":
   de: "Kinderwagentaste"
   fr: "Bouton poussette"
@@ -47525,6 +47860,7 @@ _version: 2
   zh: "婴儿车按钮"
   hi: "स्ट्रोलर बटन"
   ca: "Botó de cotxet"
+  sv: "Barnvagnsknapp"
 "Press":
   de: "Betätigung"
   fr: "Appui"
@@ -47552,6 +47888,7 @@ _version: 2
   zh: "按压方式"
   hi: "दबाने का तरीका"
   ca: "Pulsació"
+  sv: "Tryck"
 "Properties":
   de: "Eigenschaften"
   fr: "Propriétés"
@@ -47579,6 +47916,7 @@ _version: 2
   zh: "属性"
   hi: "गुण"
   ca: "Propietats"
+  sv: "Egenskaper"
 "RPM":
   de: "Drehzahl"
   fr: "Régime moteur"
@@ -47606,6 +47944,7 @@ _version: 2
   zh: "转速"
   hi: "RPM"
   ca: "RPM"
+  sv: "Varvtal"
 "Ready-made buttons":
   de: "Vorgefertigte Tasten"
   fr: "Boutons prêts à l'emploi"
@@ -47633,6 +47972,7 @@ _version: 2
   zh: "预设按钮"
   hi: "तैयार बटन"
   ca: "Botons predefinits"
+  sv: "Färdiga knappar"
 "Remote cockpit":
   de: "Remote-Cockpit"
   fr: "Cockpit à distance"
@@ -47660,6 +48000,7 @@ _version: 2
   zh: "远程驾驶舱"
   hi: "रिमोट कॉकपिट"
   ca: "Cockpit remot"
+  sv: "Fjärrförarplats"
 "Reset view":
   de: "Ansicht zurücksetzen"
   fr: "Réinitialiser la vue"
@@ -47687,6 +48028,7 @@ _version: 2
   zh: "重置视角"
   hi: "व्यू रीसेट करें"
   ca: "Restableix la vista"
+  sv: "Återställ vy"
 "Right indicator":
   de: "Blinker rechts"
   fr: "Clignotant droit"
@@ -47714,6 +48056,7 @@ _version: 2
   zh: "右转向灯"
   hi: "दायाँ इंडिकेटर"
   ca: "Intermitent dret"
+  sv: "Höger blinkers"
 "Rocker":
   de: "Wippe"
   fr: "Bascule"
@@ -47741,6 +48084,7 @@ _version: 2
   zh: "翘板开关"
   hi: "रॉकर स्विच"
   ca: "Basculant"
+  sv: "Vippbrytare"
 "Routes":
   de: "Routen"
   fr: "Itinéraires"
@@ -47768,6 +48112,7 @@ _version: 2
   zh: "行车路线"
   hi: "रूट"
   ca: "Rutes"
+  sv: "Rutter"
 "Rows":
   de: "Zeilen"
   fr: "Lignes"
@@ -47795,6 +48140,7 @@ _version: 2
   zh: "行数"
   hi: "पंक्तियाँ"
   ca: "Files"
+  sv: "Rader"
 "Saved on the computer that runs the game, for every device.":
   de: "Gespeichert auf dem Computer, auf dem das Spiel läuft, für alle Geräte."
   fr: "Enregistré sur l'ordinateur qui fait tourner le jeu, pour tous les appareils."
@@ -47822,39 +48168,108 @@ _version: 2
   zh: "保存在运行游戏的电脑上，适用于所有设备。"
   hi: "गेम चलाने वाले कंप्यूटर पर सेव होता है, सभी डिवाइस के लिए।"
   ca: "Es desa a l'ordinador on s'executa el joc, per a tots els dispositius."
+  sv: "Sparas på datorn som kör spelet, för alla enheter."
 
 "Found by its name and USB ids":
   zh-tw: "依名稱與 USB 識別碼找到"
+  sv: "Hittad via namn och USB-id"
 
 "Function":
   zh-tw: "功能"
+  sv: "Funktion"
 
 "Left/right adjusts in steps of 5 % (0-200 %)":
   zh-tw: "左右調整以 5% 為單位（0–200%）"
+  sv: "Vänster/höger justerar i steg om 5 % (0-200 %)"
 
 "Unassigned":
   zh-tw: "未指定"
+  sv: "Ej tilldelad"
 
 "Default buttons":
   zh-tw: "預設按鈕"
+  sv: "Standardknappar"
 
 "Left stick / triggers":
   zh-tw: "左搖桿／扳機"
+  sv: "Vänster spak / avtryckare"
 
 "Left stick steers, left trigger brakes, right trigger is the throttle":
   zh-tw: "左搖桿轉向、左扳機煞車、右扳機油門"
+  sv: "Vänster spak styr, vänster avtryckare bromsar, höger avtryckare är gasen"
 
 "Steer / brake, throttle":
   zh-tw: "轉向／煞車、油門"
+  sv: "Styr / broms, gas"
 
 "No Xbox or PlayStation pad found":
   zh-tw: "找不到 Xbox 或 PlayStation 手把"
+  sv: "Ingen Xbox- eller PlayStation-handkontroll hittades"
 
 "Connect a pad, or choose its type below to see the button names":
   zh-tw: "連接手把，或在下方選擇類型以查看按鈕名稱"
+  sv: "Anslut en handkontroll, eller välj dess typ nedan för att se knapparnas namn"
 
 "Names the buttons below for the pad you hold: Automatic, Xbox, PlayStation 4 or PlayStation 5":
   zh-tw: "依手把類型顯示下方按鈕名稱：自動、Xbox、PlayStation 4 或 PlayStation 5"
+  sv: "Namnger knapparna nedan för handkontrollen du håller: Automatisk, Xbox, PlayStation 4 eller PlayStation 5"
 
 "A gamepad with no buttons set up drives the cabin with these; set up its buttons under Devices to use your own":
   zh-tw: "尚未設定按鈕的手把會以這些按鈕操作駕駛室；可在「裝置」中自訂按鈕"
+  sv: "En handkontroll utan inställda knappar kör förarplatsen med dessa; ställ in dess knappar under Enheter för att använda dina egna"
+"Zoom in":
+  ca: "Apropa"
+  ru: "Приблизить"
+  de: "Vergrößern"
+  fr: "Zoomer"
+  uk: "Наблизити"
+  be: "Наблізіць"
+  kk: "Жақындату"
+  pl: "Przybliż"
+  cs: "Přiblížit"
+  hu: "Nagyítás"
+  es: "Acercar"
+  pt: "Aproximar"
+  pt-pt: "Aproximar"
+  it: "Ingrandisci"
+  nl: "Inzoomen"
+  tr: "Yakınlaştır"
+  ja: "拡大"
+  zh: "放大"
+  hi: "ज़ूम इन"
+  zh-tw: "放大"
+  ko: "확대"
+  th: "ซูมเข้า"
+  vi: "Phóng to"
+  id: "Perbesar"
+  ms: "Zum masuk"
+  tl: "Palakihin"
+  sv: "Zooma in"
+"Zoom out":
+  ca: "Allunya"
+  ru: "Отдалить"
+  de: "Verkleinern"
+  fr: "Dézoomer"
+  uk: "Віддалити"
+  be: "Аддаліць"
+  kk: "Алыстату"
+  pl: "Oddal"
+  cs: "Oddálit"
+  hu: "Kicsinyítés"
+  es: "Alejar"
+  pt: "Afastar"
+  pt-pt: "Afastar"
+  it: "Riduci"
+  nl: "Uitzoomen"
+  tr: "Uzaklaştır"
+  ja: "縮小"
+  zh: "缩小"
+  hi: "ज़ूम आउट"
+  zh-tw: "縮小"
+  ko: "축소"
+  th: "ซูมออก"
+  vi: "Thu nhỏ"
+  id: "Perkecil"
+  ms: "Zum keluar"
+  tl: "Paliitin"
+  sv: "Zooma ut"
