@@ -18,6 +18,7 @@ Nothing to install on the phone, no account, nothing leaves your network.
 - each door button opens its own door: no more door 1 opening doors 1 and 2, or a door button working the stop brake (MAN Lion's City and others)
 - the map zooms by hand: **+ / −** buttons, pinch or mouse wheel, on top of the automatic zoom
 - the next stops are shown on the map
+- pedals pushed upwards or downwards, your choice: edit the layout, tap the pedals, then **Push the pedals** (two pedals) or the second one-pedal choice
 - up to date with openOMSI 0.2.45
 
 ## Install
