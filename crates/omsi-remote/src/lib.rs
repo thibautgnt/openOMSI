@@ -6,7 +6,7 @@ mod server;
 mod session;
 pub mod sign;
 mod doors;
-pub use doors::doorways;
+pub use doors::{doorways, tried_doors};
 mod skins;
 mod texts;
 
@@ -35,6 +35,7 @@ pub enum Command {
     NextStop(usize),
 }
 
+#[derive(Clone)]
 pub struct Vehicle {
     pub key: String,
     pub name: String,
@@ -177,6 +178,10 @@ impl Remote {
         self.shared.new_pin();
     }
 
+    pub fn holds_a_door(&self) -> bool {
+        lock(&self.shared.held).values().flatten().any(|n| n.to_ascii_lowercase().starts_with("door"))
+    }
+
     pub fn release_all(&self) -> Vec<String> {
         let mut names: Vec<String> = lock(&self.shared.held).drain().flat_map(|(_, v)| v).collect();
         names.sort();
@@ -197,6 +202,14 @@ impl Remote {
         lock(&self.shared.skins).clear();
         self.set_sign(None);
         *lock(&self.shared.vehicle) = vehicle.map(Arc::new);
+        self.shared.rebuild_vehicle();
+    }
+
+    pub fn set_doors(&self, doors: Vec<Vec<usize>>, aliases: Vec<(String, String)>) {
+        let mut slot = lock(&self.shared.vehicle);
+        let Some(old) = slot.as_deref() else { return };
+        *slot = Some(Arc::new(Vehicle { doors, aliases, ..old.clone() }));
+        drop(slot);
         self.shared.rebuild_vehicle();
     }
 

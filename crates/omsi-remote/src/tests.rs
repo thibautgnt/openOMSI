@@ -297,10 +297,11 @@ fn map_messages_carry_rounded_points() {
     let roads = crate::nav::roads_message([100.0, 200.0], &[(vec![[1.234, -5.678], [2.0, 3.0]], 7.25)]);
     let v: Value = serde_json::from_str(&roads).unwrap();
     assert_eq!(v["roads"][0]["p"], json!([1.2, -5.7, 2.0, 3.0]));
-    let info = crate::nav::NavInfo { anchor: [0.0, 0.0], route: vec![[0.0, 0.0], [10.0, 0.0]], turn: Some(crate::nav::Turn { direction: 1, angle: 88.0, metres: 120.4, street: Some("Hauptstr.".into()) }), stop: None, street: None, limit: Some(50.0), on_route: true };
+    let info = crate::nav::NavInfo { anchor: [0.0, 0.0], route: vec![[0.0, 0.0], [10.0, 0.0]], turn: Some(crate::nav::Turn { direction: 1, angle: 88.0, metres: 120.4, street: Some("Hauptstr.".into()) }), stop: None, stops: vec![[5.0, 1.0]], street: None, limit: Some(50.0), on_route: true };
     let v: Value = serde_json::from_str(&crate::nav::nav_message(&info)).unwrap();
     assert_eq!(v["turn"]["m"], 120.4);
     assert_eq!(v["turn"]["street"], "Hauptstr.");
+    assert_eq!(v["stops"], json!([5.0, 1.0]));
 }
 
 #[test]

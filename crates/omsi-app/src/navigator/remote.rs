@@ -54,6 +54,7 @@ impl Navigator {
             route: roads::simplify(&pts, 0.8).iter().map(|p| [p.x, p.y]).collect(),
             turn: self.next_turn.clone().map(|(direction, angle, metres, street)| Turn { direction, angle, metres: metres as f32, street }),
             stop: self.stop_spots.first().map(|s| (s.1.clone(), self.next_dist.unwrap_or(0.0) as f32)),
+            stops: self.stop_spots.iter().map(|s| [(s.0.x - anchor.x) as f32, (s.0.y - anchor.y) as f32]).collect(),
             street: self.street_here.clone(),
             limit: r.lanes.get(r.progress).and_then(|&l| net.lanes.get(l)).map(|l| l.speed_limit_kmh).filter(|v| *v > 0.0),
             on_route: r.on_route,

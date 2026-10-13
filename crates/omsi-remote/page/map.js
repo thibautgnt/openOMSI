@@ -6,6 +6,42 @@ const MapView = {
   views: new Set(),
   running: false,
   scale: 1.6,
+  zoom: 0,
+
+  zoomBy(f) {
+    const z = Math.max(0.25, Math.min(3, this.zoom * f));
+    this.scale *= z / this.zoom;
+    this.zoom = z;
+    store.set("openomsi.mapZoom", String(Math.round(z * 1000) / 1000));
+    this.wake();
+  },
+
+  attach(view) {
+    if (!this.zoom) this.zoom = Math.max(0.25, Math.min(3, Number(store.get("openomsi.mapZoom")) || 1));
+    view.querySelector(".zoom .in").addEventListener("click", () => this.zoomBy(1.5));
+    view.querySelector(".zoom .out").addEventListener("click", () => this.zoomBy(1 / 1.5));
+    const canvas = view.querySelector("canvas");
+    const touches = new Map();
+    let spread = 0;
+    const apart = () => {
+      const [a, b] = [...touches.values()];
+      return Math.hypot(a.x - b.x, a.y - b.y);
+    };
+    canvas.addEventListener("pointerdown", (e) => {
+      touches.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (touches.size === 2) spread = apart();
+    });
+    canvas.addEventListener("pointermove", (e) => {
+      if (!touches.has(e.pointerId)) return;
+      touches.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (touches.size !== 2 || !spread) return;
+      const d = apart();
+      if (d > 0) this.zoomBy(d / spread);
+      spread = d;
+    });
+    for (const type of ["pointerup", "pointercancel", "pointerleave"]) canvas.addEventListener(type, (e) => { touches.delete(e.pointerId); spread = 0; });
+    canvas.addEventListener("wheel", (e) => { e.preventDefault(); this.zoomBy(Math.exp(-e.deltaY / 400)); }, { passive: false });
+  },
 
   take(m) {
     if (m.t === "roads") this.roads = m;
@@ -45,7 +81,7 @@ const MapView = {
     view.classList.toggle("empty", empty);
     if (empty) return;
     const speed = Math.abs(Number(R.get(s, "vehicle.motion.speedKmh")) || 0);
-    const want = Math.max(1.1, 4.2 - speed * 0.045) * dpr;
+    const want = Math.max(1.1, 4.2 - speed * 0.045) * dpr * this.zoom;
     this.scale += (want - this.scale) * 0.04;
     const k = this.scale;
     const h = (Number(R.get(s, "vehicle.motion.heading")) || 0) * Math.PI / 180;
@@ -83,6 +119,26 @@ const MapView = {
       g.lineWidth = Math.max(6 * dpr, 5 * k);
       path(n.anchor, n.route);
       g.stroke();
+    }
+    const stops = (n && n.stops) || [];
+    for (let i = stops.length - 2; i >= 0; i -= 2) {
+      const [sx, sy] = project(n.anchor[0], n.anchor[1], stops[i], stops[i + 1]);
+      const r = (i ? 10 : 13) * dpr;
+      if (sx < -r || sy < -r || sx > W + r || sy > H + r) continue;
+      g.save();
+      g.translate(sx, sy);
+      g.fillStyle = "#ffffff";
+      g.strokeStyle = "#0a4fb0";
+      g.lineWidth = 3 * dpr;
+      g.beginPath(); g.arc(0, 0, r, 0, Math.PI * 2); g.fill(); g.stroke();
+      const u = r / 13;
+      g.fillStyle = "#0a4fb0";
+      g.fillRect(-7 * u, -6 * u, 14 * u, 10 * u);
+      g.fillStyle = "#ffffff";
+      g.fillRect(-5 * u, -4 * u, 10 * u, 3.5 * u);
+      g.fillStyle = "#0a4fb0";
+      g.beginPath(); g.arc(-4 * u, 5 * u, 2 * u, 0, Math.PI * 2); g.arc(4 * u, 5 * u, 2 * u, 0, Math.PI * 2); g.fill();
+      g.restore();
     }
     g.save();
     g.translate(cx, cy);

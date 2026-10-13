@@ -5,6 +5,7 @@ use omsi_sim::htmltex::HtmlRequest;
 const PUBLISH_EVERY: f32 = 1.0 / 30.0;
 
 type Skins = std::sync::mpsc::Receiver<(String, Vec<(String, Vec<u8>)>)>;
+type Doors = std::sync::mpsc::Receiver<(String, Vec<(Vec<String>, Vec<usize>)>)>;
 
 #[derive(Default)]
 pub(crate) struct RemoteCockpit {
@@ -14,17 +15,20 @@ pub(crate) struct RemoteCockpit {
     vehicle: String,
     lang: String,
     skins: Option<Skins>,
+    tried: Option<Doors>,
     sign: Option<omsi_remote::sign::Sign>,
     sign_t: f32,
     nav_t: f32,
-    door_triggers: Vec<String>,
+    door_triggers: Vec<Vec<String>>,
     door_ways: Vec<Vec<usize>>,
     all_fired: Vec<String>,
 }
 
-fn aliases(p: &crate::player::Player) -> Vec<(String, String)> {
+fn aliases(p: &crate::player::Player, buttons: &[Vec<String>]) -> Vec<(String, String)> {
     let mut out: Vec<(String, String)> = Vec::new();
-    for (n, group) in crate::player::door_keys(&p.vehicle.ty).iter().enumerate() {
+    let keys = crate::player::door_keys(&p.vehicle.ty);
+    let doors = if buttons.is_empty() { &keys[..] } else { buttons };
+    for (n, group) in doors.iter().enumerate() {
         for t in group.iter().flat_map(|g| g.split('|')) {
             out.push((format!("door_{}", n + 1), t.to_string()));
             out.push(("doors_all".into(), t.to_string()));
@@ -38,20 +42,36 @@ fn aliases(p: &crate::player::Player) -> Vec<(String, String)> {
     out
 }
 
-fn doors(p: &crate::player::Player) -> (Vec<Vec<usize>>, Vec<String>) {
-    let ty = &p.vehicle.ty;
-    let mut ways = omsi_remote::doorways(ty);
+fn ways(p: &crate::player::Player) -> Vec<Vec<usize>> {
+    let mut ways = omsi_remote::doorways(&p.vehicle.ty);
     for t in &p.vehicle.trailers {
         ways.extend(omsi_remote::doorways(&t.ty));
     }
+    ways
+}
+
+fn doors(p: &crate::player::Player) -> (Vec<Vec<usize>>, Vec<Vec<String>>) {
+    let ty = &p.vehicle.ty;
+    let ways = ways(p);
     let keys = crate::player::door_keys(ty).len();
     let fronts: Vec<String> = (0..ways.len()).map(|k| format!("bus_doorfront{k}")).collect();
     let direct = keys < ways.len() && fronts.iter().all(|f| ty.program.trigger(f).is_some());
     match (direct, keys == 0 || ways.len() == keys) {
-        (true, _) => (ways, fronts),
+        (true, _) => (ways, fronts.into_iter().map(|f| vec![f]).collect()),
         (false, true) => (ways, Vec::new()),
         _ => (Vec::new(), Vec::new()),
     }
+}
+
+fn try_doors(p: &crate::player::Player, key: &str) -> Doors {
+    let (tx, rx) = std::sync::mpsc::channel();
+    let (ty, ways, key) = (p.vehicle.ty.clone(), omsi_remote::doorways(&p.vehicle.ty), key.to_string());
+    let _ = std::thread::Builder::new().name("remote cockpit doors".into()).spawn(move || {
+        let tried = omsi_remote::tried_doors(ty, &ways);
+        log::info!("remote cockpit: door buttons {:?}", tried.iter().map(|(t, l)| format!("{} = {l:?}", t.join(" + "))).collect::<Vec<_>>());
+        let _ = tx.send((key, tried));
+    });
+    rx
 }
 
 fn direct_doors(name: &str, down: bool, r: &mut RemoteCockpit, v: &omsi_sim::VehicleInstance) -> Option<Vec<String>> {
@@ -68,11 +88,11 @@ fn direct_doors(name: &str, down: bool, r: &mut RemoteCockpit, v: &omsi_sim::Veh
         }
         let open: Vec<bool> = r.door_ways.iter().map(|w| w.iter().any(|l| v.var(&format!("door_{l}")).is_some_and(|x| x > 0.05))).collect();
         let any = open.contains(&true);
-        r.all_fired = r.door_triggers.iter().zip(&open).filter(|(_, o)| !any || **o).map(|(t, _)| t.clone()).collect();
+        r.all_fired = r.door_triggers.iter().zip(&open).filter(|(_, o)| !any || **o).flat_map(|(t, _)| t.clone()).filter(|t| t != "bus_dooraft").collect();
         return Some(r.all_fired.clone());
     }
     let n: usize = name.strip_prefix("door_")?.parse().ok()?;
-    r.door_triggers.get(n.checked_sub(1)?).map(|t| vec![t.clone()])
+    r.door_triggers.get(n.checked_sub(1)?).cloned()
 }
 
 fn start_skins(p: &crate::player::Player, root: &std::path::Path, key: &str) -> Skins {
@@ -95,7 +115,7 @@ fn vehicle_key(p: &crate::player::Player) -> String {
     format!("{folder}/{file}#{hof}")
 }
 
-fn vehicle(p: &crate::player::Player, doors: Vec<Vec<usize>>) -> Vehicle {
+fn vehicle(p: &crate::player::Player, doors: Vec<Vec<usize>>, buttons: &[Vec<String>]) -> Vehicle {
     let def = &p.vehicle.ty.def;
     let short = omsi_launcher_lib::vehicle_type_label(&def.type_name, &def.path);
     let mut actions = p.vehicle.ty.program.trigger_names();
@@ -108,7 +128,7 @@ fn vehicle(p: &crate::player::Player, doors: Vec<Vec<usize>>) -> Vehicle {
         name: omsi_launcher_lib::display_bus_name(&format!("{} {short}", def.manufacturer)),
         folder: def.path.parent().map(std::path::Path::to_path_buf).unwrap_or_default(),
         actions,
-        aliases: aliases(p),
+        aliases: aliases(p, buttons),
         depot: p.vehicle.host.hof.as_deref().map(omsi_sim::vehicle_api::depot),
         doors,
     }
@@ -304,10 +324,19 @@ impl App {
             let _ = server.release_all();
             r.all_fired.clear();
             (r.door_ways, r.door_triggers) = self.player.as_ref().map(doors).unwrap_or_default();
-            server.set_vehicle(self.player.as_ref().map(|p| vehicle(p, r.door_ways.clone())));
+            server.set_vehicle(self.player.as_ref().map(|p| vehicle(p, r.door_ways.clone(), &r.door_triggers)));
             r.skins = self.player.as_ref().map(|p| start_skins(p, &self.args.root, &key));
+            r.tried = self.player.as_ref().map(|p| try_doors(p, &key));
             r.sign = self.player.as_ref().and_then(|p| omsi_remote::sign::Sign::find(&p.vehicle.ty, &self.args.root));
             r.vehicle = key;
+        }
+        let ready = !server.holds_a_door() && self.player.as_ref().is_some_and(|p| p.door_buttons.is_empty());
+        if let (true, Some(Ok((for_key, tried))), Some(p)) = (ready, r.tried.as_ref().map(|rx| rx.try_recv()), self.player.as_ref()) {
+            r.tried = None;
+            if for_key == r.vehicle && !tried.is_empty() {
+                (r.door_triggers, r.door_ways) = tried.into_iter().unzip();
+                server.set_doors(r.door_ways.clone(), aliases(p, &r.door_triggers));
+            }
         }
         if let Some(Ok((for_key, skins))) = r.skins.as_ref().map(|rx| rx.try_recv()) {
             if for_key == r.vehicle {

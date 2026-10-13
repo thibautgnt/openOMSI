@@ -172,6 +172,7 @@ fn main() {
                 route: corners(t),
                 turn: Some(omsi_remote::nav::Turn { direction: 1, angle: 90.0, metres: left, street: Some("Schillerstraße".into()) }),
                 stop: Some(("Marktplatz".into(), left + 250.0)),
+                stops: [left + 250.0, left + 900.0].iter().map(|d| at(t * 9.0 + *d as f64).1).map(|p| [p[0] as f32, p[1] as f32]).collect(),
                 street: Some("Hauptstraße".into()),
                 limit: Some(50.0),
                 on_route: true,

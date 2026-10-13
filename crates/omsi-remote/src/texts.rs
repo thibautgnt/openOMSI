@@ -203,4 +203,6 @@ pub static TEXTS: &[&str] = &[
     "Widgets",
     "Wipers",
     "Wrong code",
+    "Zoom in",
+    "Zoom out",
 ];
