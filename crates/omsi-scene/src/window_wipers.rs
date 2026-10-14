@@ -240,6 +240,12 @@ impl WindowWipers {
                 }
             }
         }
+        if std::env::var("PROBE_STAGGER").is_ok_and(|v| v == "1") {
+            let n = films.len().max(1) as f32;
+            for (k, film) in films.iter_mut().enumerate() {
+                film.paint_time = 1.0 + k as f32 / n / 30.0;
+            }
+        }
         log::debug!(
             "window wipers: {} blades, {} wetness masks",
             blades.len(),
@@ -500,6 +506,12 @@ impl WindowWipers {
                             writer.write(&film.drops.image);
                         }
                     }
+                }
+            }
+        } else if mode == "seq" {
+            for film in &mut self.films {
+                if std::mem::take(&mut film.paint_due) && film.drops.paint() {
+                    renderer.update_texture(scene, film.drops_texture, &film.drops.image);
                 }
             }
         } else {
