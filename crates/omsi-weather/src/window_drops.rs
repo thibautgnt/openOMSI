@@ -278,6 +278,7 @@ impl Drops {
         let edge = b - a;
         let inverse_length = edge.length_squared().max(1e-10).recip();
         let water_radius = if trail { radius * 0.25 } else { radius };
+        let reach = (radius + aa) * (radius + aa);
         for y in lo.y as usize..=hi.y as usize {
             // Clip a diagonal trail per row instead of visiting its mostly empty rectangle.
             let (left, right) = if edge.y.abs() > 1e-8 {
@@ -297,7 +298,11 @@ impl Drops {
                 let pos = Vec2::new(x as f32 + 0.5, y as f32 + 0.5) / scale;
                 let t = ((pos - a).dot(edge) * inverse_length).clamp(0.0, 1.0);
                 let offset = pos - a.lerp(b, t);
-                let distance = offset.length();
+                let distance_squared = offset.length_squared();
+                if distance_squared >= reach {
+                    continue;
+                }
+                let distance = distance_squared.sqrt();
                 let coverage = ((radius + aa - distance) / (2.0 * aa)).clamp(0.0, 1.0)
                     * (radius / aa).min(1.0);
                 // The collected channel is as wide as the head; only the water

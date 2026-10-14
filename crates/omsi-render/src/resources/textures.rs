@@ -64,10 +64,12 @@ pub(crate) fn try_create_texture(device: &wgpu::Device, desc: &wgpu::TextureDesc
     let texture = device.create_texture(desc);
     let invalid = pollster::block_on(validation.pop());
     let out_of_memory = pollster::block_on(memory.pop());
+    if out_of_memory.is_some() {
+        TEXTURE_OUT_OF_MEMORY.store(true, std::sync::atomic::Ordering::Relaxed);
+    }
     let Some(e) = out_of_memory.or(invalid) else {
         return Some(texture);
     };
-    TEXTURE_OUT_OF_MEMORY.store(true, std::sync::atomic::Ordering::Relaxed);
     static FAILED: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
     let n = FAILED.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
     if n < 5 || n % 1000 == 0 {
