@@ -88,6 +88,8 @@ pub fn frame_each<T: Send, F: Fn(&mut T) + Sync>(items: &mut [T], helpers: usize
 /// How many helpers a loop of `total` seconds of work deserves: one per `per_helper`
 /// seconds, at most the pool's threads.
 pub fn helpers_for(total: f64, per_helper: f64) -> usize {
+    static SCALE: std::sync::OnceLock<f64> = std::sync::OnceLock::new();
+    let per_helper = per_helper * *SCALE.get_or_init(|| std::env::var("OMSI_PAR_SCALE").ok().and_then(|v| v.parse().ok()).unwrap_or(1.0));
     if !(total > 0.0) || !(per_helper > 0.0) {
         return 0;
     }
