@@ -755,34 +755,15 @@ impl Renderer {
 
     /// Replace the pixels of a texture (same size as when created, no mipmaps regenerated).
     pub fn update_texture(&self, scene: &Scene, id: TextureId, img: &omsi_texture::Image) {
-        let Some(gt) = scene.textures.get(id) else { return };
-        // (a picture larger than the chip takes went up halved, see `fit_image`; one larger
-        // than its texture is not written - a device error each frame)
-        let fitted = fit_image(img, self.device.limits().max_texture_dimension_2d);
-        let img = fitted.as_ref().unwrap_or(img);
-        if img.width > gt.size.0 || img.height > gt.size.1 || img.rgba.len() < (img.width * img.height * 4) as usize {
-            return;
+        if let Some(writer) = self.texture_writer(scene, id) {
+            writer.write(img);
         }
-        let t = &gt.texture;
-        self.queue.write_texture(
-            wgpu::TexelCopyTextureInfo {
-                texture: t,
-                mip_level: 0,
-                origin: wgpu::Origin3d::ZERO,
-                aspect: wgpu::TextureAspect::All,
-            },
-            &img.rgba,
-            wgpu::TexelCopyBufferLayout {
-                offset: 0,
-                bytes_per_row: Some(img.width * 4),
-                rows_per_image: Some(img.height),
-            },
-            wgpu::Extent3d {
-                width: img.width,
-                height: img.height,
-                depth_or_array_layers: 1,
-            },
-        );
+    }
+
+    /// What `update_texture` needs of the renderer, shareable with other threads.
+    pub fn texture_writer<'a>(&'a self, scene: &'a Scene, id: TextureId) -> Option<TextureWriter<'a>> {
+        let gt = scene.textures.get(id)?;
+        Some(TextureWriter { queue: &self.queue, texture: &gt.texture, size: gt.size, max: self.device.limits().max_texture_dimension_2d })
     }
 
     /// Replace the top pixels of a dynamic texture and rebuild its mip chain. Returns true
@@ -991,4 +972,43 @@ impl Renderer {
 pub struct LevelDrops {
     encoder: Option<wgpu::CommandEncoder>,
     count: usize,
+}
+
+pub struct TextureWriter<'a> {
+    queue: &'a wgpu::Queue,
+    texture: &'a wgpu::Texture,
+    size: (u32, u32),
+    max: u32,
+}
+
+impl TextureWriter<'_> {
+    pub fn write(&self, img: &omsi_texture::Image) {
+        // (a picture larger than the chip takes went up halved, see `fit_image`; one larger
+        // than its texture is not written - a device error each frame)
+        let fitted = fit_image(img, self.max);
+        let img = fitted.as_ref().unwrap_or(img);
+        if img.width > self.size.0 || img.height > self.size.1 || img.rgba.len() < (img.width * img.height * 4) as usize {
+            return;
+        }
+        let t = self.texture;
+        self.queue.write_texture(
+            wgpu::TexelCopyTextureInfo {
+                texture: t,
+                mip_level: 0,
+                origin: wgpu::Origin3d::ZERO,
+                aspect: wgpu::TextureAspect::All,
+            },
+            &img.rgba,
+            wgpu::TexelCopyBufferLayout {
+                offset: 0,
+                bytes_per_row: Some(img.width * 4),
+                rows_per_image: Some(img.height),
+            },
+            wgpu::Extent3d {
+                width: img.width,
+                height: img.height,
+                depth_or_array_layers: 1,
+            },
+        );
+    }
 }

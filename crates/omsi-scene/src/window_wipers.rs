@@ -6,7 +6,6 @@ use glam::{Vec2, Vec3};
 use omsi_geometry::MeshData;
 use omsi_render::{MaterialId, Renderer, Scene, TextureId};
 use omsi_sim::VehicleInstance;
-use rayon::prelude::*;
 
 // (the shader reads the mask at this size: `WIPE_MASK_SIZE` in shader.wgsl)
 const SIZE: usize = 128;
@@ -471,16 +470,51 @@ impl WindowWipers {
                 &vehicle.mesh_props[film.mesh].slot_uv,
             );
         }
-        let paint = |films: &mut Vec<Film>| -> Vec<bool> {
-            films.par_iter_mut().map(|film| std::mem::take(&mut film.paint_due) && film.drops.paint()).collect()
-        };
-        let painted = match drops_pool() {
-            Some(pool) => pool.install(|| paint(&mut self.films)),
-            None => paint(&mut self.films),
-        };
-        for (film, painted) in self.films.iter().zip(painted) {
-            if painted {
-                renderer.update_texture(scene, film.drops_texture, &film.drops.image);
+        let scene = &*scene;
+        static MODE: std::sync::OnceLock<String> = std::sync::OnceLock::new();
+        let mode = MODE.get_or_init(|| std::env::var("PROBE_DROPS").unwrap_or_default()).as_str();
+        if mode == "each" || mode == "eachup" {
+            let mut due: Vec<_> = self
+                .films
+                .iter_mut()
+                .filter_map(|f| std::mem::take(&mut f.paint_due).then_some(f))
+                .map(|f| {
+                    let writer = renderer.texture_writer(scene, f.drops_texture);
+                    (f, writer, false)
+                })
+                .collect();
+            let helpers = due.len().saturating_sub(1).min(3);
+            let upload_here = mode == "eachup";
+            omsi_cfg::par::frame_each(&mut due, helpers, |(film, writer, painted)| {
+                *painted = film.drops.paint();
+                if *painted && upload_here {
+                    if let Some(writer) = writer {
+                        writer.write(&film.drops.image);
+                    }
+                }
+            });
+            if !upload_here {
+                for (film, writer, painted) in &due {
+                    if *painted {
+                        if let Some(writer) = writer {
+                            writer.write(&film.drops.image);
+                        }
+                    }
+                }
+            }
+        } else {
+            use rayon::prelude::*;
+            let paint = |films: &mut Vec<Film>| -> Vec<bool> {
+                films.par_iter_mut().map(|film| std::mem::take(&mut film.paint_due) && film.drops.paint()).collect()
+            };
+            let painted = match drops_pool() {
+                Some(pool) => pool.install(|| paint(&mut self.films)),
+                None => paint(&mut self.films),
+            };
+            for (film, painted) in self.films.iter().zip(painted) {
+                if painted {
+                    renderer.update_texture(scene, film.drops_texture, &film.drops.image);
+                }
             }
         }
         for blade in &mut self.blades {
