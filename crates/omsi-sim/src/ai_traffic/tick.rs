@@ -182,6 +182,20 @@ impl TrafficSim {
         let others = ts.others;
         self.set_visibility();
         let t_par = std::time::Instant::now();
+        PLAN_PROBE.with(|p| {
+            let mut p = p.borrow_mut();
+            p.0[9] += (t_par - t_plan).as_secs_f64();
+            p.0[10] += (t_plan - t_start).as_secs_f64();
+            p.1 += 1;
+            p.2 += self.cars.len();
+            if p.3.elapsed().as_secs_f64() >= 10.0 {
+                let n = p.1.max(1) as f64;
+                let names = ["lead", "kerb", "keep_back", "sideways", "right_of_way", "stop_points", "service+end", "scenery", "drive", "PLAN", "LANES"];
+                let parts: Vec<String> = names.iter().zip(p.0.iter()).map(|(k, v)| format!("{k} {:.0}", v / n * 1e6)).collect();
+                log::info!("plan probe: {} steps, {:.1} cars/step, us/step: {}", p.1, p.2 as f64 / n, parts.join(", "));
+                *p = ([0.0; 11], 0, 0, std::time::Instant::now());
+            }
+        });
         self.step_bodies(dt, &mut frames);
         self.tick_split = [
             (t_plan - t_start).as_secs_f64(),
@@ -462,19 +476,34 @@ impl TrafficSim {
     /// Car `i`'s plan for this tick and its drive: its frame for the body and the scripts,
     /// None when it ran out of road (it is taken off).
     fn plan_car(&mut self, i: usize, ts: &TickScene, reservations: &mut ClaimBook) -> Option<AiFrame> {
+        let mut t = std::time::Instant::now();
+        let mut lap = |k: usize| {
+            let now = std::time::Instant::now();
+            PLAN_PROBE.with(|p| p.borrow_mut().0[k] += (now - t).as_secs_f64());
+            t = now;
+        };
         let (lead, player, player_standing) = self.car_lead(i, ts);
+        lap(0);
         let (lead, parked_ahead, parked_box, kerb_swerve) = self.kerb_and_squeeze(i, lead, &ts.by_lane);
+        lap(1);
         let (standing, obstacle_len, at_stop, keep_back) = self.keep_back(i, lead, parked_ahead, player, player_standing);
-        // where it goes across the road: decided in one place (`lateral`)
         let scene = SideScene { lead, obstacle_len, standing, parked_ahead, at_stop, player, parked_box, kerb_swerve };
+        lap(2);
         let SideOut { merge_wait, park, make_way } = self.steer_sideways(i, ts, &scene);
+        lap(3);
         let (way, light, yield_at) = self.right_of_way(i, ts, lead, reservations);
+        lap(4);
         self.emergency_speed(i, &way);
         let (stop_at, why) = self.stop_points(i, ts, &way, lead, light, yield_at, [merge_wait, make_way], keep_back);
+        lap(5);
         let (stop_at, why) = self.service_and_park(i, ts, &way, kerb_swerve, park, stop_at, why);
         let (stop_at, why) = self.end_of_way(i, ts, &way, stop_at, why);
+        lap(6);
         let (stop_at, why) = self.scenery_stop(i, ts, stop_at, why);
-        self.drive_car(i, ts, lead, stop_at, why, light, yield_at, merge_wait)
+        lap(7);
+        let r = self.drive_car(i, ts, lead, stop_at, why, light, yield_at, merge_wait);
+        lap(8);
+        r
     }
 
     /// What car `i` follows: the car ahead (it may change lanes first), the player's bus or
@@ -1446,4 +1475,9 @@ impl TrafficSim {
             }
         }
     }
+}
+
+thread_local! {
+    static PLAN_PROBE: std::cell::RefCell<([f64; 11], u32, usize, std::time::Instant)> =
+        std::cell::RefCell::new(([0.0; 11], 0, 0, std::time::Instant::now()));
 }
