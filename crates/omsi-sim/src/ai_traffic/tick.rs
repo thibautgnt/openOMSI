@@ -193,6 +193,11 @@ impl TrafficSim {
                 let names = ["lead", "kerb", "keep_back", "sideways", "right_of_way", "stop_points", "service+end", "scenery", "drive", "PLAN", "LANES"];
                 let parts: Vec<String> = names.iter().zip(p.0.iter()).map(|(k, v)| format!("{k} {:.0}", v / n * 1e6)).collect();
                 log::info!("plan probe: {} steps, {:.1} cars/step, us/step: {}", p.1, p.2 as f64 / n, parts.join(", "));
+                LOOK_PROBE.with(|l| {
+                    let mut l = l.borrow_mut();
+                    log::info!("look probe: {:.2} looks/step, {:.1} near/look, us/step: near {:.0}, shape {:.0}, first_contact {:.0}, nudge {:.0}", l.1 as f64 / n, l.2 as f64 / l.1.max(1) as f64, l.0[0] / n * 1e6, l.0[1] / n * 1e6, l.0[2] / n * 1e6, l.0[3] / n * 1e6);
+                    *l = ([0.0; 4], 0, 0);
+                });
                 *p = ([0.0; 11], 0, 0, std::time::Instant::now());
             }
         });
@@ -1477,7 +1482,19 @@ impl TrafficSim {
     }
 }
 
+pub(super) fn look_probe(t: [f64; 4], near: usize) {
+    LOOK_PROBE.with(|p| {
+        let mut p = p.borrow_mut();
+        for (a, b) in p.0.iter_mut().zip(t) {
+            *a += b;
+        }
+        p.1 += 1;
+        p.2 += near;
+    });
+}
+
 thread_local! {
+    static LOOK_PROBE: std::cell::RefCell<([f64; 4], usize, usize)> = std::cell::RefCell::new(([0.0; 4], 0, 0));
     static PLAN_PROBE: std::cell::RefCell<([f64; 11], u32, usize, std::time::Instant)> =
         std::cell::RefCell::new(([0.0; 11], 0, 0, std::time::Instant::now()));
 }

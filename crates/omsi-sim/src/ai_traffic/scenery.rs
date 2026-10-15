@@ -470,14 +470,18 @@ impl TrafficSim {
     /// A look along car `i`'s way (see the module): the scenery near it, where the body
     /// would first touch it, and a nudge round it where it touches at the side.
     fn look_at_scenery(&mut self, i: usize, world: &CollisionWorld, ts: &TickScene) {
+        let t0 = std::time::Instant::now();
         let near = self.scenery_near_way(i, world);
+        let t1 = std::time::Instant::now();
         let net = &self.net;
         let car = &self.cars[i];
         let st = &car.state;
         let road_z = car.body.position.z;
         let (shape, poses) = Shape::of(&car.vehicle, (st.front, st.rear, car.half_width), road_z);
+        let t2 = std::time::Instant::now();
         let reach = scenery_reach(st);
         let hit = first_contact(&car.body, &shape, &poses, &|d| st.way_point(net, d), road_z, st.speed, reach, &near, true);
+        let t3 = std::time::Instant::now();
         // round it at the side, if a nudge within the lane clears it and everybody else -
         // or away from what a corner touches already
         let beside_now = || {
@@ -486,6 +490,8 @@ impl TrafficSim {
         };
         let side = hit.filter(|h| h.side).or_else(|| hit.is_none().then(beside_now).flatten());
         let nudge = side.and_then(|h| self.nudge_round(i, &h, &shape, &poses, &near, ts));
+        let t4 = std::time::Instant::now();
+        super::tick::look_probe([(t1 - t0).as_secs_f64(), (t2 - t1).as_secs_f64(), (t3 - t2).as_secs_f64(), (t4 - t3).as_secs_f64()], near.len());
         let was = self.cars[i].guard.contact.is_some();
         let car = &mut self.cars[i];
         car.guard.next_look = self.time + LOOK_EVERY;
