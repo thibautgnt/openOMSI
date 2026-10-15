@@ -49,8 +49,17 @@ pub(crate) enum ArrayPath {
     VertexTextures,
     /// No storage buffers at all: the arrays are textures, and the point lights (the street
     /// lamps, headlights and interior lamps lit per pixel) are left out - the sixteen
-    /// textures a fragment shader may read here are all taken.
+    /// textures a pipeline may read here are all taken. Where the device has room for two
+    /// more (ANGLE on Direct3D 11 has 32), `LightTextures`: the lights and their grid are
+    /// textures as well.
     NoStorage,
+    LightTextures,
+}
+
+impl ArrayPath {
+    pub(crate) fn no_storage(self) -> bool {
+        matches!(self, ArrayPath::NoStorage | ArrayPath::LightTextures)
+    }
 }
 
 pub(crate) static ARRAY_PATH: std::sync::atomic::AtomicU8 = std::sync::atomic::AtomicU8::new(0);
@@ -59,6 +68,7 @@ pub(crate) fn array_path() -> ArrayPath {
     match ARRAY_PATH.load(std::sync::atomic::Ordering::Relaxed) {
         1 => ArrayPath::VertexTextures,
         2 => ArrayPath::NoStorage,
+        3 => ArrayPath::LightTextures,
         _ => ArrayPath::Storage,
     }
 }
@@ -89,7 +99,7 @@ impl GpuArray {
                 mapped_at_creation: false,
             }));
         }
-        if !vertex {
+        if !vertex && path == ArrayPath::NoStorage {
             return GpuArray::Unused;
         }
         let texels = size.div_ceil(texel as u64).max(1);
@@ -189,7 +199,7 @@ pub(crate) fn array_layout_entry_on(path: ArrayPath, binding: u32, stage: wgpu::
     let texture = match path {
         ArrayPath::Storage => false,
         ArrayPath::VertexTextures => stage.contains(wgpu::ShaderStages::VERTEX),
-        ArrayPath::NoStorage => true,
+        ArrayPath::NoStorage | ArrayPath::LightTextures => true,
     };
     wgpu::BindGroupLayoutEntry {
         binding,
