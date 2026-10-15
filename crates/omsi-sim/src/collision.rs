@@ -89,8 +89,7 @@ impl Obb {
         [self.center + r * hx + f * hy, self.center - r * hx + f * hy, self.center - r * hx - f * hy, self.center + r * hx - f * hy]
     }
 
-    fn interval(&self, axis: DVec2) -> (f64, f64) {
-        let [r, f] = self.axes();
+    fn interval(&self, [r, f]: [DVec2; 2], axis: DVec2) -> (f64, f64) {
         let c = self.center.dot(axis);
         let e = self.half.x * r.dot(axis).abs() + self.half.y * f.dot(axis).abs();
         (c - e, c + e)
@@ -101,9 +100,10 @@ impl Obb {
         if self.z1 < o.z0 || o.z1 < self.z0 {
             return false;
         }
-        for axis in self.axes().into_iter().chain(o.axes()) {
-            let (min_a, max_a) = self.interval(axis);
-            let (min_b, max_b) = o.interval(axis);
+        let (mine, theirs) = (self.axes(), o.axes());
+        for axis in mine.into_iter().chain(theirs) {
+            let (min_a, max_a) = self.interval(mine, axis);
+            let (min_b, max_b) = o.interval(theirs, axis);
             if max_a < min_b || max_b < min_a {
                 return false;
             }
@@ -120,9 +120,10 @@ impl Obb {
             return None;
         }
         let mut best: Option<(f64, DVec2)> = None;
-        for axis in self.axes().into_iter().chain(o.axes()) {
-            let (min_a, max_a) = self.interval(axis);
-            let (min_b, max_b) = o.interval(axis);
+        let (mine, theirs) = (self.axes(), o.axes());
+        for axis in mine.into_iter().chain(theirs) {
+            let (min_a, max_a) = self.interval(mine, axis);
+            let (min_b, max_b) = o.interval(theirs, axis);
             if max_a <= min_b || max_b <= min_a {
                 return None;
             }
@@ -164,8 +165,8 @@ impl Obb {
     /// is nearest), which is what a clearance check wants.
     pub fn separation(&self, o: &Obb) -> f64 {
         let d = o.center - self.center;
-        let (ra, fa) = (self.axes()[0], self.axes()[1]);
-        let (rb, fb) = (o.axes()[0], o.axes()[1]);
+        let [ra, fa] = self.axes();
+        let [rb, fb] = o.axes();
         let extent = |r: DVec2, f: DVec2, half: DVec2, axis: DVec2| r.dot(axis).abs() * half.x + f.dot(axis).abs() * half.y;
         let mut best = f64::MIN;
         for axis in [ra, fa, rb, fb] {
