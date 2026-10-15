@@ -450,7 +450,7 @@ impl SceneryState {
         // the frame waited on a latch for busy or unscheduled workers - 20-70 ms frames
         // standing still on a city map - for 4 ms of scripts)
         let clock = inputs.clock;
-        let helpers = omsi_cfg::par::helpers_for(self.scripts_work, SCRIPTS_SECS_PER_HELPER).min(jobs.len().saturating_sub(1));
+        let helpers = omsi_cfg::par::helpers_for(self.scripts_work, { static S: std::sync::OnceLock<f64> = std::sync::OnceLock::new(); *S.get_or_init(|| std::env::var("PROBE_SCRIPTS_SECS").ok().and_then(|v| v.parse().ok()).unwrap_or(SCRIPTS_SECS_PER_HELPER)) }).min(jobs.len().saturating_sub(1));
         omsi_cfg::par::frame_each(&mut jobs, helpers, |(o, vars, _, _)| {
             o.inst.update_on(dt, vars, clock);
         });
