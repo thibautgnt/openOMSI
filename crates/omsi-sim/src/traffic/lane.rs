@@ -45,6 +45,8 @@ pub struct Lane {
     /// Heading (degrees, clockwise from north) at each point: the tangent of the spline or
     /// arc the lane was sampled from, not the direction of the chord to the next point.
     pub headings: Vec<f32>,
+    /// `heading_dir` of each heading, for `hermite`.
+    dirs: Vec<DVec2>,
     /// Signed curvature at each point (1/m, positive = turning right).
     pub curvature: Vec<f32>,
     /// Cumulative distance at each point.
@@ -226,8 +228,7 @@ impl Lane {
         if len < 1e-6 {
             return lin;
         }
-        let d0 = heading_dir(self.headings[i] as f64);
-        let d1 = heading_dir(self.headings[i + 1] as f64);
+        let (d0, d1) = (self.dirs[i], self.dirs[i + 1]);
         // tangents far off the chord (a kink in hand-made samples) would make the curve loop
         let c = chord / len;
         if d0.dot(c) < 0.8 || d1.dot(c) < 0.8 {
@@ -335,7 +336,8 @@ impl LaneBuilder {
     pub fn curve(points: Vec<DVec3>, headings: Vec<f32>, curvature: Vec<f32>, kind: LaneKind, width: f32) -> Lane {
         let dist = cumulative(&points);
         let speed_limit_kmh = if kind == LaneKind::Air { AIR_NO_LIMIT_KMH } else { 50.0 };
-        Lane { key: None, reversed: false, kind, width, points, headings, curvature, dist, speed_limit_kmh, next: Vec::new(), traffic_light: None, turn: 0, source: 0, offset: 0.0, name: String::new(), invisible: false, density: 1.0, group_density: Vec::new(), no_cars: false, rule_bus: false, rule_trucks: false, no_overtaking: false, left: None, right: None, priority: DEFAULT_PRIORITY, blocks: Vec::new(), crossing_problem: false, ring: false }
+        let dirs = headings.iter().map(|&h| heading_dir(h as f64)).collect();
+        Lane { key: None, reversed: false, kind, width, points, headings, dirs, curvature, dist, speed_limit_kmh, next: Vec::new(), traffic_light: None, turn: 0, source: 0, offset: 0.0, name: String::new(), invisible: false, density: 1.0, group_density: Vec::new(), no_cars: false, rule_bus: false, rule_trucks: false, no_overtaking: false, left: None, right: None, priority: DEFAULT_PRIORITY, blocks: Vec::new(), crossing_problem: false, ring: false }
     }
 
     /// Lane from bare points: headings from the neighbouring points on both sides (the
