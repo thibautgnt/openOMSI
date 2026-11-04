@@ -472,8 +472,7 @@ async function doc(name, anchor, set = "openomsi") {
   const at = siblings.findIndex(d => d.href === here);
   const step = (d, label, cls) => d ? `<a class="doc-step ${cls}" href="${d.href}"><span class="muted">${label}</span><b>${d.title}</b></a>` : "<span></span>";
   box.innerHTML = (meta ? `<p class="kicker">${meta.group}</p>` : "") + html
-    + `<nav class="doc-steps" aria-label="More pages">${at >= 0 ? step(siblings[at - 1], "Previous", "") + step(siblings[at + 1], "Next", "doc-step-next") : ""}</nav>
-    <p class="doc-edit"><a href="https://github.com/${cfg.repo}/blob/main/docs/${name}.md"><span class="material-icons">edit</span>Edit this page on GitHub</a></p>`;
+    + `<nav class="doc-steps" aria-label="More pages">${at >= 0 ? step(siblings[at - 1], "Previous", "") + step(siblings[at + 1], "Next", "doc-step-next") : ""}</nav>`;
   document.title = `${meta ? meta.title : name} · ${set === "mapper" ? "openMapper" : "openOMSI docs"}`;
   // heading anchors
   box.querySelectorAll("h1, h2, h3, h4").forEach(h => {
