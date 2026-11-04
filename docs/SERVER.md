@@ -31,7 +31,7 @@ nothing is drawn. `server.cfg` is written with a comment for every key on the fi
 | `port`, `web_port`, `max_players` | UDP port of the session (27015), TCP port of the web gateway (27025), player limit (16) |
 | `gateway_proxy_header` | the header a proxy of this machine names a WebSocket player's address in (below) |
 | `tunnel` | start a free Cloudflare quick tunnel (needs `cloudflared`) |
-| `public_address` | where players reach the web port without the tunnel (`1.2.3.4:27025`, a name, or `off`); a game joining through the tunnel tries it first. Empty: found by itself (the machine's own internet address, else the one the internet sees if the server reaches itself there, never behind a carrier's NAT) |
+| `public_address` | where players reach the web port without the tunnel (`1.2.3.4:27025`, a name, or `off`); a game joining through the tunnel tries it first. Empty: found by itself (the machine's own internet address, else the one the internet sees if the server reaches itself there, never behind a carrier's NAT). It is told to whoever asks the server's status, as the join code tells it already |
 | `radius` | how many tiles round the map's first entry point are kept loaded (0: the whole map) |
 | `admin_password`, `moderator_password` | administration in the game, the web panel and `POST /admin` (see [Administration](#administration)); at least 12 characters each, empty: nobody |
 | `admin_web`, `admin_web_origins`, `admin_trusted_proxies`, `admin_proxy_header` | where the web panel (`/admin/` on the web port) can be reached from: `local` (what a new `server.cfg` writes), `remote` through trusted proxies (passwords of at least 16 characters, else `local`), or `off` (a file from before the panel, without the key) |
